@@ -1,0 +1,77 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ex: <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix schema: <http://schema.org/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix cv: <http://rdfs.org/resume-rdf/cv.rdfs/> .
+@prefix saro: <http://w3id.org/saro#> .
+@base <http://qualichain.eu/> .
+@prefix qc: <http://qualichain.eu/> .
+
+
+<CVMap> a rr:TriplesMap;
+
+  rml:logicalSource [
+    rml:source "CV.json";
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$"
+  ];
+
+  rr:subjectMap [
+    rr:template "http://w3id.org/resume-rdf/#CV/{label}";
+    rr:class cv:CV
+  ];
+
+ rr:predicateObjectMap [
+  rr:predicate rdfs:label;
+  rr:objectMap [
+    rml:reference "label"
+  ]
+];
+
+ rr:predicateObjectMap [
+  rr:predicate saro:Sector;
+  rr:objectMap [
+    rml:reference "targetSector"
+  ]
+].
+
+# rr:predicateObjectMap [
+#  rr:predicate qc:Salary;
+#  rr:objectMap [
+#    rml:reference "expectedSalary"
+#  ]
+#].
+
+
+
+# iterate over the skill list with Jsonpath
+<SkillsMap> a rr:TriplesMap;
+
+  rml:logicalSource [
+        rml:source "CV.json";
+        rml:referenceFormulation ql:JSONPath;
+        rml:iterator "$.skills[*]"
+      ];
+
+# Create skill subjects
+  rr:subjectMap [
+    rr:template "http://w3id.org/saro/#Skill/{uri}"
+  ];
+
+# define types
+ rr:predicateObjectMap [
+  rr:predicate rdf:type;
+  rr:constant saro:Skill
+];
+
+ rr:predicateObjectMap [
+  rr:predicate rdfs:label;
+  rr:objectMap [
+    rml:reference "Label"
+  ]
+].
