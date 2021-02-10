@@ -1,4 +1,4 @@
-package pt.KBZ.QualiChain.IP;
+package IP.RML;
 
 import be.ugent.rml.Executor;
 import be.ugent.rml.Utils;
@@ -13,17 +13,17 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-//import org.eclipse.rdf4j.rio.RDFFormat;
 
-public class Profiling {
+public class Mapping {
 
-    public static void main(String[] args) {
-        standard();
+  public static void main(String[] args)  throws Exception{
+      Mapping mapping = new Mapping();
+      System.out.println(mapping.map("RMLMapperCV.ttl", "turtle"));
     }
 
-    public static void standard() {
+    public String map(String mappingFilename, String TargetType){
         try {
-            String mapPath = "RMLMapperCV.ttl"; //path to the mapping file that needs to be executed
+            String mapPath = mappingFilename; //path to the mapping file that needs to be executed
             File mappingFile = new File(mapPath);
 
             // Get the mapping string stream
@@ -33,10 +33,11 @@ public class Profiling {
             QuadStore rmlStore = QuadStoreFactory.read(mappingStream);
 
             // Set up the basepath for the records factory, i.e., the basepath for the (local file) data sources
-            RecordsFactory factory = new RecordsFactory("./");
+            RecordsFactory factory = new RecordsFactory("./"/*mappingFile.getParent()*/);
 
             // Set up the functions used during the mapping
-            Map<String, Class> libraryMap = new HashMap<>();
+            @SuppressWarnings("rawtypes")
+			Map<String, Class> libraryMap = new HashMap<>();
             libraryMap.put("IDLabFunctions", IDLabFunctions.class);
 
             FunctionLoader functionLoader = new FunctionLoader(null, libraryMap);
@@ -51,11 +52,14 @@ public class Profiling {
             QuadStore result = executor.execute(null);
 
             // Output the result
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
-            result.write(out, "turtle");
-            out.close();
+            //BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
+            StringWriter out = new StringWriter();
+            result.write(out, TargetType);
+            return (out.toString());
+            //out.close();
         } catch (Exception e) {
             e.printStackTrace();
+            return (e.getMessage());
             //fail("No exception was expected.");
         }
     }
