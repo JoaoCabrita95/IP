@@ -712,6 +712,7 @@ public class JobPosting extends RDFObject {
                     Skill skillReq = Skill.getSkill(reqSkill);
                     if(jp.hasSkillRef(skillReq) == null)
                         jp.addSkillRef(skillReq, null, null);
+                    break;
                             	
                 case "hasSkillRef":
                 	String skillRef = object;
@@ -739,12 +740,12 @@ public class JobPosting extends RDFObject {
                 	String jobAppURI = object;
                 	if(jobAppURI.contains("#"))
                 		jobAppURI = ":" + jobAppURI.substring(jobAppURI.indexOf("#") + 1);
-				try {
-					jp.apply(Application.getApplication(jobAppURI));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					try {
+						jp.apply(Application.getApplication(jobAppURI));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                 	break;
                 	
                 case "createdBy":

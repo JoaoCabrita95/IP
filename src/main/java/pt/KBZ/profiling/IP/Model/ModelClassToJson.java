@@ -46,7 +46,7 @@ public class ModelClassToJson {
 		JsonArray jsonResults = new JsonArray();
 		
 		for(CVSkillRef skillRef : cv.getSkillRefs()) {
-//          jsonResults.add(ModelClassToJson.getCVSkillRefJson(skillRef));
+//        jsonResults.add(ModelClassToJson.getCVSkillRefJson(skillRef));
           if(skillRef.getSkillURI() != null)
               jsonResults.add(getCVSkillJsonFromRef(skillRef));
 		}

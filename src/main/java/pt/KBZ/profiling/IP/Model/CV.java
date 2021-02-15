@@ -41,7 +41,7 @@ public class CV extends RDFObject {
     private List<WorkHistory> workHistory;
     private List<Education> education;
     private List<Course> courses;
-    private List<CVSkillRef> skillRefs;
+    private List<CVSkillRef> skills;
     private List<Application> jobApplications;
 
     //TODO: Add remove methods for Lists
@@ -56,7 +56,7 @@ public class CV extends RDFObject {
     	education = new ArrayList<>();
     	courses = new ArrayList<>();
     	jobApplications = new ArrayList<>();
-    	skillRefs = new ArrayList<>();
+    	skills = new ArrayList<>();
     }
     
     /**
@@ -103,10 +103,10 @@ public class CV extends RDFObject {
     	else
     		this.courses = courses;
     	if(skillRefs == null) {
-    		this.skillRefs = new ArrayList<CVSkillRef>();
+    		this.skills = new ArrayList<CVSkillRef>();
     	}
     	else {
-    		this.skillRefs = skillRefs;
+    		this.skills = skillRefs;
     	}
     	if(jobApps == null)
     		this.jobApplications = new ArrayList<Application>();
@@ -158,15 +158,15 @@ public class CV extends RDFObject {
     	else
     		this.courses = courses;
     	if(skillRefs == null) {
-    		this.skillRefs = new ArrayList<CVSkillRef>();
+    		this.skills = new ArrayList<CVSkillRef>();
     	}
     	else {
-    		this.skillRefs = skillRefs;
+    		this.skills = skillRefs;
     	}
     	this.jobApplications = new ArrayList<Application>();
     	jobApplications.add(jobApp);
     	
-    	skillRefs = new ArrayList<>();
+//    	skillRefs = new ArrayList<>();
     }
 
     
@@ -485,22 +485,22 @@ public class CV extends RDFObject {
     }
     
     public List<CVSkillRef> getSkillRefs(){
-    	return skillRefs;
+    	return skills;
     }
     
     public void addSkillRef(Skill skill, String evalDate, String skillLevel, String adquiredDate, String skillLastUsedDate) {
     	CVSkillRef skillRef = new CVSkillRef(skill, evalDate, adquiredDate, skillLevel, skillLastUsedDate);
-    	skillRefs.add(skillRef);
+    	skills.add(skillRef);
     }
     
     public void addSkillRef(CVSkillRef skillRef) {
-    	skillRefs.add(skillRef);
+    	skills.add(skillRef);
     }
     
     public void removeSkillRef(CVSkillRef skillRef) {
-    	for(SkillRefObject ref : skillRefs) {
+    	for(SkillRefObject ref : skills) {
     		if(ref.getURI().equals(skillRef.getURI()) || ref.getSkillURI().equals(skillRef.getSkillURI())) {
-    			skillRefs.remove(ref);
+    			skills.remove(ref);
     			return;
     		}
     			
@@ -509,8 +509,8 @@ public class CV extends RDFObject {
     }
     
     public CVSkillRef hasSkillRef(CVSkillRef newSkillRef) {
-    	if(skillRefs != null) {
-    		for(CVSkillRef skillRef : skillRefs) {
+    	if(skills != null) {
+    		for(CVSkillRef skillRef : skills) {
         		if(skillRef.getURI().equals(newSkillRef.getURI()) || skillRef.getSkillURI().equals(newSkillRef.getSkillURI()))
         			return skillRef;
         	}
@@ -520,8 +520,8 @@ public class CV extends RDFObject {
     }
     
     public CVSkillRef hasSkillRef(Skill skill) {
-    	if(skillRefs != null) {
-    		for(CVSkillRef skillRef : skillRefs) {
+    	if(skills != null) {
+    		for(CVSkillRef skillRef : skills) {
         		if(skillRef.getSkillURI().equals(skill.getURI()))
         			return skillRef;
         	}
@@ -657,7 +657,7 @@ public class CV extends RDFObject {
 //        	SparqlEndPoint.insertTriple(triple);
         }
         
-        for(CVSkillRef skillRef : skillRefs) {
+        for(CVSkillRef skillRef : skills) {
         	skillRef.Save();
         	
         	triple = new Triple(getURI(), "qc:hasSkillRef", skillRef.getURI());
@@ -1123,6 +1123,15 @@ public class CV extends RDFObject {
                 	cv.setCurrentJob(":" + curJob);
                 	break;
                 	
+                case "hasSkill":
+                    String skillURI = object;
+                    if(skillURI.contains("#"))
+                        skillURI = skillURI.substring(skillURI.indexOf("#") + 1);
+                    Skill skill = Skill.getSkill(skillURI);
+                    if(cv.hasSkillRef(skill) == null)
+                        cv.addSkillRef(skill, null, null, null, null);
+                	break;
+                	
                 case "hasSkillRef":
                 	String skillRef = object;
                 	if(skillRef.contains("#"))
@@ -1160,10 +1169,13 @@ public class CV extends RDFObject {
     }
 
 	public List<Skill> getSkills() {
-		List<Skill> skills = new ArrayList<Skill>(skillRefs.size());
+        List<Skill> skills = new ArrayList<Skill>(this.skills.size());
 		
-		for(SkillRefObject skillRef : skillRefs) {
-			skills.add(Skill.getSkill(skillRef.getSkillURI()));
+        for(SkillRefObject skillRef : this.skills) {
+            if(skillRef.getSkillURI() != null)
+                skills.add(Skill.getSkill(skillRef.getSkillURI()));
+            else
+                skills.add(skillRef.getSkill());
 		}
 		
 		return skills;

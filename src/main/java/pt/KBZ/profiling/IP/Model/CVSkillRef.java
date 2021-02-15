@@ -66,6 +66,8 @@ public class CVSkillRef extends SkillRefObject {
 	
 	public void Save() {
 		
+		super.Save();
+		
 		Triple triple;
 		
 		Map<Triple, String> saveData = new HashMap<Triple, String>();

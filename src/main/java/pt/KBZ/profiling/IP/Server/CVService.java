@@ -316,7 +316,7 @@ public class CVService {
 		
 		try {
 			CV cv = CV.getCVbyPersonURI(personID);
-            JsonElement jsonResults = getCVinJson(cv);
+            JsonElement jsonResults = ModelClassToJson.getCVJson(cv);
 //			System.out.println(jsonResults.toString());
 			
             return Response.ok(jsonResults.toString()).build();
