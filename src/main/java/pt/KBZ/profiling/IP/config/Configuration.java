@@ -26,7 +26,7 @@ public class Configuration {
 
         Properties prop = new Properties();
         try {
-            InputStream is = this.getClass().getResourceAsStream("../../app.config");
+            InputStream is = this.getClass().getResourceAsStream("app.config");
             prop.load(is);
 
             port = Integer.parseInt(prop.getProperty("port","8000"));
