@@ -580,7 +580,7 @@ public class Person extends RDFObject {
         List<Person> persons = ParseResponse(SparqlJsonResults);
         if(persons.isEmpty())
         	throw new NoSuchElementException("No Profiles found in Database");
-        return ParseResponse(SparqlJsonResults);
+        return persons;
     }
 
     /**
@@ -600,9 +600,7 @@ public class Person extends RDFObject {
 		if(!SparqlEndPoint.existURI(uri)) {
 			throw new NoSuchElementException("Person with URI: " + uri + " Not found");
 		}
-		
         String properties = SparqlEndPoint.getAllProperties(uri);
-        //System.out.println(properties);
         Person person = ParseResponseToPerson(properties);
         person.setURI(uri);
         return person;

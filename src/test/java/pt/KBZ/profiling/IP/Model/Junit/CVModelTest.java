@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Order;
 
 @TestMethodOrder(value = OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled
 class CVModelTest {
 	
 	Configuration cnf = new Configuration();

@@ -18,11 +18,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import IP.GsonParser;
 import IP.Model.CV;
 import IP.Model.JobPosting;
+import IP.Model.ModelClassToJson;
 import IP.Model.Skill;
 import IP.Model.SparqlEndPoint;
 
@@ -35,9 +37,14 @@ public class SkillService {
     @GET
 	@Path("/skill")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Skill> GetSkills() {
+	public Response GetSkills() {
 		try {
-			return Skill.getSkills();
+			List<Skill> skills = Skill.getSkills();
+			JsonArray results = new JsonArray();
+            for(Skill skill : skills) {
+                results.add(ModelClassToJson.getSkillJson(skill));
+            }
+			return Response.ok(results.toString()).build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,7 +73,12 @@ public class SkillService {
     @GET
     @Path("/skill/search/{text}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Skill> SearchSkills(@PathParam("text") String text){
-		return Skill.getSkills(text);
+    public Response SearchSkills(@PathParam("text") String text){
+    	List<Skill> skills = Skill.getSkills(text);
+    	JsonArray results = new JsonArray();
+        for(Skill skill : skills) {
+            results.add(ModelClassToJson.getSkillJson(skill));
+        }
+		return Response.ok(results.toString()).build();
     }
 }

@@ -17,12 +17,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import IP.GsonParser;
 import IP.Model.Application;
 import IP.Model.CV;
 import IP.Model.JobPosting;
+import IP.Model.ModelClassToJson;
 import IP.Model.Person;
 import IP.Model.RDFObject;
 import IP.Model.Skill;
@@ -40,7 +42,11 @@ public class PersonService {
 		List<Person> profiles;
 		try {
 			profiles = Person.getPersons();
-			return Response.ok(profiles).build();
+			JsonArray results = new JsonArray();
+            for(Person p : profiles) {
+                results.add(ModelClassToJson.getProfileJson(p));
+            }
+			return Response.ok(results.toString()).build();
 		}
 		catch (NoSuchElementException e1) {
 			return Response.status(Response.Status.OK).entity(e1.getMessage()).build();
@@ -132,7 +138,8 @@ public class PersonService {
 	public Response GetPerson(@PathParam("userid")String userid) {
 		try {
 			Person person = Person.getPerson(userid);
-			return Response.ok(person).build();
+			JsonElement personJson = ModelClassToJson.getProfileJson(person);
+			return Response.ok(personJson.toString()).build();
 		}
 		catch(NoSuchElementException e1) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();

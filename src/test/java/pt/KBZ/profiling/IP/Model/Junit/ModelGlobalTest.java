@@ -45,6 +45,7 @@ import IP.config.Configuration;
 
 @TestMethodOrder(value = OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled
 class ModelGlobalTest {
 
 	Configuration cnf = new Configuration();

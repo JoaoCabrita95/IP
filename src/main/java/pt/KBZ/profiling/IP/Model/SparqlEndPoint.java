@@ -66,6 +66,7 @@ public class SparqlEndPoint {
 	//Query method of SPARQL protocol
 	//The query operation is used to send a SPARQL query to a service and receive the results of the query
 	public static String query(String query) {
+//		System.out.println("Query:");
 //		System.out.println(query);
 		return sendQuery("query", query);
 	}
@@ -79,6 +80,7 @@ public class SparqlEndPoint {
 		//Create a new RDF Graph to a Graph Store.
 		//Delete an RDF graph from a Graph Store.
 	public static String update(String query) {
+//		System.out.println("Update Query");
 //		System.out.println(query);
 		return sendQuery("update", query);
 
@@ -162,10 +164,18 @@ public class SparqlEndPoint {
 		+ "	" + URI + " ?predicate ?object" 
 		+ " } LIMIT 1";
 
-		if((ParseResponseToURI(query(query)) == null))
-			return false;
-		else
-			return true;
+//		if((ParseResponseToURI(query(query)) == null))
+//			return false;
+//		else
+//			return true;
+		String serverResponse = query(query);
+		InputStream in = new ByteArrayInputStream(serverResponse.getBytes(StandardCharsets.UTF_8));
+        ResultSet results = ResultSetFactory.fromJSON(in);
+        if(results != null && results.hasNext()) {
+            return true;
+        }	
+        else
+        	return false;
 	}
 	
 	public static String getAllPropertiesByType(String type) {
@@ -485,9 +495,9 @@ public class SparqlEndPoint {
 		//request.addURLParam("query="+query);
 		String response = request.Response();
 		request.close();
-		//System.out.println("----------------------------------");
-		//System.out.println(response);
-		//System.out.println("----------------------------------");
+//		System.out.println("----------------------------------");
+//		System.out.println(response);
+//		System.out.println("----------------------------------");
 		return response;
 	}
 	
@@ -512,6 +522,7 @@ public class SparqlEndPoint {
 
     
     public static String ParseResponseToURI(String SparqlJsonResults) {
+    	
         InputStream in = new ByteArrayInputStream(SparqlJsonResults.getBytes(StandardCharsets.UTF_8));
         ResultSet results = ResultSetFactory.fromJSON(in);
 

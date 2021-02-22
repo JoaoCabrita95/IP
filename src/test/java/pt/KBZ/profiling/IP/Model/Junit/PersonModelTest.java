@@ -13,6 +13,7 @@ import IP.Model.SparqlEndPoint;
 import IP.Model.Junit.Data.PersonTestData;
 import IP.config.Configuration;
 
+@Disabled
 class PersonModelTest {
 
 	Configuration cnf = new Configuration();
