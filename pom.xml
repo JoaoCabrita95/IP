@@ -107,8 +107,8 @@
   </dependencies>
   
   <build>
-  	<sourceDirectory>src/main/java/pt/knowledgebiz/intelligentprofiling</sourceDirectory>
-  	<testSourceDirectory>src/test/java/pt/knowledgebiz/intelligentprofiling</testSourceDirectory>
+  	<sourceDirectory>src/main/java/pt/KBZ/profiling</sourceDirectory>
+  	<testSourceDirectory>src/test/java/pt/KBZ/profiling</testSourceDirectory>
   	<plugins>
         <plugin>
         <!-- Build an executable JAR -->
@@ -192,7 +192,7 @@
     </pluginManagement>
   	<resources>
       <resource>
-        <directory>src/main/java/pt/knowledgebiz/intelligentprofiling/IP/config</directory>
+        <directory>src/main/java/pt/KBZ/profiling/IP/config</directory>
       </resource>
     </resources>
   </build>
