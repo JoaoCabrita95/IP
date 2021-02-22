@@ -213,7 +213,10 @@ public class CVService {
 			parser = new GsonParser();
 			CV cv = parser.toCV(data);
 			
+			System.out.println("Current output:");
 			System.out.println(getCVinJson(cv).toString());
+			System.out.println("Alternate output:");
+			System.out.println(ModelClassToJson.getCVJson(cv).toString());
 			
 			try {
 				Person p = Person.getPerson(cv.getPersonURI());
@@ -241,6 +244,11 @@ public class CVService {
 //			if(SparqlEndPoint.existURI(cv.getURI()))
 //				return Response.status(Response.Status.BAD_REQUEST).entity("CV ID:" + cv.getID() +" already exists").build();
 			cv.Save();
+			
+			System.out.println("Current output:");
+			System.out.println(getCVinJson(cv).toString());
+			System.out.println("Alternate output:");
+			System.out.println(ModelClassToJson.getCVJson(cv).toString());
 			
 			//TODO:Add to publishing queue RabbitMQ
 			try {
@@ -451,7 +459,7 @@ public class CVService {
 			JsonArray results = new JsonArray(refs.size());
 
 			for(CVSkillRef ref : refs) {
-				results.add(ModelClassToJson.getCVSkillRefJson(ref));
+				results.add(ModelClassToJson.getCVSkillJsonFromRef(ref));
 			}
 			
 			return Response.ok(results.toString()).build();
@@ -495,7 +503,7 @@ public class CVService {
 			else
 				return Response.status(Response.Status.BAD_REQUEST).entity("CV already contains this skill, to update the reference please use PUT method").build();
 			
-			JsonElement result = ModelClassToJson.getCVSkillRefJson(newRef);
+			JsonElement result = ModelClassToJson.getCVSkillJsonFromRef(newRef);
 			
 			return Response.ok(result.toString()).build();
 			
@@ -535,18 +543,18 @@ public class CVService {
 				newRef.setSkill(Skill.getSkill(skillURI));
 				cv.addSkillRef(newRef);
 				cv.update();
-				result = ModelClassToJson.getCVSkillRefJson(newRef);
-				try {
-					JsonObject rabbitObject = new JsonObject();
-					rabbitObject.add("cv", getCVinJson(cv));
-					
-					System.out.println(rabbitObject);
-					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
-					System.out.println(rabbit.channel.isOpen());
-				}
-				catch (Exception e) {
-					System.out.println("Could not send the created CV to the RabbitMQ queue.");
-				}
+				result = ModelClassToJson.getCVSkillJsonFromRef(newRef);
+//				try {
+//					JsonObject rabbitObject = new JsonObject();
+//					rabbitObject.add("cv", getCVinJson(cv));
+//					
+//					System.out.println(rabbitObject);
+//					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
+//					System.out.println(rabbit.channel.isOpen());
+//				}
+//				catch (Exception e) {
+//					System.out.println("Could not send the created CV to the RabbitMQ queue.");
+//				}
 			}
 			else
 				return Response.status(Response.Status.BAD_REQUEST).entity("The selected skill reference "+ ref.getURI()

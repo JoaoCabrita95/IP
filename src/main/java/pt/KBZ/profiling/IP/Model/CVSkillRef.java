@@ -87,10 +87,13 @@ public class CVSkillRef extends SkillRefObject {
 	        saveData.put(triple, "String");
 		}
 		
-		if(progress != null) {
-			triple = new Triple(getURI(), "qc:skillProgress", progress);
-	        saveData.put(triple, "String");
-		}
+		if(progress == null)
+			progress = "0";
+		
+		triple = new Triple(getURI(), "qc:skillProgress", progress);
+	    saveData.put(triple, "String");
+		
+		
 		
 		super.Save();
 		SparqlEndPoint.insertTriples(saveData);

@@ -198,7 +198,7 @@ public class MatchingService {
 			CV cv = CV.getCVbyPersonURI(userid);
 			
 			
-			Application app = cv.getApplication(jobid);
+			Application app = Application.getApplicationByUserJob(jobid, userid);
 			if(app == null)
 				return Response.status(Response.Status.BAD_REQUEST).entity("User " + userid + " does not have an application to job " + jobid).build();;
 			
@@ -219,7 +219,7 @@ public class MatchingService {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 		
-		return Response.ok("Job Application deleted: " + jobid + "  " + userid).build();
+		return Response.ok("Job Application deleted: job:" + jobid + "  user:" + userid).build();
 	}
 	
 	@DELETE

@@ -104,10 +104,11 @@ public class SkillRefObject extends RDFObject {
 
         } 
 		
-		if(skillLevel != null) {
-			triple = new Triple(getURI(), "qc:skillLevel", skillLevel);
-	        saveData.put(triple, "String");
-		}
+		if(skillLevel == null) 
+			skillLevel = "basic";
+		triple = new Triple(getURI(), "qc:skillLevel", skillLevel);
+	    saveData.put(triple, "String");
+		
 		
 		SparqlEndPoint.insertTriples(saveData);
 	}

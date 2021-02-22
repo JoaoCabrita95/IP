@@ -851,7 +851,7 @@ public class Person extends RDFObject {
 		if(!jobURI.contains(":"))
 			jobURI = ":" + jobURI;
 		List<Application> apps = Application.getApplicationsByProfile(this.getURI());
-		System.out.println(apps);
+//		System.out.println(apps);
 		for(Application app : apps) {
 			if(app.getJobURI() != null && app.getJobURI().equals(jobURI))
 				return true;

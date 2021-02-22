@@ -176,6 +176,24 @@ public class Application extends RDFObject {
         return app;
 	}
 	
+	public static Application getApplicationByUserJob(String jobID,String profileID) throws Exception {
+		String jobURI = jobID;
+		if(!jobURI.contains(":"))
+			jobURI = ":" + jobURI;
+		String profileURI = profileID;
+		if(!profileURI.contains(":"))
+			profileURI = ":" + profileURI;
+		
+		Application result = null;
+		
+		for(Application app : getApplicationsByJob(jobURI)) {
+			if(app.getPersonURI().equals(profileURI))
+				result = app;
+		}
+		
+		return result;
+	}
+	
 	public static List<Application> getApplicationsByJob(String jobID) throws Exception{
 		String jobURI = jobID;
 		if(!jobURI.contains(":"))

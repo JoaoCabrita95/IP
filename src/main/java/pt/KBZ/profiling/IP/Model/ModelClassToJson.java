@@ -184,6 +184,7 @@ public class ModelClassToJson {
         
         Skill skill = Skill.getSkill(skillRef.getSkillURI());
         JsonObject result = (JsonObject) getSkillJson(skill);
+        result.addProperty("proficiencyLevel", skillRef.getSkillLevel());
         result.addProperty("skillLastUsedDate", skillRef.getSkillLastUsedDate());
         result.addProperty("evalDate", skillRef.getEvalDate());
         result.addProperty("acquiredDate", skillRef.getAcquiredDate());
@@ -260,21 +261,27 @@ public class ModelClassToJson {
 		return jsonPropValue;
 	}
 
+	//For rabbitMQ schema
 	public static JsonElement getCVSkillRefJson(CVSkillRef ref) {
 		
+		Skill skill = Skill.getSkill(ref.getSkillURI());
+		
 		JsonObject jsonPropValue = new JsonObject();
-		jsonPropValue.addProperty("label", ref.getLabel());
-		jsonPropValue.addProperty("comment", ref.getComment());
-		if(ref.getSkillURI() != null)
-			jsonPropValue.addProperty("skillID", ref.getSkillURI().substring(1));
-		jsonPropValue.addProperty("evalDate", ref.getEvalDate());
-		jsonPropValue.addProperty("acquiredDate", ref.getAcquiredDate());
-		jsonPropValue.addProperty("skillName", ref.getSkillName());
+		jsonPropValue.addProperty("label", skill.getLabel());
+		jsonPropValue.addProperty("comment", skill.getComment());
+//		if(ref.getSkillURI() != null)
+//			jsonPropValue.addProperty("skillID", ref.getSkillURI().substring(1));
+//		jsonPropValue.addProperty("evalDate", ref.getEvalDate());
+//		jsonPropValue.addProperty("acquiredDate", ref.getAcquiredDate());
+//		jsonPropValue.addProperty("skillName", ref.getSkillName());
 //		jsonPropValue.addProperty("skillLastUsedDate", ref.getSkillLastUsedDate());
-		jsonPropValue.addProperty("skillLevel", ref.getSkillLevel());
-		jsonPropValue.addProperty("progress", ref.getProgress());
-//		jsonPropValue.addProperty("uri", ref.getURI());
-//		jsonPropValue.addProperty("id", RDFObject.uri2id(ref.getURI()));
+		jsonPropValue.addProperty("proficiencyLevel", ref.getSkillLevel());
+		jsonPropValue.addProperty("coreTo", skill.getCoreTo());
+		jsonPropValue.addProperty("isFrom", skill.getIsFrom());
+		jsonPropValue.addProperty("skillType", skill.getSkillType());
+//		jsonPropValue.addProperty("progress", ref.getProgress());
+		jsonPropValue.addProperty("uri", skill.getURI());
+		jsonPropValue.addProperty("id", RDFObject.uri2id(skill.getURI()));
 			
 			
 		return jsonPropValue;
@@ -288,7 +295,7 @@ public class ModelClassToJson {
 		if(ref.getSkillURI() != null)
 			jsonPropValue.addProperty("skillID", ref.getSkillURI().substring(1));
 		jsonPropValue.addProperty("skillName", ref.getSkillName());
-		jsonPropValue.addProperty("skillLevel", ref.getSkillLevel());
+		jsonPropValue.addProperty("proficiencyLevel", ref.getSkillLevel());
 		jsonPropValue.addProperty("priorityLevel", ref.getPriorityLevel());
 //		jsonPropValue.addProperty("uri", ref.getURI());
 //		jsonPropValue.addProperty("id", RDFObject.uri2id(ref.getURI()));
