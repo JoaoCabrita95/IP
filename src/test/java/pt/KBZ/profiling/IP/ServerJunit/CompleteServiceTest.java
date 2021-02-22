@@ -2,6 +2,9 @@ package IP.ServerJunit;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 import IP.Client.HTTPrequest;
 import IP.Model.CV;
 import IP.Model.JobPosting;
@@ -16,8 +19,10 @@ import IP.Model.Junit.Data.SkillTestData;
 public class CompleteServiceTest {
 	
 	public static String REQUEST_PATH = "http://localhost:8000";
-
-	public static void main(String[] args) {
+	
+	@Test
+	@Disabled
+	void main() {
 		try {
 			HTTPrequest request;
 			String body;

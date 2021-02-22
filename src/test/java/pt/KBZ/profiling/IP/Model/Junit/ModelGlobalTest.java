@@ -318,12 +318,4 @@ class ModelGlobalTest {
 		
 	}
 	
-	@Test
-	@Order(12)
-	@DisplayName("Complete test")
-	@Disabled()
-	void completeTest() {
-		CompleteServiceTest.main(null);
-	}
-
 }
