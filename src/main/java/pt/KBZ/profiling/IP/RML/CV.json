@@ -1,0 +1,22 @@
+{
+  "uri": "cv100",
+  "label": "CV100",
+  "targetSector": "IT",
+  "jobApplication": {
+    "expectedSalary": "40K",
+    "availableAt": "02-06-2020"
+  },
+  "description": "It is a test CV",
+  "skills": [
+    {
+      "uri": "skill1",
+      "Label": "java",
+      "proficiencyLevel": "advanced"
+    },
+    {
+      "uri": "skill2",
+      "Label": "python",
+      "proficiencyLevel": "advanced"
+    }
+  ]
+}

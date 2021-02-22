@@ -1,0 +1,2 @@
+port=8000
+sparqlendpoint=http://fuseki:3030/QualiChain/
