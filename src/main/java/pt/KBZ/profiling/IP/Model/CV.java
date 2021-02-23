@@ -509,6 +509,11 @@ public class CV extends RDFObject {
     }
     
     public CVSkillRef hasSkillRef(CVSkillRef newSkillRef) {
+    	if(newSkillRef.getURI() == null)
+    		return null;
+    	if(newSkillRef.getSkillURI() == null)
+    		return null;
+    	
     	if(skills != null) {
     		for(CVSkillRef skillRef : skills) {
         		if(skillRef.getURI().equals(newSkillRef.getURI()) || skillRef.getSkillURI().equals(newSkillRef.getSkillURI()))
@@ -773,6 +778,8 @@ public class CV extends RDFObject {
     	if(cvURI != null && !cvURI.startsWith(":"))
     		cvURI = ":" + cvURI;
     	if(!SparqlEndPoint.existURI(cvURI)) {
+    		if(cvURI == null)
+    			throw new NoSuchElementException("CV URI is null");
 			throw new NoSuchElementException("CV with URI: " + cvURI + " Not found");
 		}
     	return CV.getCV(cvURI);

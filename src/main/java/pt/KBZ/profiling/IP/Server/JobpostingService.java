@@ -96,12 +96,15 @@ public class JobpostingService {
 	 */
 	@GET
 	@Path("/jobs/companies/{hiringOrg}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response GetCompanyJobs(@PathParam("hiringOrg") String hiringOrg){
 		try {
 			List<JobPosting> jobs = JobPosting.getJobPostingsByHiringOrg(hiringOrg);
-			return Response.status(Response.Status.OK).entity(jobs).build();
+			JsonArray jobsArray = new JsonArray();
+			for(JobPosting job : jobs) {
+				jobsArray.add(ModelClassToJson.getJobJson(job));
+			}
+			return Response.status(Response.Status.OK).entity(jobsArray.toString()).build();
 		}
 		catch (NoSuchElementException e1) {
 			return Response.status(Response.Status.OK).entity(e1.getMessage()).build();
@@ -122,7 +125,10 @@ public class JobpostingService {
 	public Response GetHiringOrganizations(){
 		try {
 			List<String> hiringOrgs = JobPosting.getAllHiringOrganizations();
-			return Response.status(Response.Status.OK).entity(hiringOrgs).build();
+			JsonArray orgs = new JsonArray();
+			for(String org : hiringOrgs)
+				orgs.add(org);
+			return Response.status(Response.Status.OK).entity(orgs.toString()).build();
 		} 
 		catch (NoSuchElementException e1) {
 			return Response.status(Response.Status.OK).entity(e1.getMessage()).build();
@@ -153,7 +159,9 @@ public class JobpostingService {
 			JobPosting job = parser.toJobPosting(data);
 			parser.SavetoFile("output-jobpost.ttl");
 			String response = parser.toString("TTL");
-
+			
+			System.out.println(job.getURI());
+			
 			job.Save();
 			
 			try {

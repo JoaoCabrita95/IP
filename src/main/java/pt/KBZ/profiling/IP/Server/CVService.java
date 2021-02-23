@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -140,7 +141,12 @@ public class CVService {
     public Response getSkillRecommendations(@PathParam("PersonURI") String PersonURI, @PathParam("jobID") String jobID){
     	try {
     		List<Skill> skillRecommendations = CV.getSkillRecomendations(PersonURI, jobID);
-    		return Response.ok(skillRecommendations).build();
+    		
+    		JsonArray skillResults = new JsonArray();
+			for(Skill skill : skillRecommendations) {
+				skillResults.add(ModelClassToJson.getSkillJson(skill));
+			}
+    		return Response.ok(skillResults.toString()).build();
     	}
     	catch (NoSuchElementException e1) {
     		return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
@@ -163,7 +169,11 @@ public class CVService {
     public Response getJobRecommendations(@PathParam("PersonURI") String PersonURI){
     	try {
     		List<JobPosting> jobRecommendations = CV.getJobRecomendations(PersonURI);
-    		return Response.ok(jobRecommendations).build();
+    		JsonArray jobs = new JsonArray();
+    		for(JobPosting job: jobRecommendations) {
+    			jobs.add(ModelClassToJson.getJobJson(job));
+    		}
+    		return Response.ok(jobs.toString()).build();
 		} 
     	catch (NoSuchElementException e1) {
     		return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
@@ -187,7 +197,10 @@ public class CVService {
     		HashMap<String, Integer> scores = CV.getJobApplicationScores(PersonURI);
     		if(scores.isEmpty())
     			return Response.ok("No scores were able to be calculated").build();
-			return Response.ok(scores).build();
+    		Gson gson = new Gson(); 
+    		String json = gson.toJson(scores); 
+    		
+			return Response.ok(json).build();
 		} 
     	catch (NoSuchElementException e1) {
     		return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
@@ -212,12 +225,7 @@ public class CVService {
 		try {
 			parser = new GsonParser();
 			CV cv = parser.toCV(data);
-			
-			System.out.println("Current output:");
-			System.out.println(getCVinJson(cv).toString());
-			System.out.println("Alternate output:");
-			System.out.println(ModelClassToJson.getCVJson(cv).toString());
-			
+						
 			try {
 				Person p = Person.getPerson(cv.getPersonURI());
 				p.setCVURI(cv.getURI());
@@ -233,6 +241,9 @@ public class CVService {
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			if(SparqlEndPoint.existURI(cv.getURI()))
+				throw new IllegalArgumentException("CV already exists, either delete cv with person URI: " + cv.getPersonURI() + " or use update service");
 
 			parser.SavetoFile("output-cv.ttl");
 			String response = parser.toString("TTL");
@@ -245,10 +256,6 @@ public class CVService {
 //				return Response.status(Response.Status.BAD_REQUEST).entity("CV ID:" + cv.getID() +" already exists").build();
 			cv.Save();
 			
-			System.out.println("Current output:");
-			System.out.println(getCVinJson(cv).toString());
-			System.out.println("Alternate output:");
-			System.out.println(ModelClassToJson.getCVJson(cv).toString());
 			
 			//TODO:Add to publishing queue RabbitMQ
 			try {
@@ -257,7 +264,7 @@ public class CVService {
 				
 				System.out.println(rabbitObject);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
-				System.out.println(rabbit.channel.isOpen());
+//				System.out.println(rabbit.channel.isOpen());
 			}
 			catch (Exception e) {
 				System.out.println("Could not send the created CV to the RabbitMQ queue.");
@@ -265,12 +272,15 @@ public class CVService {
 			}
 			
 			
-			return Response.ok(response, MediaType.APPLICATION_JSON).build();
+			return Response.ok(ModelClassToJson.getCVJson(cv).toString(), MediaType.APPLICATION_JSON).build();
 			
 			
 		} 
 		catch(NoSuchElementException e1) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
+		}
+		catch(IllegalArgumentException e2) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e2.toString()).build();	
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -377,15 +387,17 @@ public class CVService {
 					JsonObject rabbitObject = new JsonObject();
 					rabbitObject.add("cv", getCVinJson(cv));
 					
-					System.out.println(rabbitObject);
+//					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
-					System.out.println(rabbit.channel.isOpen());
+//					System.out.println(rabbit.channel.isOpen());
 				}
 				catch (Exception e) {
 					System.out.println("Could not send the created CV to the RabbitMQ queue.");
 				}
 				
-				return Response.ok(updatedCV).build();
+				JsonElement newCV = ModelClassToJson.getCVJson(updatedCV);
+				
+				return Response.ok(newCV.toString()).build();
 			}
 			else
 				return Response.status(Response.Status.CONFLICT).entity("CV URI from new data does not match previous CV associated with the profile").build();
@@ -413,7 +425,8 @@ public class CVService {
 			CV cv = CV.getCVbyPersonURI(profileID);
 			RDFObject.quickDeleteByURI(cv.getURI());
 			RDFObject.deleteURIAssociations(cv.getURI());
-			return Response.ok(cv).build();
+			JsonElement cvJson = getCVinJson(cv);
+			return Response.ok(cvJson.toString()).build();
 		} 
 		catch (NoSuchElementException e1) {
     		return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
@@ -435,8 +448,13 @@ public class CVService {
 	public Response getCVSkills(@PathParam("profileID") String profileID) {
 		try {
 			CV cv = CV.getCVbyPersonURI(profileID);
+			List<Skill> skills = cv.getSkills();
+			JsonArray skillResults = new JsonArray();
+			for(Skill skill : skills) {
+				skillResults.add(ModelClassToJson.getSkillJson(skill));
+			}
 			
-			return Response.ok(cv.getSkills()).build();
+			return Response.ok(skillResults.toString()).build();
 		}
 		catch (NoSuchElementException e1) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
@@ -618,7 +636,9 @@ public class CVService {
 			for(Skill skill : skills) {
 				skillsMap.put(skill.getURI(), skill.getLabel());
 			}
-			return Response.ok(skillsMap).build();
+			Gson gson = new Gson(); 
+    		String json = gson.toJson(skillsMap); 
+			return Response.ok(json).build();
 		}
 		catch (NoSuchElementException e1) {
     		return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();

@@ -49,7 +49,7 @@ public class JobPosting extends RDFObject {
 	//match with education and courses?
 	private List<Education> educationReq;
 	private List<Application> jobApplications;
-	private List<SkillJobReq> jobSkillReqs;
+	private List<SkillJobReq> skillReq;
 	
 	//Might have to change according to QualiChain ontology model
 	
@@ -60,7 +60,7 @@ public class JobPosting extends RDFObject {
 		workExperienceReq = new ArrayList<WorkHistory>();
 		educationReq = new ArrayList<Education>();
 		jobApplications = new ArrayList<Application>();
-		jobSkillReqs = new ArrayList<SkillJobReq>();
+		skillReq = new ArrayList<SkillJobReq>();
 	}
 	
 	public JobPosting(String id, String label,String comment, String jobDescription, String contractType, String sector, String occupation,
@@ -97,10 +97,10 @@ public class JobPosting extends RDFObject {
 		
 		
 		if(jobSkillReqs == null) {
-			this.jobSkillReqs = new ArrayList<SkillJobReq>();
+			this.skillReq = new ArrayList<SkillJobReq>();
 		}	
 		else {
-			this.jobSkillReqs = jobSkillReqs;
+			this.skillReq = jobSkillReqs;
 		}
 
 		
@@ -252,22 +252,22 @@ public class JobPosting extends RDFObject {
     }
     
     public List<SkillJobReq> getJobSkillReqRefs(){
-    	return jobSkillReqs;
+    	return skillReq;
     }
     
     public void addSkillRef(Skill skill, String priorityLevel, String skillLevel) {
     	SkillJobReq skillJobReq = new SkillJobReq(skill, priorityLevel, skillLevel);
-    	jobSkillReqs.add(skillJobReq);
+    	skillReq.add(skillJobReq);
     }
     
     public void addSkillRef(SkillJobReq skillJobReq) {
-    	jobSkillReqs.add(skillJobReq);
+    	skillReq.add(skillJobReq);
     }
     
     public SkillJobReq removeSkillRef(SkillJobReq skillJobReq) {
-    	for(SkillJobReq ref : jobSkillReqs) {
+    	for(SkillJobReq ref : skillReq) {
     		if(ref.getURI().equals(skillJobReq.getURI()) || ref.getSkillURI().equals(skillJobReq.getSkillURI())) {
-    			jobSkillReqs.remove(ref);
+    			skillReq.remove(ref);
     			return ref;
     		}
     			
@@ -277,8 +277,8 @@ public class JobPosting extends RDFObject {
     }
     
     public SkillJobReq hasSkillRef(SkillJobReq skillJobReq) {
-    	if(jobSkillReqs != null) {
-    		for(SkillJobReq skillRef : jobSkillReqs) {
+    	if(skillReq != null) {
+    		for(SkillJobReq skillRef : skillReq) {
         		if(skillRef.getURI().equals(skillJobReq.getURI()) || skillRef.getSkillURI().equals(skillJobReq.getSkillURI()))
         			return skillRef;
         	}
@@ -288,8 +288,8 @@ public class JobPosting extends RDFObject {
     }
     
     public SkillJobReq hasSkillRef(Skill skill) {
-    	if(jobSkillReqs != null) {
-    		for(SkillJobReq skillRef : jobSkillReqs) {
+    	if(skillReq != null) {
+    		for(SkillJobReq skillRef : skillReq) {
         		if(skillRef.getSkillURI().equals(skill.getURI()))
         			return skillRef;
         	}
@@ -441,7 +441,7 @@ public class JobPosting extends RDFObject {
 //        	SparqlEndPoint.insertPropertyValue(triple);
         }
         
-        for(SkillJobReq skillRef : jobSkillReqs) {
+        for(SkillJobReq skillRef : skillReq) {
         	skillRef.Save();
         	triple = new Triple(getURI(), "qc:hasSkillRef", skillRef.getURI());
         	saveData.put(triple, "Object");

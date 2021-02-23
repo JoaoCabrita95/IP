@@ -86,7 +86,7 @@ public class PersonService {
 //			}
 
 			String response = parser.toString("TTL");
-			return Response.ok(response, MediaType.TEXT_PLAIN).build();
+			return Response.ok(ModelClassToJson.getProfileJson(person).toString()).build();
 				
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -170,10 +170,14 @@ public class PersonService {
 			List<Application> apps = Application.getApplicationsByProfile(userid);
 //			CV cv = CV.getCV(person.getCVURI());
 //			apps = cv.getApplications();	
+			JsonArray applications = new JsonArray();
+			for(Application app : apps) {
+				applications.add(ModelClassToJson.getApplicationJson(app));
+			}
 			if(apps.isEmpty())
 				return Response.status(Response.Status.OK).entity("No Applications made by user found").build();
 			else
-				return Response.ok(apps).build();
+				return Response.ok(applications.toString()).build();
 		} catch(NoSuchElementException e1) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
 		}
@@ -234,7 +238,7 @@ public class PersonService {
 				
 				try {
 					person.Save();
-					return Response.ok(person).build();
+					return Response.ok(ModelClassToJson.getProfileJson(person).toString()).build();
 				} catch (Exception e) {
 					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Could not save profile").build();
 				}
@@ -322,7 +326,7 @@ public class PersonService {
 			}
 			RDFObject.quickDeleteByURI(p.getURI());	
 			
-			return Response.ok(p).build();
+			return Response.ok(ModelClassToJson.getProfileJson(p).toString()).build();
 		}
 		
 		catch (NoSuchElementException e1) {

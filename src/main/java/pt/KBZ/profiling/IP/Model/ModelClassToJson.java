@@ -58,6 +58,7 @@ public class ModelClassToJson {
 		}
 		jsonPropValue.add("workHistory",jsonResults);
 		
+		jsonResults = new JsonArray();
 		for(Course course : cv.getCourses()) {
 			jsonResults.add(ModelClassToJson.getCourseJson(course));
 		}
