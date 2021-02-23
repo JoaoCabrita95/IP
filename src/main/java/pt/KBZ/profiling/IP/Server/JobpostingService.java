@@ -160,7 +160,13 @@ public class JobpostingService {
 			parser.SavetoFile("output-jobpost.ttl");
 			String response = parser.toString("TTL");
 			
-			System.out.println(job.getURI());
+			
+			job.setURI(":" + job.getID());
+			
+			if(SparqlEndPoint.existURI(job.getURI()))
+				return Response.status(Response.Status.BAD_REQUEST).
+						entity("Job Posting already exists, either delete Job with Job URI: " + job.getURI() + " or use update service").build();
+
 			
 			job.Save();
 			
@@ -171,9 +177,9 @@ public class JobpostingService {
 				testD = testD + jpData.toString() + " }";
 				Map<String, String> rabbitData = new HashMap<String, String>();
 				rabbitData.put("'job'", getJobPostinginJson(job).toString());
-				System.out.println(rabbitData);
+//				System.out.println(rabbitData);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, testD.getBytes());
-				System.out.println(rabbit.channel.isOpen());
+//				System.out.println(rabbit.channel.isOpen());
 			}
 			catch (Exception e) {
 				System.out.println("Could not send the created CV to the RabbitMQ queue.");

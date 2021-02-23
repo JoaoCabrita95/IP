@@ -588,6 +588,7 @@ public class JobPosting extends RDFObject {
             }
             catch (Exception e) {
             	System.out.println("Tried retrieving Job Posting with ID: " + ID + " but was unsucessful");
+            	continue;
             }
             
         } 
