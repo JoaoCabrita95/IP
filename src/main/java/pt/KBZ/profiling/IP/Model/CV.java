@@ -509,6 +509,11 @@ public class CV extends RDFObject {
     }
     
     public CVSkillRef hasSkillRef(CVSkillRef newSkillRef) {
+    	if(newSkillRef.getURI() == null)
+    		return null;
+    	if(newSkillRef.getSkillURI() == null)
+    		return null;
+    	
     	if(skills != null) {
     		for(CVSkillRef skillRef : skills) {
         		if(skillRef.getURI().equals(newSkillRef.getURI()) || skillRef.getSkillURI().equals(newSkillRef.getSkillURI()))

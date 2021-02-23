@@ -64,7 +64,7 @@ public class GsonParser {
         String uri = "job-" + UUID.randomUUID();
         //ModelData modelD = new ModelData();
         //modelD.addPropertyToResource(modelD, resURI, propURI, prop_value);
-        p.setURI(uri);
+//        p.setURI(uri);
 
         Resource jobpost = model.createResource(uri);
 
@@ -93,23 +93,23 @@ public class GsonParser {
         //ModelData modelD = new ModelData();
         //modelD.addPropertyToResource(modelD, resURI, propURI, prop_value);
 
-        Resource cv = model.createResource(cvURI + p.getLabel() + "-" + UUID.randomUUID());
-
-        cv.addProperty(RDF.type, model.createProperty(cvURI + "CV"));
-        // cv.addProperty(model.createProperty("rdfs:label"),p.getLabel());
-        if (p.getLabel()!=null)      
-            cv.addProperty(RDFS.label, p.getLabel());
-        if (p.getDescription()!=null)
-            cv.addProperty(model.createProperty("rdfs:comment"), p.getDescription());
-        if (p.getPersonURI()!=null)
-            cv.addProperty(model.createProperty("cv:aboutPerson"), p.getPersonURI());
-
-        for (Skill skill : p.getSkills()) {
-            if (skill.getLabel()!=null){
-                cv.addProperty(model.createProperty(QualiChainURI + "refersToAccomplishment"),skill.getLabel());
-                cv.addProperty(model.createProperty(QualiChainURI + "refersToExperience"), skill.getLabel());
-            }
-        }
+//        Resource cv = model.createResource(cvURI + p.getLabel() + "-" + UUID.randomUUID());
+//
+//        cv.addProperty(RDF.type, model.createProperty(cvURI + "CV"));
+//        // cv.addProperty(model.createProperty("rdfs:label"),p.getLabel());
+//        if (p.getLabel()!=null)      
+//            cv.addProperty(RDFS.label, p.getLabel());
+//        if (p.getDescription()!=null)
+//            cv.addProperty(model.createProperty("rdfs:comment"), p.getDescription());
+//        if (p.getPersonURI()!=null)
+//            cv.addProperty(model.createProperty("cv:aboutPerson"), p.getPersonURI());
+//
+//        for (Skill skill : p.getSkills()) {
+//            if (skill.getLabel()!=null){
+//                cv.addProperty(model.createProperty(QualiChainURI + "refersToAccomplishment"),skill.getLabel());
+//                cv.addProperty(model.createProperty(QualiChainURI + "refersToExperience"), skill.getLabel());
+//            }
+//        }
 
         return p;
     }

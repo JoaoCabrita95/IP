@@ -212,12 +212,7 @@ public class CVService {
 		try {
 			parser = new GsonParser();
 			CV cv = parser.toCV(data);
-			
-			System.out.println("Current output:");
-			System.out.println(getCVinJson(cv).toString());
-			System.out.println("Alternate output:");
-			System.out.println(ModelClassToJson.getCVJson(cv).toString());
-			
+						
 			try {
 				Person p = Person.getPerson(cv.getPersonURI());
 				p.setCVURI(cv.getURI());
@@ -385,7 +380,9 @@ public class CVService {
 					System.out.println("Could not send the created CV to the RabbitMQ queue.");
 				}
 				
-				return Response.ok(updatedCV).build();
+				JsonElement newCV = ModelClassToJson.getCVJson(updatedCV);
+				
+				return Response.ok(newCV.toString()).build();
 			}
 			else
 				return Response.status(Response.Status.CONFLICT).entity("CV URI from new data does not match previous CV associated with the profile").build();
