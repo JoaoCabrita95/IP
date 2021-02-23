@@ -1,5 +1,6 @@
 package IP.Server;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,10 @@ import IP.Model.SkillJobReq;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.apache.http.HttpResponse;
 import org.apache.jena.base.Sys;
+import org.piwik.java.tracking.PiwikRequest;
+import org.piwik.java.tracking.PiwikTracker;
 
 @Path("/")
 public class MatchingService {
@@ -150,6 +154,15 @@ public class MatchingService {
 				application.setPersonURI(p.getURI());
 				application.Save();
 				
+				URL actionUrl = new URL("http://example.org/landing.html?pk_campaign=Email-Nov2011&pk_kwd=LearnMore");
+				String hostUrl = "https://knowledgebizvpn.ddns.net/matomo.php";
+				
+//				PiwikRequest request = new PiwikRequest(1, actionUrl);
+//				
+//				PiwikTracker tracker = new PiwikTracker(hostUrl);
+//				
+//				HttpResponse response = tracker.sendRequest(request);
+				
 				try {
 //					rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
 					String testD = "{\"job_application\": ";
@@ -231,7 +244,8 @@ public class MatchingService {
 			Application app = Application.getApplication(applicationID);
 			RDFObject.quickDeleteByURI(app.getURI());
 			RDFObject.deleteURIAssociations(app.getURI());
-			return Response.ok(app).build();
+			
+			return Response.ok(ModelClassToJson.getApplicationJson(app).toString()).build();
 			
 		}
 		catch (NoSuchElementException e1) {

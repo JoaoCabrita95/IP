@@ -61,7 +61,8 @@ public class SkillService {
     		GsonParser parser = new GsonParser();
     		Skill skill = parser.toSkill(data);
     		skill.Save();
-    		return Response.ok(skill).build();
+    		
+    		return Response.ok(ModelClassToJson.getSkillJson(skill).toString()).build();
     	}
     	catch(Exception e) {
     		e.printStackTrace();
