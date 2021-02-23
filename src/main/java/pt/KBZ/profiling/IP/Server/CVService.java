@@ -228,6 +228,9 @@ public class CVService {
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			if(SparqlEndPoint.existURI(cv.getURI()))
+				throw new IllegalArgumentException("CV already exists, either delete cv with person URI: " + cv.getPersonURI() + " or use update service");
 
 			parser.SavetoFile("output-cv.ttl");
 			String response = parser.toString("TTL");
@@ -240,10 +243,6 @@ public class CVService {
 //				return Response.status(Response.Status.BAD_REQUEST).entity("CV ID:" + cv.getID() +" already exists").build();
 			cv.Save();
 			
-			System.out.println("Current output:");
-			System.out.println(getCVinJson(cv).toString());
-			System.out.println("Alternate output:");
-			System.out.println(ModelClassToJson.getCVJson(cv).toString());
 			
 			//TODO:Add to publishing queue RabbitMQ
 			try {
@@ -266,6 +265,9 @@ public class CVService {
 		} 
 		catch(NoSuchElementException e1) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
+		}
+		catch(IllegalArgumentException e2) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e2.toString()).build();	
 		}
 		catch (Exception e) {
 			e.printStackTrace();

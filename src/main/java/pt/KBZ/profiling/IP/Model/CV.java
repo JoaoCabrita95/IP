@@ -778,6 +778,8 @@ public class CV extends RDFObject {
     	if(cvURI != null && !cvURI.startsWith(":"))
     		cvURI = ":" + cvURI;
     	if(!SparqlEndPoint.existURI(cvURI)) {
+    		if(cvURI == null)
+    			throw new NoSuchElementException("CV URI is null");
 			throw new NoSuchElementException("CV with URI: " + cvURI + " Not found");
 		}
     	return CV.getCV(cvURI);
