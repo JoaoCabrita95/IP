@@ -410,7 +410,8 @@ public class CVService {
 			CV cv = CV.getCVbyPersonURI(profileID);
 			RDFObject.quickDeleteByURI(cv.getURI());
 			RDFObject.deleteURIAssociations(cv.getURI());
-			return Response.ok(cv).build();
+			JsonElement cvJson = getCVinJson(cv);
+			return Response.ok(cvJson.toString()).build();
 		} 
 		catch (NoSuchElementException e1) {
     		return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
