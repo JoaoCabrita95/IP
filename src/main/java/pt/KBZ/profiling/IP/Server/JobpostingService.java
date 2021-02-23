@@ -358,15 +358,19 @@ public class JobpostingService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response GetApplicationsforJob(@PathParam("jobURI")String jobURI) {
+		JsonArray jsonJobApps = new JsonArray();
 		JobPosting job;
 		try {
 			job = JobPosting.getJobPosting(jobURI);
 //			List<Application> apps = job.getApplications();	
 			List<Application> apps = Application.getApplicationsByJob(jobURI);	
+			for(Application app: apps) {
+				jsonJobApps.add(ModelClassToJson.getApplicationJson(app));
+			}
 			if(apps.isEmpty())
 				return Response.status(Response.Status.OK).entity("No applications found for this Job").build();
 			else
-				return Response.status(Response.Status.OK).entity(apps).build();
+				return Response.status(Response.Status.OK).entity(jsonJobApps.toString()).build();
 		} 
 		catch (NoSuchElementException e1) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
