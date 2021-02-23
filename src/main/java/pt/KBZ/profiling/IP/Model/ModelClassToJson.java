@@ -101,7 +101,9 @@ public class ModelClassToJson {
 		
 		for(SkillJobReq skillReq : job.getJobSkillReqRefs()) {
 //          jsonResults.add(ModelClassToJson.getJobSkillRef(skillReq));
-          jsonResults.add(getSkillReqJsonFromRef(skillReq));
+			JsonElement skill = getSkillReqJsonFromRef(skillReq);
+			if(skill != null)
+				jsonResults.add(skill);
 		}
 		jsonPropValue.add("skillReq", jsonResults );
 		
@@ -195,7 +197,8 @@ public class ModelClassToJson {
     }
     
     public static JsonElement getSkillReqJsonFromRef(SkillJobReq skillRef) {
-        
+        if(skillRef.getSkillURI() == null)
+        	return null;
         Skill skill = Skill.getSkill(skillRef.getSkillURI());
         JsonObject jsonProps = (JsonObject) getSkillJson(skill);
         jsonProps.addProperty("proficiencyLevel", skillRef.getSkillLevel());

@@ -60,28 +60,29 @@ public class GsonParser {
     public JobPosting toJobPosting(String data) {
     	
         JobPosting p = g.fromJson(data, JobPosting.class);
-        System.out.println("Request Parsed");
-        String uri = "job-" + UUID.randomUUID();
-        //ModelData modelD = new ModelData();
-        //modelD.addPropertyToResource(modelD, resURI, propURI, prop_value);
-//        p.setURI(uri);
-
-        Resource jobpost = model.createResource(uri);
-
-        jobpost.addProperty(RDF.type, model.createProperty(jobpostURI + "JobPosting"));
-        // jobpost.addProperty(model.createProperty("rdfs:label"),p.getLabel());
-        if (p.getLabel()!=null) jobpost.addProperty(RDFS.label, p.getLabel());
-        if (p.getJobDescription()!=null) jobpost.addProperty(model.createProperty("rdfs:comment"), p.getJobDescription());
-        if (p.getJobDescription()!=null) jobpost.addProperty(model.createProperty(jobpostURI+"describes"), p.getJobDescription());
         
-//        for (Skill skill : p.getSkillReq()) {
-//            if (skill.getLabel()!=null){
-//                jobpost.addProperty(model.createProperty("saro:requiresSkill"),skill.getLabel());
-//                jobpost.addProperty(model.createProperty(QualiChainURI + "requiresExperience"), skill.getLabel());
-//            }
-//        }
-        
-        System.out.println("Jobposting created:"+uri);
+//        System.out.println("Request Parsed");
+//        String uri = "job-" + UUID.randomUUID();
+//        //ModelData modelD = new ModelData();
+//        //modelD.addPropertyToResource(modelD, resURI, propURI, prop_value);
+////        p.setURI(uri);
+//
+//        Resource jobpost = model.createResource(uri);
+//
+//        jobpost.addProperty(RDF.type, model.createProperty(jobpostURI + "JobPosting"));
+//        // jobpost.addProperty(model.createProperty("rdfs:label"),p.getLabel());
+//        if (p.getLabel()!=null) jobpost.addProperty(RDFS.label, p.getLabel());
+//        if (p.getJobDescription()!=null) jobpost.addProperty(model.createProperty("rdfs:comment"), p.getJobDescription());
+//        if (p.getJobDescription()!=null) jobpost.addProperty(model.createProperty(jobpostURI+"describes"), p.getJobDescription());
+//        
+////        for (Skill skill : p.getSkillReq()) {
+////            if (skill.getLabel()!=null){
+////                jobpost.addProperty(model.createProperty("saro:requiresSkill"),skill.getLabel());
+////                jobpost.addProperty(model.createProperty(QualiChainURI + "requiresExperience"), skill.getLabel());
+////            }
+////        }
+//        
+//        System.out.println("Jobposting created:"+uri);
         return p;
 
     }
