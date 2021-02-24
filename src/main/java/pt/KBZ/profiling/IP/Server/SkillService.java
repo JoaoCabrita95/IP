@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -67,6 +68,25 @@ public class SkillService {
     	catch(Exception e) {
     		e.printStackTrace();
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();		
+    	}
+    }
+    
+    @DELETE
+    @Path("/skill/{skillID}")
+    public Response deleteSkill(@PathParam("skillID") String skillID) {
+    	
+    	try {
+    		Skill skill = Skill.getSkill(skillID);
+    		Skill.quickDeleteByURI(skill.getURI());
+    		Skill.deleteURIAssociations(skill.getURI());
+    		
+    		return Response.ok("Skill with id: \"" + skill.getID() + "\" and label: \"" + skill.getLabel() + "\" has been deleted").build();
+    	}
+    	catch (NoSuchElementException e1){
+    		return Response.status(Response.Status.BAD_REQUEST).entity(e1.toString()).build();
+    	}
+    	catch (Exception e){
+    		return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();
     	}
     }
     

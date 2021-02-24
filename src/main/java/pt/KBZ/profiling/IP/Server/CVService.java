@@ -449,6 +449,8 @@ public class CVService {
 		try {
 			CV cv = CV.getCVbyPersonURI(profileID);
 			List<Skill> skills = cv.getSkills();
+			if(skills == null || skills.isEmpty())
+				return Response.status(Response.Status.NOT_FOUND).entity("No skills found on this profile").build();
 			JsonArray skillResults = new JsonArray();
 			for(Skill skill : skills) {
 				skillResults.add(ModelClassToJson.getSkillJson(skill));
@@ -473,6 +475,9 @@ public class CVService {
 			CV cv = CV.getCVbyPersonURI(profileID);
 			
 			List<CVSkillRef> refs = cv.getSkillRefs();
+			
+			if(refs == null || refs.isEmpty())
+				return Response.status(Response.Status.NOT_FOUND).entity("No skills found on this profile").build();
 			
 			JsonArray results = new JsonArray(refs.size());
 
