@@ -21,19 +21,19 @@ public class SkillRefObject extends RDFObject {
 	private String skillURI;
 	private String skillID;
 	private String skillName;
-	private String skillLevel;
+	private String proficiencyLevel;
 	
 	public SkillRefObject() {
 		super(ClassType, prefix);
 	}
 	
-	public SkillRefObject(Skill skill, String skillLevel) {
+	public SkillRefObject(Skill skill, String proficiencyLevel) {
 		super(ClassType, prefix);
 		this.skill = skill;
 		this.skillURI = skill.getURI();
 		this.skillID = skill.getID();
 		this.skillName = skill.getLabel();
-		this.skillLevel = skillLevel;
+		this.proficiencyLevel = proficiencyLevel;
 		
 	}
 	
@@ -68,11 +68,11 @@ public class SkillRefObject extends RDFObject {
 	}
 	
 	public String getSkillLevel() {
-		return skillLevel;
+		return proficiencyLevel;
 	}
 	
-	public void setSkillLevel(String skillLevel) {
-		this.skillLevel = skillLevel;
+	public void setSkillLevel(String proficiencyLevel) {
+		this.proficiencyLevel = proficiencyLevel;
 	}
 	
 	public void Save() {
@@ -104,9 +104,9 @@ public class SkillRefObject extends RDFObject {
 
         } 
 		
-		if(skillLevel == null) 
-			skillLevel = "basic";
-		triple = new Triple(getURI(), "qc:skillLevel", skillLevel);
+		if(proficiencyLevel == null) 
+			proficiencyLevel = "basic";
+		triple = new Triple(getURI(), "qc:skillLevel", proficiencyLevel);
 	    saveData.put(triple, "String");
 		
 		
@@ -203,6 +203,11 @@ public class SkillRefObject extends RDFObject {
                 		e.printStackTrace();
                 	}
                 	
+                	break;
+                	
+                case "skillLevel":
+                	String proficiencyLevel = object;  
+                	skillRef.setSkillLevel(proficiencyLevel);
                 	break;
             
                 default:

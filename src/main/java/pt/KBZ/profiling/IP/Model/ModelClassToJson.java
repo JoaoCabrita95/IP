@@ -175,8 +175,8 @@ public class ModelClassToJson {
         }
         jsonPropValue.add("subClasses", temp);
         
-		jsonPropValue.addProperty("uri", skill.getURI());
-		jsonPropValue.addProperty("id", RDFObject.uri2id(skill.getURI()));
+		jsonPropValue.addProperty("skillURI", skill.getURI());
+		jsonPropValue.addProperty("skillID", RDFObject.uri2id(skill.getURI()));
 		
 		
 		return jsonPropValue;
@@ -184,9 +184,12 @@ public class ModelClassToJson {
 	
     
     public static JsonElement getCVSkillJsonFromRef(CVSkillRef skillRef) {
-        
+    	if(skillRef.getSkillURI() == null)
+        	return null;
         Skill skill = Skill.getSkill(skillRef.getSkillURI());
         JsonObject result = (JsonObject) getSkillJson(skill);
+        result.addProperty("skillRefLabel", skillRef.getLabel());
+        result.addProperty("skillRefComment", skillRef.getComment());
         result.addProperty("proficiencyLevel", skillRef.getSkillLevel());
         result.addProperty("skillLastUsedDate", skillRef.getSkillLastUsedDate());
         result.addProperty("evalDate", skillRef.getEvalDate());
