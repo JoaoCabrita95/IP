@@ -46,7 +46,11 @@ public class SkillService {
                 results.add(ModelClassToJson.getSkillJson(skill));
             }
 			return Response.ok(results.toString()).build();
-		} catch (Exception e) {
+		}
+		catch(NoSuchElementException e1) {
+			return Response.status(Response.Status.NO_CONTENT).build();
+		}
+		catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
