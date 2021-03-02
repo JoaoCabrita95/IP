@@ -52,8 +52,10 @@ public class CareerPath {
 	           	results += "{'from': '" + jobPrecedent.getJobDescription() +
 	           			"', 'to': '" + curJob.getJobDescription() + "', 'value': " + jobScores.get(curJob.getURI()) + ", 'missing_skills': [";
 	           	for(Skill skill : missingSkills) {
-	           		results += "{'" + skill.getLabel() + "'}";
+	           		results += "'" + skill.getLabel() + "',";
 	           	}
+	           	if(results.endsWith(","))
+	           		results = results.substring(0, results.length()-1);
 	           	results +=  "]},\n";
 	        }
 	    }
