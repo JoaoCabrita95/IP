@@ -35,7 +35,7 @@ public class CareerPath {
 	}
 	
 	private static String processData(HashMap<String, Integer> jobScores, JobPosting currentJob, String personURI) throws Exception {
-		String results = "";
+		String results = "[\n";
 		List<Skill> missingSkills = null;
 		for(Map.Entry<String, Integer> jobScore : jobScores.entrySet()) {
 //			if(jobScore.getKey().equals(currentJob.getURI())) {
@@ -49,7 +49,7 @@ public class CareerPath {
 			for(JobPosting jobPrecedent : precedentJobs) {
 				missingSkills = CV.getSkillRecomendations(personURI, curJob.getURI());
 	
-	           	results += "{'from': '" + jobPrecedent.getJobDescription() +
+	           	results += "\t{'from': '" + jobPrecedent.getJobDescription() +
 	           			"', 'to': '" + curJob.getJobDescription() + "', 'value': " + jobScores.get(curJob.getURI()) + ", 'missing_skills': [";
 	           	for(Skill skill : missingSkills) {
 	           		results += "'" + skill.getLabel() + "',";
@@ -63,6 +63,7 @@ public class CareerPath {
 		if(results.endsWith(",")) {
 			results = results.substring(0, results.length()-1);
 		}
+		results += " ]";
 		return results;
 	}
 
