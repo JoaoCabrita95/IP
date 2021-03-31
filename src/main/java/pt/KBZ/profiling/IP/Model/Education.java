@@ -305,5 +305,9 @@ public class Education extends RDFObject{
         
         SparqlEndPoint.insertTriples(saveData);
 	}
+	
+	public boolean equals(Education ed) {
+		return true;
+	}
 
 }

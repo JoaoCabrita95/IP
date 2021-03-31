@@ -36,6 +36,7 @@ public class ModelClassToJson {
 		jsonPropValue.addProperty("comment", cv.getComment());
 		jsonPropValue.addProperty("title", cv.getTitle());
 		jsonPropValue.addProperty("personURI", cv.getPersonURI());
+		jsonPropValue.addProperty("userID", cv.getPersonURI().substring(1));
 		jsonPropValue.addProperty("description", cv.getDescription());
 		jsonPropValue.addProperty("targetSector", cv.getTargetSector());
 		jsonPropValue.addProperty("otherInfo", cv.getOtherInfo());
@@ -144,6 +145,41 @@ public class ModelClassToJson {
 			
 		return jsonPropValue;
 	}
+	
+	public static JsonElement getSkillJsonForInput(Skill skill) {
+		
+		JsonArray temp = new JsonArray();
+		
+		JsonObject jsonPropValue = new JsonObject();
+		jsonPropValue.addProperty("label", skill.getLabel());
+		jsonPropValue.addProperty("comment", skill.getComment());
+		jsonPropValue.addProperty("coreTo", skill.getCoreTo());
+		jsonPropValue.addProperty("isFrom", skill.getIsFrom());
+		jsonPropValue.addProperty("skillType", skill.getSkillType());
+        jsonPropValue.addProperty("reuseLevel", skill.getReuseLevel());
+        for(String synonim : skill.getSynonyms()) {
+            temp.add(synonim);
+        }
+        jsonPropValue.add("synonyms", temp);
+        temp = new JsonArray();
+        
+        for(String superClass : skill.getSuperClasses()) {
+            temp.add(superClass);
+        }
+        jsonPropValue.add("superClasses", temp);
+        temp = new JsonArray();
+        
+        for(String subClass : skill.getsubClasses()) {
+            temp.add(subClass);
+        }
+        jsonPropValue.add("subClasses", temp);
+        
+		jsonPropValue.addProperty("uri", skill.getURI());
+		jsonPropValue.addProperty("id", RDFObject.uri2id(skill.getURI()));
+		
+		
+		return jsonPropValue;
+	}
 		
 	public static JsonElement getSkillJson(Skill skill) {
 		
@@ -206,6 +242,8 @@ public class ModelClassToJson {
         JsonObject jsonProps = (JsonObject) getSkillJson(skill);
         jsonProps.addProperty("proficiencyLevel", skillRef.getSkillLevel());
         jsonProps.addProperty("priorityLevel", skillRef.getPriorityLevel());
+        jsonProps.addProperty("uri", skillRef.getURI());
+        jsonProps.addProperty("id", RDFObject.uri2id(skillRef.getURI()));
         
         return jsonProps;
     }

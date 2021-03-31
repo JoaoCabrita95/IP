@@ -215,4 +215,8 @@ public class CVSkillRef extends SkillRefObject {
         } 
         return CVskillRef; 
 	}
+	
+	public boolean equals(CVSkillRef compareTo) {
+		return true;
+	}
 }

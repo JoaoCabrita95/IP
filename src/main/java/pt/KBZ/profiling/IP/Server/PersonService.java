@@ -29,11 +29,13 @@ import IP.Model.Person;
 import IP.Model.RDFObject;
 import IP.Model.Skill;
 import IP.Model.SparqlEndPoint;
+import matomo.matomoClient;
 
 @Path("/")
 public class PersonService {
 	
 	rabbitMQService rabbit = new rabbitMQService();
+	matomoClient mc = new matomoClient();
 	
 	@GET
 	@Path("/profiles")
@@ -76,14 +78,14 @@ public class PersonService {
 			//SparqlEndPoint.insertTriple(parser.toStringData());
 			person.Save();
 			
-//			try {
-//				rabbit.bindQueue("");
-//				byte[] profileData = getPersonInJson(person).toString().getBytes();
-//				rabbit.channel.basicPublish(rabbit.exchange, "info", null, profileData);
-//			}
-//			catch (Exception e) {
-//				System.out.println("Could not send the created Profile to the RabbitMQ queue.");
-//			}
+			try {
+//				JsonObject rabbitObject = new JsonObject();
+//				rabbitObject.add("profile", ModelClassToJson.getProfileJson(person));
+//				rabbit.channel.basicPublish(rabbit.exchange, "info", null, rabbitObject.toString().getBytes());
+			}
+			catch (Exception e) {
+				System.out.println("Could not send the created Profile to the RabbitMQ queue.");
+			}
 
 			String response = parser.toString("TTL");
 			return Response.ok(ModelClassToJson.getProfileJson(person).toString()).build();

@@ -344,5 +344,9 @@ public class Course extends RDFObject {
         
         
 	}
+	
+	public boolean equals(Course course) {
+		return true;
+	}
 
 }

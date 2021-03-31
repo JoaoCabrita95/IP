@@ -156,4 +156,8 @@ public class SkillJobReq extends SkillRefObject {
         } 
         return SkillJobReq; 
 	}
+	
+	public boolean equals(SkillJobReq compareTo) {
+		return true;
+	}
 }

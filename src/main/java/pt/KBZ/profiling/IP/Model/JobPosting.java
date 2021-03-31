@@ -356,7 +356,7 @@ public class JobPosting extends RDFObject {
     	
     	if(creator_id != null) {
     		triple = new Triple(getURI(), "saro:createdBy", creator_id);
-    		saveData.put(triple, "Object");
+    		saveData.put(triple, "String");
 //    		SparqlEndPoint.insertPropertyValue(triple);
     	}
         
@@ -751,8 +751,8 @@ public class JobPosting extends RDFObject {
                 	
                 case "createdBy":
                 	String creator_id = object;
-                	if(creator_id.contains("#"))
-                		creator_id = ":" + creator_id.substring(creator_id.indexOf("#") + 1);
+//                	if(creator_id.contains("#"))
+//                		creator_id = ":" + creator_id.substring(creator_id.indexOf("#") + 1);
                 	jp.setcreator_id(creator_id);
                 	break;
                 	
@@ -809,5 +809,278 @@ public class JobPosting extends RDFObject {
         }
         
     	return properties;
+    }
+    
+    public boolean equals(JobPosting compareTo) {
+    	
+    	boolean contains = false;
+    	if(!this.getURI().equals(compareTo.getURI()))
+    		return false;
+    	if(!this.getID().equals(compareTo.getID()))
+    		return false;
+    	
+    	if(this.getCountry() == null && compareTo.getCountry() != null) {
+    		return false;
+    	}
+    	else if(this.getCountry() == null && compareTo.getCountry() == null) {
+    		
+    	}
+    	else if(!this.getCountry().equals(compareTo.getCountry())){
+        	return false;
+    	}
+    	
+    	if(this.getState() == null && compareTo.getState() != null) {
+    		return false;
+    	}
+    	else if(this.getState() == null && compareTo.getState() == null) {
+    		
+    	}
+    	else if(!this.getState().equals(compareTo.getState())){
+        	return false;
+    	}
+    	
+    	if(this.getCity() == null && compareTo.getCity() != null) {
+    		return false;
+    	}
+    	else if(this.getCity() == null && compareTo.getCity() == null) {
+    		
+    	}
+    	else if(!this.getCity().equals(compareTo.getCity())){
+        	return false;
+    	}
+    	
+    	if(this.getcreator_id() == null && compareTo.getcreator_id() != null) {
+    		return false;
+    	}
+    	else if(this.getcreator_id() == null && compareTo.getcreator_id() == null) {
+    		
+    	}
+    	else if(!this.getcreator_id().equals(compareTo.getcreator_id())){
+        	return false;
+    	}
+    	
+    	if(this.getJobDescription() == null && compareTo.getJobDescription() != null) {
+    		return false;
+    	}
+    	else if(this.getJobDescription() == null && compareTo.getJobDescription() == null) {
+    		
+    	}
+    	else if(!this.getJobDescription().equals(compareTo.getJobDescription())){
+        	return false;
+    	}
+    	
+    	if(this.getContractType() == null && compareTo.getContractType() != null) {
+    		return false;
+    	}
+    	else if(this.getContractType() == null && compareTo.getContractType() == null) {
+    		
+    	}
+    	else if(!this.getContractType().equals(compareTo.getContractType())){
+        	return false;
+    	}
+    	
+    	if(this.getSector() == null && compareTo.getSector() != null) {
+    		return false;
+    	}
+    	else if(this.getSector() == null && compareTo.getSector() == null) {
+    		
+    	}
+    	else if(!this.getSector().equals(compareTo.getSector())){
+        	return false;
+    	}
+    	
+    	if(this.getOccupation() == null && compareTo.getOccupation() != null) {
+    		return false;
+    	}
+    	else if(this.getOccupation() == null && compareTo.getOccupation() == null) {
+    		
+    	}
+    	else if(!this.getOccupation().equals(compareTo.getOccupation())){
+        	return false;
+    	}
+    	
+    	if(this.getListingOrg() == null && compareTo.getListingOrg() != null) {
+    		return false;
+    	}
+    	else if(this.getListingOrg() == null && compareTo.getListingOrg() == null) {
+    		
+    	}
+    	else if(!this.getListingOrg().equals(compareTo.getListingOrg())){
+        	return false;
+    	}
+    	
+    	if(this.getHiringOrg() == null && compareTo.getHiringOrg() != null) {
+    		return false;
+    	}
+    	else if(this.getHiringOrg() == null && compareTo.getHiringOrg() == null) {
+    		
+    	}
+    	else if(!this.getHiringOrg().equals(compareTo.getHiringOrg())){
+        	return false;
+    	}
+    	
+    	if(this.getjobLocation() == null && compareTo.getjobLocation() != null) {
+    		return false;
+    	}
+    	else if(this.getjobLocation() == null && compareTo.getjobLocation() == null) {
+    		
+    	}
+    	else if(!this.getjobLocation().equals(compareTo.getjobLocation())){
+        	return false;
+    	}
+    	
+    	if(this.getStartDate() == null && compareTo.getStartDate() != null) {
+    		return false;
+    	}
+    	else if(this.getStartDate() == null && compareTo.getStartDate() == null) {
+    		
+    	}
+    	else if(!this.getStartDate().equals(compareTo.getStartDate())){
+        	return false;
+    	}
+    	
+    	if(this.getEndDate() == null && compareTo.getEndDate() != null) {
+    		return false;
+    	}
+    	else if(this.getEndDate() == null && compareTo.getEndDate() == null) {
+    		
+    	}
+    	else if(!this.getEndDate().equals(compareTo.getEndDate())){
+        	return false;
+    	}
+    	
+    	if(this.getseniorityLevel() == null && compareTo.getseniorityLevel() != null) {
+    		return false;
+    	}
+    	else if(this.getseniorityLevel() == null && compareTo.getseniorityLevel() == null) {
+    		
+    	}
+    	else if(!this.getseniorityLevel().equals(compareTo.getseniorityLevel())){
+        	return false;
+    	}
+    	
+    	if(this.getExpectedSalary() == null && compareTo.getExpectedSalary() != null) {
+    		return false;
+    	}
+    	else if(this.getExpectedSalary() == null && compareTo.getExpectedSalary() == null) {
+    		
+    	}
+    	else if(!this.getExpectedSalary().equals(compareTo.getExpectedSalary())){
+        	return false;
+    	}
+    	
+    	if(this.getSalaryCurrency() == null && compareTo.getSalaryCurrency() != null) {
+    		return false;
+    	}
+    	else if(this.getSalaryCurrency() == null && compareTo.getSalaryCurrency() == null) {
+    		
+    	}
+    	else if(!this.getSalaryCurrency().equals(compareTo.getSalaryCurrency())){
+        	return false;
+    	}
+    	
+    	for(SkillJobReq skillReq : this.getJobSkillReqRefs()) {
+    		contains = false;
+    		for(SkillJobReq skillReq2 : compareTo.getJobSkillReqRefs()) {
+    			if(skillReq.equals(skillReq2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(SkillJobReq skillReq : compareTo.getJobSkillReqRefs()) {
+    		contains = false;
+    		for(SkillJobReq skillReq2 : this.getJobSkillReqRefs()) {
+    			if(skillReq.equals(skillReq2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(WorkHistory workHistory : this.getworkExperienceReq()) {
+    		contains = false;
+    		for(WorkHistory workHistory2 : compareTo.getworkExperienceReq()) {
+    			if(workHistory.equals(workHistory2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(WorkHistory workHistory : compareTo.getworkExperienceReq()) {
+    		contains = false;
+    		for(WorkHistory workHistory2 : this.getworkExperienceReq()) {
+    			if(workHistory.equals(workHistory2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Course course : this.getCapabilityReq()) {
+    		contains = false;
+    		for(Course course2 : compareTo.getCapabilityReq()) {
+    			if(course.equals(course2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Course course : compareTo.getCapabilityReq()) {
+    		contains = false;
+    		for(Course course2 : this.getCapabilityReq()) {
+    			if(course.equals(course2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Education ed : this.getEducationReq()) {
+    		contains = false;
+    		for(Education ed2 : compareTo.getEducationReq()) {
+    			if(ed.equals(ed2)) {
+    				contains = true;
+    				break;
+    			}
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Education ed : compareTo.getEducationReq()) {
+    		contains = false;
+    		for(Education ed2 : this.getEducationReq()) {
+    			if(ed.equals(ed2)) {
+    				contains = true;
+    				break;
+    			}	
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	    	
+    	return true;
     }
 }

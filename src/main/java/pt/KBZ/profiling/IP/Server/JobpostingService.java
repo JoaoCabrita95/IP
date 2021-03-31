@@ -35,6 +35,7 @@ import IP.Model.Skill;
 import IP.Model.SkillJobReq;
 import IP.Model.SparqlEndPoint;
 import IP.Model.WorkHistory;
+import matomo.matomoClient;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +48,7 @@ import java.util.logging.Logger;
 @Path("/")
 public class JobpostingService {
 	rabbitMQService rabbit = new rabbitMQService();
+	matomoClient mc = new matomoClient();
 	
 	private static Logger Log = Logger.getLogger(JobpostingService.class.getName());
 	public JobpostingService() {
@@ -171,14 +173,11 @@ public class JobpostingService {
 			job.Save();
 			
 			try {
-//				rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
-				String testD = "{\"job\": ";
-				byte[] jpData = getJobPostinginJson(job).toString().getBytes();
-				testD = testD + jpData.toString() + " }";
-				Map<String, String> rabbitData = new HashMap<String, String>();
-				rabbitData.put("'job'", getJobPostinginJson(job).toString());
+				JsonObject rabbitObject = new JsonObject();
+				rabbitObject.add("job", ModelClassToJson.getJobJson(job));
+				
 //				System.out.println(rabbitData);
-				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, testD.getBytes());
+				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //				System.out.println(rabbit.channel.isOpen());
 			}
 			catch (Exception e) {
@@ -206,9 +205,8 @@ public class JobpostingService {
 	 * @param job
 	 * @return
 	 */
-	private JsonArray getJobPostinginJson(JobPosting job) {
-		
-		JsonArray jsonResults = new JsonArray();
+	private JsonObject getJobPostinginJson(JobPosting job) {
+		JsonArray jsonTmp = new JsonArray();
 		
 		JsonObject jsonPropValue = new JsonObject();
 		jsonPropValue.addProperty("label",job.getLabel());
@@ -232,15 +230,13 @@ public class JobpostingService {
 		
 		
 		for(SkillJobReq skillReq : job.getJobSkillReqRefs()) {
-			jsonResults.add(ModelClassToJson.getJobSkillRef(skillReq));
+			jsonTmp.add(ModelClassToJson.getJobSkillRef(skillReq));
 		}
-		jsonPropValue.add("skills", jsonResults );
 		
-		jsonResults = new JsonArray();
+		jsonPropValue.add("skills", jsonTmp );
 		
-		jsonResults.add(jsonPropValue);
 		
-		return jsonResults;
+		return jsonPropValue;
 	}
 
 	/**
@@ -329,6 +325,7 @@ public class JobpostingService {
 	 */
 	@DELETE
 	@Path("/jobs/{jobURI}")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response DeleteJob(@PathParam("jobURI")String jobURI) {
 		try {
 			JobPosting job = JobPosting.getJobPosting(jobURI);

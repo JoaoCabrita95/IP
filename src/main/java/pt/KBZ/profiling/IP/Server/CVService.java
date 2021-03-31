@@ -1,5 +1,7 @@
 package IP.Server;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +37,7 @@ import IP.Model.Skill;
 import IP.Model.SkillRefObject;
 import IP.Model.SparqlEndPoint;
 import IP.Model.WorkHistory;
+import matomo.matomoClient;
 
 /**
  * CVService class is a service for CV related endpoint path handling for the Qualichain back-end server
@@ -42,8 +45,10 @@ import IP.Model.WorkHistory;
 @Path("/")
 public class CVService {
 	rabbitMQService rabbit = new rabbitMQService();
+	matomoClient mc = new matomoClient();
 	
 	public CVService() {
+		
 	}
 
 	/**
@@ -262,7 +267,7 @@ public class CVService {
 				JsonObject rabbitObject = new JsonObject();
 				rabbitObject.add("cv", getCVinJson(cv));
 				
-				System.out.println(rabbitObject);
+//				System.out.println(rabbitObject);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //				System.out.println(rabbit.channel.isOpen());
 			}
@@ -304,6 +309,7 @@ public class CVService {
 		jsonPropValue.addProperty("comment",cv.getComment());
 		jsonPropValue.addProperty("title",cv.getTitle());
 		jsonPropValue.addProperty("personURI",cv.getPersonURI());
+		jsonPropValue.addProperty("userID", RDFObject.uri2id(cv.getPersonURI()));
 		jsonPropValue.addProperty("targetSector",cv.getTargetSector());
 		jsonPropValue.addProperty("description",cv.getDescription());
 		
@@ -336,7 +342,17 @@ public class CVService {
 			CV cv = CV.getCVbyPersonURI(personID);
             JsonElement jsonResults = ModelClassToJson.getCVJson(cv);
 //			System.out.println(jsonResults.toString());
-			
+            Date curDate = new GregorianCalendar().getTime();
+            Date evalDate;
+            int year, month, dayOfMonth, hourOfDay, minute, second;
+            String evalDateRef;
+            for(CVSkillRef ref : cv.getSkillRefs()) {
+            	evalDateRef = ref.getEvalDate();
+            	
+//            	evalDate = new GregorianCalendar(year, month, dayOfMonth, hourOfDay,
+//                        minute, second);
+            }
+            
             return Response.ok(jsonResults.toString()).build();
 		} 
 		catch (NoSuchElementException e1) {
@@ -517,6 +533,7 @@ public class CVService {
 					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 					System.out.println(rabbit.channel.isOpen());
+					mc.send("employees", "newSkill", profileID, 1);
 				}
 				catch (Exception e) {
 					System.out.println("Could not send the created CV to the RabbitMQ queue.");

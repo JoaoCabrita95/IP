@@ -33,7 +33,6 @@ public class SkillTestData {
 		Ss.add(new Skill("Skill_18", "MongoDB", "basic", "high", "Skill comment 18", "cv:Skill"));
 		Ss.add(new Skill("Skill_19", "SQL", "basic", "high", "Skill comment 19", "cv:Skill"));
 		Ss.add(new Skill("Skill_20", "Apache Spark", "advanced", "high", "Skill comment 20", "cv:Skill"));
-		Ss.add(new Skill("Skill_21", "Java", "basic", "Medium", "Skill comment 21", "cv:Skill"));
 		
 		Ss.get(0).addsubClass(Ss.get(4).getURI());
 		Ss.get(0).addsubClass(Ss.get(6).getURI());

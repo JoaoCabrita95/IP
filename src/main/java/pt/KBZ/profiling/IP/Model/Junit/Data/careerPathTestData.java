@@ -170,6 +170,8 @@ public class careerPathTestData {
 		
 		Skill skill = new Skill("skill_60", "Final skill for end of career", null, null, null, "cv:Skill");
 		SkillJobReq skillRef = new SkillJobReq(skill, "High", "advanced");
+		Skill skill2 = new Skill("skill_61", "Second skill for end of career", null, null, null, "cv:Skill");
+		SkillJobReq skillRef2 = new SkillJobReq(skill2, "High", "advanced");
 		
 		//fourth fork-2
 		twh = new LinkedList<WorkHistory>();
@@ -178,10 +180,11 @@ public class careerPathTestData {
 		temp = new JobPosting("Job71", "Job fork 4-2-2", "Career path advisor test job 11", "End of career", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
 		temp.addSkillRef(skillRef);
+		temp.addSkillRef(skillRef2);
 		jps.add(temp);
 				
 	}
-	
+		
 	public List<CV> getCvs(){
 		return cvs;
 	}

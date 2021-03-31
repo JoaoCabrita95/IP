@@ -387,4 +387,8 @@ public class WorkHistory extends RDFObject {
         
         SparqlEndPoint.insertTriples(saveData);
 	}
+	
+	public boolean equals(WorkHistory wh) {
+		return true;
+	}
 }

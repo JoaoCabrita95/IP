@@ -38,6 +38,7 @@ public class CV extends RDFObject {
     private String targetSector = null;
     private String otherInfo = null;
     private String currentJob = null;
+    private String realocation = null;
     private List<WorkHistory> workHistory;
     private List<Education> education;
     private List<Course> courses;
@@ -272,6 +273,14 @@ public class CV extends RDFObject {
     
     public String getCurrentJob() {
     	return currentJob;
+    }
+    
+    public void setRealocation(String realocation) {
+    	this.realocation = realocation;
+    }
+    
+    public String getRealocation() {
+    	return realocation;
     }
     
     /**
@@ -516,7 +525,7 @@ public class CV extends RDFObject {
     	
     	if(skills != null) {
     		for(CVSkillRef skillRef : skills) {
-        		if(skillRef.getURI().equals(newSkillRef.getURI()) || skillRef.getSkillURI().equals(newSkillRef.getSkillURI()))
+        		if(skillRef != null && (skillRef.getURI().equals(newSkillRef.getURI()) || skillRef.getSkillURI().equals(newSkillRef.getSkillURI())))
         			return skillRef;
         	}
     	}
@@ -635,6 +644,11 @@ public class CV extends RDFObject {
         if(currentJob != null) {
         	triple = new Triple(getURI(), "qc:currentJob", currentJob);
         	saveData.put(triple, "Object");
+        }
+        
+        if(realocation != null) {
+        	triple = new Triple(getURI() , "qc:realocationInfo", realocation);
+	        saveData.put(triple, "String");
         }
         
         //Insert CV work history list
@@ -1091,6 +1105,10 @@ public class CV extends RDFObject {
                 	cv.setComment(comment);
                 	break;
                 	
+                case "realocationInfo":
+                	String realocation = object;
+                	cv.setRealocation(realocation);
+                	break;
 
                 case "hasEducation":
                 	String education = object;  
@@ -1188,7 +1206,216 @@ public class CV extends RDFObject {
 		return skills;
 	}
     
-    
+	//TODO: Complete method that compares all variables in this and compareTo
+    public boolean equals(CV compareTo) {
+    	
+    	boolean contains = false;
+    	
+    	if(!this.getURI().equals(compareTo.getURI()))
+    		return false;
+    	if(!this.getID().equals(compareTo.getID()))
+    		return false;
+    	
+    	if(this.getTitle() == null && compareTo.getTitle() != null) {
+    		return false;
+    	}
+    	else if(this.getTitle() == null && compareTo.getTitle() == null) {
+    		
+    	}
+    	else if(!this.getTitle().equals(compareTo.getTitle())){
+        	return false;
+    	}
+    	
+    	if(this.getPersonURI() == null && compareTo.getPersonURI() != null) {
+    		return false;
+    	}
+    	else if(this.getPersonURI() == null && compareTo.getPersonURI() == null) {
+    		
+    	}
+    	else if(!this.getPersonURI().equals(compareTo.getPersonURI())){
+        	return false;
+    	}
+    	
+    	if(this.getDescription() == null && compareTo.getDescription() != null) {
+    		return false;
+    	}
+    	else if(this.getDescription() == null && compareTo.getDescription() == null) {
+    		
+    	}
+    	else if(!this.getDescription().equals(compareTo.getDescription())){
+        	return false;
+    	}
+    	
+    	if(this.getTargetSector() == null && compareTo.getTargetSector() != null) {
+    		return false;
+    	}
+    	else if(this.getTargetSector() == null && compareTo.getTargetSector() == null) {
+    		
+    	}
+    	else if(!this.getTargetSector().equals(compareTo.getTargetSector())){
+        	return false;
+    	}
+    	
+    	if(this.getOtherInfo() == null && compareTo.getOtherInfo() != null) {
+    		return false;
+    	}
+    	else if(this.getOtherInfo() == null && compareTo.getOtherInfo() == null) {
+    		
+    	}
+    	else if(!this.getOtherInfo().equals(compareTo.getOtherInfo())){
+        	return false;
+    	}
+    	
+    	if(this.getCurrentJob() == null && compareTo.getCurrentJob() != null) {
+    		return false;
+    	}
+    	else if(this.getCurrentJob() == null && compareTo.getCurrentJob() == null) {
+    		
+    	}
+    	else if(!this.getCurrentJob().equals(compareTo.getCurrentJob())){
+        	return false;
+    	}
+    	
+    	if(this.getRealocation() == null && compareTo.getRealocation() != null) {
+    		return false;
+    	}
+    	else if(this.getRealocation() == null && compareTo.getRealocation() == null) {
+    		
+    	}
+    	else if(!this.getRealocation().equals(compareTo.getRealocation())){
+        	return false;
+    	}
+    	
+    	for(WorkHistory workHistory : this.getWorkHistory()) {
+    		contains = false;
+    		for(WorkHistory workHistory2 : compareTo.getWorkHistory()) {
+    			if(workHistory.equals(workHistory2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(WorkHistory workHistory : compareTo.getWorkHistory()) {
+    		contains = false;
+    		for(WorkHistory workHistory2 : this.getWorkHistory()) {
+    			if(workHistory.equals(workHistory2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Education education : this.getEducation()) {
+    		contains = false;
+    		for(Education education2 : compareTo.getEducation()) {
+    			if(education.equals(education2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Education education : compareTo.getEducation()) {
+    		contains = false;
+    		for(Education education2 : this.getEducation()) {
+    			if(education.equals(education2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Course course : this.getCourses()) {
+    		contains = false;
+    		for(Course course2 : compareTo.getCourses()) {
+    			if(course.equals(course2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Course course : compareTo.getCourses()) {
+    		contains = false;
+    		for(Course course2 : this.getCourses()) {
+    			if(course.equals(course2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(CVSkillRef skillRef : this.getSkillRefs()) {
+    		contains = false;
+    		for(CVSkillRef skillRef2 : compareTo.getSkillRefs()) {
+    			if(skillRef.equals(skillRef2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(CVSkillRef skillRef : compareTo.getSkillRefs()) {
+    		contains = false;
+    		for(CVSkillRef skillRef2 : this.getSkillRefs()) {
+    			if(skillRef.equals(skillRef2)) {
+    				contains = true;
+    				break;
+    			}
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Skill skill : this.getSkills()) {
+    		contains = false;
+    		for(Skill skill2 : compareTo.getSkills()) {
+    			if(skill.equals(skill2)) {
+    				contains = true;
+    				break;
+    			}
+    				
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	
+    	for(Skill skill : compareTo.getSkills()) {
+    		contains = false;
+    		for(Skill skill2 : this.getSkills()) {
+    			if(skill.equals(skill2)) {
+    				contains = true;
+    				break;
+    			}
+    		}
+    		if(!contains)
+    			return false;
+    	}
+    	    	    	
+    	return true;
+    }
     
 
 }
