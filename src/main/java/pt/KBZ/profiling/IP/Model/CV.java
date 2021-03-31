@@ -806,8 +806,13 @@ public class CV extends RDFObject {
      * @throws Exception 
      */
     public static CV getCVbyPerson(String name) throws Exception {
-    	Person person = Person.getPersonByName(name);
-    	return getCV(person.getCVURI());
+    	
+    	String properties = SparqlEndPoint.getInstancesByProperty("cv:CV", "cv:aboutPerson",":"+ name);
+    	System.out.println(properties);
+    	List<CV> cvTMP = ParseResponse(properties);
+    	if(cvTMP.isEmpty())
+    		throw new NoSuchElementException("CV not found, no applications can be retrieved");
+    	return cvTMP.get(0);    	
     }
     
     // Return a map with one Job to one Score

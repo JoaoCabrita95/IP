@@ -164,13 +164,14 @@ public class PersonService {
 	@GET
 	@Path("/profiles/{userid}/applications")
 	@Produces(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.TEXT_PLAIN)
 	public Response GetJobApplications(@PathParam("userid")String userid) {
 		
 		Person person;
 		try {
-			person = Person.getPerson(userid);
+//			person = Person.getPerson(userid);
+			CV cv = CV.getCVbyPerson(userid);
 			List<Application> apps = Application.getApplicationsByProfile(userid);
-//			CV cv = CV.getCV(person.getCVURI());
 //			apps = cv.getApplications();	
 			JsonArray applications = new JsonArray();
 			for(Application app : apps) {
