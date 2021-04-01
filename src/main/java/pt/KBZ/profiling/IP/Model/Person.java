@@ -499,17 +499,17 @@ public class Person extends RDFObject {
         }
         
         if(competenceArea != null) {
-        	triple = new Triple(":" + competenceArea, "rdf:type", "qc:CompetenceArea");
-        	saveData.put(triple, "Object");
+//        	triple = new Triple(":" + competenceArea, "rdf:type", "qc:CompetenceArea");
+//        	saveData.put(triple, "Object");
 //    		SparqlEndPoint.insertTriple(triple);
     		
-    		triple = new Triple(getURI(), "qc:field", ":" + competenceArea);
-    		saveData.put(triple, "Object");
+    		triple = new Triple(getURI(), "qc:field", competenceArea);
+    		saveData.put(triple, "String");
 //            SparqlEndPoint.insertTriple(triple);
         }
         
         if(competenceArea != null && competenceAreaDescription != null) {
-    		triple = new Triple(":" + competenceArea, "rdfs:label", competenceAreaDescription);
+    		triple = new Triple(getURI(), "qc:fieldDescription", competenceAreaDescription);
     		saveData.put(triple, "String");
 //    		SparqlEndPoint.insertPropertyValue(triple);	
         }
@@ -518,6 +518,11 @@ public class Person extends RDFObject {
         	triple = new Triple(getURI(), "cv:hasNationality", nationality);
         	saveData.put(triple, "String");
 //        	SparqlEndPoint.insertPropertyValue(triple);
+        }
+        
+        if(address != null) {
+        	triple = new Triple(getURI(), "qc:hasAddress", address);
+        	saveData.put(triple, "String");
         }
         
         if(currentJobURI != null) {
@@ -759,6 +764,14 @@ public class Person extends RDFObject {
                 		person.setDriversLicense(false);	
                 	break;
                 	
+                case "hasAddress":
+                	person.setAddress(object);
+                	break;
+                	
+                case "hasNationality":
+                	person.setNationality(object);
+                	break;
+                	
                 case "hasResume":
                 	if(object.contains("#"))
                 		object = object.substring(object.indexOf("#") + 1);
@@ -770,6 +783,9 @@ public class Person extends RDFObject {
                 		object = object.substring(object.indexOf("#") + 1);
                 	person.setCompetenceArea(object);
                 	break;
+                	
+                case "fieldDescription":
+                	person.setCompetenceAreaDescription(object);
                 	
 
                 case "hasAccomplishment":
@@ -855,6 +871,169 @@ public class Person extends RDFObject {
 				return true;
 		}
 		return false;
+	}
+	
+	public boolean equals(Person compareTo) {
+		
+		if(!this.getURI().equals(compareTo.getURI()))
+    		return false;
+    	if(!this.getID().equals(compareTo.getID()))
+    		return false;
+    	
+    	if(this.getName() == null && compareTo.getName() != null) {
+    		return false;
+    	}
+    	else if(this.getName() == null && compareTo.getName() == null) {
+    		
+    	}
+    	else if(!this.getName().equals(compareTo.getName())){
+        	return false;
+    	}
+    	
+    	if(this.getsurname() == null && compareTo.getsurname() != null) {
+    		return false;
+    	}
+    	else if(this.getsurname() == null && compareTo.getsurname() == null) {
+    		
+    	}
+    	else if(!this.getsurname().equals(compareTo.getsurname())){
+        	return false;
+    	}
+    	
+    	if(this.getGender() == null && compareTo.getGender() != null) {
+    		return false;
+    	}
+    	else if(this.getGender() == null && compareTo.getGender() == null) {
+    		
+    	}
+    	else if(!this.getGender().equals(compareTo.getGender())){
+        	return false;
+    	}
+    	
+    	if(this.getNationality() == null && compareTo.getNationality() != null) {
+    		return false;
+    	}
+    	else if(this.getNationality() == null && compareTo.getNationality() == null) {
+    		
+    	}
+    	else if(!this.getNationality().equals(compareTo.getNationality())){
+        	return false;
+    	}
+    	
+    	if(this.getAddress() == null && compareTo.getAddress() != null) {
+    		return false;
+    	}
+    	else if(this.getAddress() == null && compareTo.getAddress() == null) {
+    		
+    	}
+    	else if(!this.getAddress().equals(compareTo.getAddress())){
+        	return false;
+    	}
+    	
+    	if(this.getDriversLicense() != compareTo.getDriversLicense())
+    		return false;
+    	
+    	if(this.getCVURI() == null && compareTo.getCVURI() != null) {
+    		return false;
+    	}
+    	else if(this.getCVURI() == null && compareTo.getCVURI() == null) {
+    		
+    	}
+    	else if(!this.getCVURI().equals(compareTo.getCVURI())){
+        	return false;
+    	}
+    	
+    	if(this.getCompetenceArea() == null && compareTo.getCompetenceArea() != null) {
+    		return false;
+    	}
+    	else if(this.getCompetenceArea() == null && compareTo.getCompetenceArea() == null) {
+    		
+    	}
+    	else if(!this.getCompetenceArea().equals(compareTo.getCompetenceArea())){
+        	return false;
+    	}
+    	
+    	if(this.getCompetenceAreaDescription() == null && compareTo.getCompetenceAreaDescription() != null) {
+    		return false;
+    	}
+    	else if(this.getCompetenceAreaDescription() == null && compareTo.getCompetenceAreaDescription() == null) {
+    		
+    	}
+    	else if(!this.getCompetenceAreaDescription().equals(compareTo.getCompetenceAreaDescription())){
+        	return false;
+    	}
+    	
+    	if(this.getRole() == null && compareTo.getRole() != null) {
+    		return false;
+    	}
+    	else if(this.getRole() == null && compareTo.getRole() == null) {
+    		
+    	}
+    	else if(!this.getRole().equals(compareTo.getRole())){
+        	return false;
+    	}
+    	
+    	if(this.getCurrentJobURI() == null && compareTo.getCurrentJobURI() != null) {
+    		return false;
+    	}
+    	else if(this.getCurrentJobURI() == null && compareTo.getCurrentJobURI() == null) {
+    		
+    	}
+    	else if(!this.getCurrentJobURI().equals(compareTo.getCurrentJobURI())){
+        	return false;
+    	}
+    	    	
+//    	for(String qualification : this.getQualifications()) {
+//    		if(!compareTo.getQualifications().contains(qualification))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String qualification : compareTo.getQualifications()) {
+//    		if(!this.getQualifications().contains(qualification))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String experience : this.getExperiences()) {
+//    		if(!compareTo.getExperiences().contains(experience))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String experience : compareTo.getExperiences()) {
+//    		if(!this.getExperiences().contains(experience))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String membership : this.getMembership()) {
+//    		if(!compareTo.getMembership().contains(membership))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String membership : compareTo.getMembership()) {
+//    		if(!this.getMembership().contains(membership))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String publication : this.getPublications()) {
+//    		if(!compareTo.getPublications().contains(publication))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String publication : compareTo.getPublications()) {
+//    		if(!this.getPublications().contains(publication))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String accomplishment : this.getAccomplishments()) {
+//    		if(!compareTo.getAccomplishments().contains(accomplishment))
+//    			return false;
+//    	}
+//    	    	
+//    	for(String accomplishment : compareTo.getAccomplishments()) {
+//    		if(!this.getAccomplishments().contains(accomplishment))
+//    			return false;
+//    	}    	
+    	    	
+		return true;
 	}
 
 }

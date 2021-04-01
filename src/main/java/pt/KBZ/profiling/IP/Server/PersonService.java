@@ -29,11 +29,13 @@ import IP.Model.Person;
 import IP.Model.RDFObject;
 import IP.Model.Skill;
 import IP.Model.SparqlEndPoint;
+import matomo.matomoClient;
 
 @Path("/")
 public class PersonService {
 	
 	rabbitMQService rabbit = new rabbitMQService();
+	matomoClient mc = new matomoClient();
 	
 	@GET
 	@Path("/profiles")
@@ -76,14 +78,14 @@ public class PersonService {
 			//SparqlEndPoint.insertTriple(parser.toStringData());
 			person.Save();
 			
-//			try {
-//				rabbit.bindQueue("");
-//				byte[] profileData = getPersonInJson(person).toString().getBytes();
-//				rabbit.channel.basicPublish(rabbit.exchange, "info", null, profileData);
-//			}
-//			catch (Exception e) {
-//				System.out.println("Could not send the created Profile to the RabbitMQ queue.");
-//			}
+			try {
+//				JsonObject rabbitObject = new JsonObject();
+//				rabbitObject.add("profile", ModelClassToJson.getProfileJson(person));
+//				rabbit.channel.basicPublish(rabbit.exchange, "info", null, rabbitObject.toString().getBytes());
+			}
+			catch (Exception e) {
+				System.out.println("Could not send the created Profile to the RabbitMQ queue.");
+			}
 
 			String response = parser.toString("TTL");
 			return Response.ok(ModelClassToJson.getProfileJson(person).toString()).build();
@@ -162,13 +164,14 @@ public class PersonService {
 	@GET
 	@Path("/profiles/{userid}/applications")
 	@Produces(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.TEXT_PLAIN)
 	public Response GetJobApplications(@PathParam("userid")String userid) {
 		
 		Person person;
 		try {
-			person = Person.getPerson(userid);
+//			person = Person.getPerson(userid);
+			CV cv = CV.getCVbyPerson(userid);
 			List<Application> apps = Application.getApplicationsByProfile(userid);
-//			CV cv = CV.getCV(person.getCVURI());
 //			apps = cv.getApplications();	
 			JsonArray applications = new JsonArray();
 			for(Application app : apps) {

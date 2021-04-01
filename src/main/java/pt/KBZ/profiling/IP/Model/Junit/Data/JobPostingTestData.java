@@ -71,8 +71,8 @@ public class JobPostingTestData {
 		//Null values test
 		ArrayList<Skill> skills = new ArrayList<>();
 		skills.add(new Skill(null, "null", "null", null, null, "saro:Skill"));
-		JPs.add(new JobPosting(null, "sdfsdfsdf", null, "sdfsdfsdfsdf", "4", null, null, null, null, "sdfsdfsdfs", null, null,
-				null, null, null, null, null, null, null, null));
+//		JPs.add(new JobPosting(null, "sdfsdfsdf", null, "sdfsdfsdfsdf", "4", null, null, null, null, "sdfsdfsdfs", null, null,
+//				null, null, null, null, null, null, null, null));
 		
 		addCompetenceReq();
 	}

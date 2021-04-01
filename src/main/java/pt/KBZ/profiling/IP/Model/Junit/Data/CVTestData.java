@@ -46,7 +46,7 @@ public class CVTestData {
 				"1100", "Euro", null, null, null, null, new Application(":app12", ":12", ":Job12", "879", "01/01/21", "Euro")));
 		cvs.add(new CV("id13", "Test CV 13", "Comment 13", "CV Title 13", ":13", "Description 13", "Sector 3", "Optional info 13",
 				"1600", "USD", null, null, null, null, new Application(":app13", ":13", ":Job1", "577", "01/01/21", "Euro")));
-		cvs.add(new CV("id14", "Test CV 14", "Comment 14", "CV Title 14", ":24", "Description 14", "Sector 5", "Optional info 14",
+		cvs.add(new CV("id14", "Test CV 14", "Comment 14", "CV Title 14", ":14", "Description 14", "Sector 5", "Optional info 14",
 				"1200", "Euro", null, null, null, null, new Application(":app14", ":14", ":Job2", "3000", "01/01/21", "Euro")));
 		cvs.add(new CV("id15", "Example CV x", "No comment", "Albertos CV", ":15", "Things Alberto has done", "Something new", "Is a fast learner",
 				"1000", "Euros", null, null, null, null, new Application(":app98173918", ":15", ":Job2", "2508", "01/01/21", "Euro") ));
@@ -55,16 +55,16 @@ public class CVTestData {
 		cvs.add(new CV("id17", "Example CV z", "Some comment", "Guilherme CV", ":17", "Etc", "Something challenging", "Very proactive",
 				"900", "Euro", null, null, null, null, new Application(":app57168721", ":17", "Job1", "4355", "01/01/21", "Euro")));
 
-		cvs.add(new CV("id22", "CV for Data Scientists Application", "Comment 14", "CV Title 14", ":22", "Description 14", "IT", "Optional info 14",
+		cvs.add(new CV("id22", "CV for Data Scientists Application", "Comment 22", "CV Title 22", ":22", "Description 22", "IT", "Optional info 22",
 				"1200", "Euro", null, null, null, null, new Application(":app22", ":22", ":Job2", "3000", "01/01/21", "Euro")));
 
-		cvs.add(new CV("id25", "Student CV", "Comment", "CV Title 14", ":25", "Description 14", "IT", "Optional info 14",
+		cvs.add(new CV("id25", "Student CV", "Comment", "CV Title 25", ":25", "Description 25", "IT", "Optional info 25",
 				"1200", "Euro", null, null, null, null, new Application(":app25", ":25", ":Job2", "3000", "01/01/21", "Euro")));
 
 		cvs.add(new CV("id29", "Software Developer CV", "Software Developer CV", "Software Developer CV", ":29", "I am an experinced software Developer.", "IT",
 				"Optional info 14","1200", "Euro", null, null, null, null, new Application(":app29", ":29", ":Job2", "3000", "01/01/21", "Euro")));
 
-		cvs.add(new CV("id30", "CV V", "Comment", "CV Title 14", ":30", "Description 14", "IT", "Optional info 14",
+		cvs.add(new CV("id30", "CV V", "Comment", "CV Title 30", ":30", "Description 30", "IT", "Optional info 30",
 				"1200", "Euro", null, null, null, null, new Application(":app30", ":30", ":Job2", "3000", "01/01/21", "Euro")));
 		
 		List<WorkHistory> twh = new LinkedList<WorkHistory>();
@@ -76,15 +76,15 @@ public class CVTestData {
 		List<Course> tc = new LinkedList<Course>();
 		tc.add(new Course());
 		
-		List<CVSkillRef> ts = new LinkedList<CVSkillRef>();
-		ts.add(new CVSkillRef());
-		
+//		List<CVSkillRef> ts = new LinkedList<CVSkillRef>();
+//		ts.add(new CVSkillRef());
+//		
 		List<Application> ta = new LinkedList<Application>();
-		ta.add(new Application());
+//		ta.add(new Application());
 		
 		cvs.add(new CV("id50", "Complex CV test", "Testing a CV with all possible elements",
 				"Complex CV test Title", ":50", "A CV with Work History, Education, Courses and Job applications", "HR", "no extra info", "1200", "Euro",
-				twh , te, tc, ts, ta));
+				twh , te, tc, null, ta));
 
 		addCompetencesToCVs();
 	}

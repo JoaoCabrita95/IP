@@ -28,9 +28,11 @@ import IP.Model.JobPosting;
 import IP.Model.ModelClassToJson;
 import IP.Model.Skill;
 import IP.Model.SparqlEndPoint;
+import matomo.matomoClient;
 
 @Path("/")
 public class SkillService {
+	
 	
 	public SkillService() {
 	}
@@ -43,7 +45,7 @@ public class SkillService {
 			List<Skill> skills = Skill.getSkills();
 			JsonArray results = new JsonArray();
             for(Skill skill : skills) {
-                results.add(ModelClassToJson.getSkillJson(skill));
+                results.add(ModelClassToJson.getSkillJsonForInput(skill));
             }
 			return Response.ok(results.toString()).build();
 		}
@@ -67,7 +69,7 @@ public class SkillService {
     		Skill skill = parser.toSkill(data);
     		skill.Save();
     		
-    		return Response.ok(ModelClassToJson.getSkillJson(skill).toString()).build();
+    		return Response.ok(ModelClassToJson.getSkillJsonForInput(skill).toString()).build();
     	}
     	catch(Exception e) {
     		e.printStackTrace();
@@ -102,7 +104,7 @@ public class SkillService {
     	List<Skill> skills = Skill.getSkills(text);
     	JsonArray results = new JsonArray();
         for(Skill skill : skills) {
-            results.add(ModelClassToJson.getSkillJson(skill));
+            results.add(ModelClassToJson.getSkillJsonForInput(skill));
         }
 		return Response.ok(results.toString()).build();
     }

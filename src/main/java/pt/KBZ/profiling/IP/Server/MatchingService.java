@@ -30,6 +30,7 @@ import IP.Model.Person;
 import IP.Model.RDFObject;
 import IP.Model.Skill;
 import IP.Model.SkillJobReq;
+import matomo.matomoClient;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -43,6 +44,7 @@ import org.piwik.java.tracking.PiwikTracker;
 public class MatchingService {
 	
 	rabbitMQService rabbit = new rabbitMQService();
+	matomoClient mc = new matomoClient();
 	
 	public MatchingService() {
 		
@@ -154,25 +156,22 @@ public class MatchingService {
 				application.setPersonURI(p.getURI());
 				application.Save();
 				
-				URL actionUrl = new URL("http://example.org/landing.html?pk_campaign=Email-Nov2011&pk_kwd=LearnMore");
-				String hostUrl = "https://knowledgebizvpn.ddns.net/matomo.php";
+				mc.send("job_applications", "apply", job.getID(), 1);
 				
-//				PiwikRequest request = new PiwikRequest(1, actionUrl);
-//				
-//				PiwikTracker tracker = new PiwikTracker(hostUrl);
-//				
-//				HttpResponse response = tracker.sendRequest(request);
+				//TODO: Calculate job matching score and check if it's above a certain threshold, if so send another tick to matomo
+				if(false) {
+					mc.send("job_applications", "matching", job.getID(), 1);
+				}
 				
+								
 				try {
 //					rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
-					String testD = "{\"job_application\": ";
-					byte[] appData = ModelClassToJson.getApplicationJson(application).toString().getBytes();
-					testD = testD + appData.toString() + " }";
-					Map<String, String> rabbitData = new HashMap<String, String>();
-					rabbitData.put("'job_application'", ModelClassToJson.getApplicationJson(application).toString());
-					System.out.println(rabbitData);
-					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, testD.getBytes());
-					System.out.println(rabbit.channel.isOpen());
+					JsonObject rabbitObject = new JsonObject();
+					rabbitObject.add("job_application", getApplicationForRabbitMQ(application));
+					
+					System.out.println(rabbitObject);
+					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
+//					System.out.println(rabbit.channel.isOpen());
 				}
 				catch (Exception e) {
 					System.out.println("Could not send the created CV to the RabbitMQ queue.");
@@ -201,6 +200,25 @@ public class MatchingService {
 		}
 		
 
+	}
+	
+	private JsonObject getApplicationForRabbitMQ(Application application) {
+		JsonObject jsonPropValue = new JsonObject();
+		
+		jsonPropValue.addProperty("label", application.getLabel());
+		jsonPropValue.addProperty("comment", application.getComment());
+		jsonPropValue.addProperty("personURI", application.getPersonURI());
+//		jsonPropValue.addProperty("personID", RDFObject.uri2id(application.getPersonURI()));
+		jsonPropValue.addProperty("jobURI", application.getJobURI());
+//		jsonPropValue.addProperty("jobID", RDFObject.uri2id(application.getJobURI()));
+		jsonPropValue.addProperty("expectedSalary", application.getExpectedSalary());
+		jsonPropValue.addProperty("salaryCurrency", application.getSalaryCurrency());
+		jsonPropValue.addProperty("availability", application.getAvailability());
+		jsonPropValue.addProperty("uri", application.getURI());
+		jsonPropValue.addProperty("id", RDFObject.uri2id(application.getURI()));
+			
+			
+		return jsonPropValue;
 	}
 
 	@DELETE

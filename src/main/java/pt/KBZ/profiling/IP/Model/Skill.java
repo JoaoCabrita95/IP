@@ -20,6 +20,8 @@ import org.cyberborean.rdfbeans.annotations.RDFBean;
 import org.cyberborean.rdfbeans.annotations.RDFNamespaces;
 import org.cyberborean.rdfbeans.annotations.RDFSubject;
 
+import com.google.gson.JsonElement;
+
 /*
 //for <classpathentry kind="lib" path="lib/RDFBeans-2.1/RDFBeans-2.1.jar"/>
 import com.viceversatech.rdfbeans.annotations.RDF;
@@ -44,7 +46,7 @@ public class Skill extends RDFObject //implements Serializable
 { 	
     private static String ClassType = "cv:Skill";
     private static String prefix = ":";  
-    private List<String> superClassesURIs;
+    private List<String> superClasses;
 //    //Right now the accepted values for skill proficiency are as such: Basic, Junior, Senior, Expert
 //    private String proficiencyLevel;
 //    //Right now the accepted values for skill priority are as such: Low, Medium, High
@@ -54,7 +56,7 @@ public class Skill extends RDFObject //implements Serializable
     private String skillType;
     private String reuseLevel;
     private List<String> synonyms;
-    private List<String> subClassesURIs;
+    private List<String> subClasses;
     
     
     
@@ -66,8 +68,8 @@ public class Skill extends RDFObject //implements Serializable
     public Skill() {
     	super(ClassType, prefix);
     	synonyms = new ArrayList<String>();
-    	subClassesURIs = new ArrayList<String>();
-    	superClassesURIs = new ArrayList<String>();
+    	subClasses = new ArrayList<String>();
+    	superClasses = new ArrayList<String>();
     }
     
     /**
@@ -85,8 +87,8 @@ public class Skill extends RDFObject //implements Serializable
 //    	this.proficiencyLevel = profLevel;
 //    	this.priorityLevel = priority;
     	synonyms = new ArrayList<String>();
-    	subClassesURIs = new ArrayList<String>();
-    	superClassesURIs = new ArrayList<String>();
+    	subClasses = new ArrayList<String>();
+    	superClasses = new ArrayList<String>();
     }
     
     /**
@@ -109,8 +111,8 @@ public class Skill extends RDFObject //implements Serializable
 //    	this.proficiencyLevel = profLevel;
 //    	this.priorityLevel = priority;
     	this.synonyms = synonyms;
-    	this.subClassesURIs = subClasses;
-    	this.superClassesURIs = superClasses;
+    	this.subClasses = subClasses;
+    	this.superClasses = superClasses;
     	this.coreTo = coreTo;
     }
 
@@ -119,7 +121,7 @@ public class Skill extends RDFObject //implements Serializable
      * @return List of super classes
      */
     public List<String> getSuperClasses() {
-    	return superClassesURIs;
+    	return superClasses;
     }
     
     /**
@@ -130,7 +132,7 @@ public class Skill extends RDFObject //implements Serializable
     	String uri = superClass;
 //    	if(uri.startsWith("http"))
 //    		uri = prefix + uri.substring(uri.indexOf("#")+1, uri.indexOf(">"));
-    	this.superClassesURIs.add(uri);
+    	this.superClasses.add(uri);
     }
     
     /**
@@ -138,7 +140,7 @@ public class Skill extends RDFObject //implements Serializable
      * @param superClass URI of a Skill that will be removed as a super class of this Skill
      */
     public void removeSuperClass(String superClass) {
-    	superClassesURIs.remove(superClass);
+    	superClasses.remove(superClass);
     }
     
 //    /**
@@ -269,7 +271,7 @@ public class Skill extends RDFObject //implements Serializable
      * @return List of sub classes of this Skill
      */
     public List<String> getsubClasses(){
-    	return subClassesURIs;
+    	return subClasses;
     }
     
     /**
@@ -280,7 +282,7 @@ public class Skill extends RDFObject //implements Serializable
     	String uri = subClass;
     	if(uri.startsWith("http"))
     		uri = "<" + uri + ">";
-    	subClassesURIs.add(uri);
+    	subClasses.add(uri);
     }
     
     /**
@@ -288,7 +290,7 @@ public class Skill extends RDFObject //implements Serializable
      * @param subClass URI of the sub class that is no longer considered a sub class of this SKill
      */
     public void removesubClasses(String subClass) {
-    	subClassesURIs.remove(subClass);
+    	subClasses.remove(subClass);
     }
     
     /**
@@ -335,7 +337,7 @@ public class Skill extends RDFObject //implements Serializable
             	saveData.put(triple, "String");
             }
             
-            for(String superClass : superClassesURIs) {
+            for(String superClass : superClasses) {
             	triple = new Triple(getURI(), "saro:hasSuperClass" , superClass);
             	saveData.put(triple, "Object");
             }
@@ -345,7 +347,7 @@ public class Skill extends RDFObject //implements Serializable
             	saveData.put(triple, "String");
             }
             
-            for(String subClass : subClassesURIs) {
+            for(String subClass : subClasses) {
             	triple = new Triple(getURI(), "saro:hasSubClass" , subClass);
             	saveData.put(triple, "Object");
             }
@@ -597,5 +599,99 @@ public class Skill extends RDFObject //implements Serializable
         }
         return skill;
     }
-        
+    
+    
+    public boolean equals(Skill compareTo) {
+    	if(!this.getURI().equals(compareTo.getURI()))
+    		return false;
+    	if(!this.getID().equals(compareTo.getID()))
+    		return false;
+    	
+    	if(this.getCoreTo() == null && compareTo.getCoreTo() != null) {
+    		return false;
+    	}
+    	else if(this.getCoreTo() == null && compareTo.getCoreTo() == null) {
+    		
+    	}
+    	else if(!this.getCoreTo().equals(compareTo.getCoreTo())){
+        	return false;
+    	}
+    	
+    	if(this.getIsFrom() == null && compareTo.getIsFrom() != null) {
+    		return false;
+    	}
+    	else if(this.getIsFrom() == null && compareTo.getIsFrom() == null) {
+    		
+    	}
+    	else if(!this.getIsFrom().equals(compareTo.getIsFrom()))
+    		return false;
+    	
+    	if(this.getSkillType() == null && compareTo.getSkillType() != null) {
+    		return false;
+    	}
+    	else if(this.getSkillType() == null && compareTo.getSkillType() == null) {
+    		
+    	}
+    	else if(!this.getSkillType().equals(compareTo.getSkillType()))
+    		return false;
+    	
+    	if(this.getReuseLevel() == null && compareTo.getReuseLevel() != null) {
+    		return false;
+    	}
+    	else if(this.getReuseLevel() == null && compareTo.getReuseLevel() == null) {
+    		
+    	}
+    	else if(!this.getReuseLevel().equals(compareTo.getReuseLevel()))
+    		return false;
+    	
+    	if(this.getLabel() == null && compareTo.getLabel() != null) {
+    		return false;
+    	}
+    	else if(this.getLabel() == null && compareTo.getLabel() == null) {
+    		
+    	}
+    	else if(!this.getLabel().equals(compareTo.getLabel()))
+    		return false;
+    	
+    	if(this.getComment() == null && compareTo.getComment() != null) {
+    		return false;
+    	}
+    	else if(this.getComment() == null && compareTo.getComment() == null) {
+    		
+    	}
+    	else if(!this.getComment().equals(compareTo.getComment()))
+    		return false;
+    	
+    	for(String subClass : this.getsubClasses()) {
+    		if(!compareTo.getsubClasses().contains(subClass))
+    			return false;
+    	}
+    	
+    	for(String subClass : compareTo.getsubClasses()) {
+    		if(!this.getsubClasses().contains(subClass))
+    			return false;
+    	}
+    	
+    	for(String superClass : this.getSuperClasses()) {
+    		if(!compareTo.getSuperClasses().contains(superClass))
+    			return false;
+    	}
+    	
+    	for(String superClass : compareTo.getSuperClasses()) {
+    		if(!this.getSuperClasses().contains(superClass))
+    			return false;
+    	}
+    	
+    	for(String synonim : this.getSynonyms()) {
+    		if(!compareTo.getSynonyms().contains(synonim))
+    			return false;
+    	}
+    	
+    	for(String synonim : compareTo.getSynonyms()) {
+    		if(!this.getSynonyms().contains(synonim))
+    			return false;
+    	}
+    	
+    	return true;
+    }
 }
