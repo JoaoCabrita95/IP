@@ -29,13 +29,38 @@ public class RestServer {
 	public static String SERVER_BASE_URI = "http://%s:%s/";
 	
 	public static void main(String[] args) throws Exception {
+		
+//		new Thread() {
+//			public void run() {
+//				try {
+//					FusekiLogging.setLogging();
+//					Dataset ds = DatasetFactory.create();
+//					FusekiServer server = FusekiServer.create()
+//					  .port(3030)
+//					  .add("/QualiChain", ds, true)
+//					  .build();
+//					server.start();
+//					Log.info("Fuseki Server Inicialized");
+//				}
+//				catch(Exception e) {
+//					Log.info(e.getMessage());
+//				}
+//			}
+//		}.start();
 
 		Configuration cnf=new Configuration();
-		cnf.LoadConfiguration();
+		if(args.length > 0) {
+			if(args[0].equals("test"))
+				cnf.LoadConfiguration(true);
+			else if(args[0].equals("internal")) 
+				SparqlEndPoint.REQUEST_PATH = "http://localhost:4343/QualiChain/";
+			else
+				cnf.LoadConfiguration(false);
+		}
+		else
+			cnf.LoadConfiguration(false);
 		
-		if(args.length > 0)
-			SparqlEndPoint.REQUEST_PATH = args[0];
-
+			
 		Log.setLevel( Level.FINER );
 
 		String ip = IP.hostAddress();

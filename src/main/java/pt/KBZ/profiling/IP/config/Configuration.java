@@ -22,7 +22,7 @@ public class Configuration {
     
     }
 
-    public void LoadConfiguration() {
+    public void LoadConfiguration(boolean test) {
 
         Properties prop = new Properties();
         try {
@@ -30,7 +30,10 @@ public class Configuration {
             prop.load(is);
 
             port = Integer.parseInt(prop.getProperty("port","8000"));
-            SparqlEndPoint.REQUEST_PATH = prop.getProperty("sparqlendpoint");
+            if(!test)
+            	SparqlEndPoint.REQUEST_PATH = prop.getProperty("sparqlendpoint");
+            else
+            	SparqlEndPoint.REQUEST_PATH = prop.getProperty("sparqlendpointtest");
 
         } catch (IOException e) {
             e.printStackTrace();
