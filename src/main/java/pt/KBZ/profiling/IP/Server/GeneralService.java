@@ -1,6 +1,7 @@
 package IP.Server;
 
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -34,6 +35,9 @@ import IP.Model.Junit.Data.careerPathTestData;
 
 @Path("/")
 public class GeneralService {
+	
+	rabbitMQService rabbit = new rabbitMQService();
+	
 	public GeneralService() {
 	}
 	
@@ -195,5 +199,21 @@ public class GeneralService {
 			}
 			
 			return Response.ok("Test data has been inserted").build();
+		}
+		
+		@POST
+		@Path("/test/insertPresetTestData/{extraData}")
+		public String rabbitMQTest() {
+			
+			String test = "test";
+			
+			try {
+				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, test.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
+			return null;
 		}
 }

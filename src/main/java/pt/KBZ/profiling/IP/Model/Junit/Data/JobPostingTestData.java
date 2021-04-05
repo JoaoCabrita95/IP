@@ -31,7 +31,7 @@ public class JobPostingTestData {
 				"senior_level", null, null, "27", null, null, null, null));
 		JPs.add(new JobPosting("Job3", "Data Scientist", "JobPosting Comment 3", "Job Description 3", "contract",
 				"Sector 1", "Job Position Name 3", "Listing Organization 2", "Hiring Organization 2", "Location 3", "2020-01-01", "2022-01-01",
-				"entity_level", null, null, "27", null, null, null, null));
+				"entry_level", null, null, "27", null, null, null, null));
 		JPs.add(new JobPosting("Job4", "Frontend Developer", "JobPosting Comment 4", "Job Description 4", "temporary",
 				"Sector 2", "Job Position Name 4", "Listing Organization 2", "Hiring Organization 1", "Location 1", "2020-01-01", "2022-01-01",
 				"associate", null, null, "27", null, null, null, null));

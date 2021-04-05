@@ -740,7 +740,7 @@ public class CompleteServiceTest {
 					FusekiLogging.setLogging();
 					Dataset ds = DatasetFactory.create();
 					FusekiServer server = FusekiServer.create()
-					  .port(3330)
+					  .port(4343)
 					  .add("/QualiChain", ds, true)
 					  .build();
 					server.start();
@@ -755,7 +755,7 @@ public class CompleteServiceTest {
 			public void run() {
 				try {
 					String[] args = new  String[1];
-					args[0] = "http://localhost:3330/QualiChain/";
+					args[0] = "http://localhost:4343/QualiChain/";
 					RestServer.main(args);
 					Log.info("RestServer inicialized");
 				} catch (Exception e) {
