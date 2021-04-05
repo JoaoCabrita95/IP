@@ -28,6 +28,9 @@ public class RestServer {
 
 		Configuration cnf=new Configuration();
 		cnf.LoadConfiguration();
+		
+		if(args.length > 0)
+			SparqlEndPoint.REQUEST_PATH = args[0];
 
 		Log.setLevel( Level.FINER );
 
