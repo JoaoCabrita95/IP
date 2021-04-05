@@ -68,7 +68,7 @@ public class CompleteServiceTest {
 			FileLogOutput.setLevel(logLevel);
 			Log.setLevel(logLevel);
 			
-			Log.info("=====================================START OF TEST============================================");
+			Log.info("=====================================START OF TEST============================================\n");
 			
 			initializeServices();
 			
@@ -84,7 +84,7 @@ public class CompleteServiceTest {
 			
 			Log.info("");
 			Log.info("=============================================");
-			String expectedResult = "{ \"head\": {\"vars\": [ \"subject\" , \"predicate\" , \"object\" ]} ,\"results\": {\"bindings\": []}} ";
+			String expectedResult = "{\"head\": {\"vars\": [ \"subject\" , \"predicate\" , \"object\" ]} ,\"results\": {\"bindings\": []}} ";
 			Log.info("Connection test... Server should be empty, should return: \n"
 					+ "{ \"head\": {\"vars\": [ \"subject\" , \"predicate\" , \"object\" ]} ,\"results\": {\"bindings\": []}} ");
 			String testConnection = SparqlEndPoint.query("SELECT ?subject ?predicate ?object\r\n" + 
@@ -94,11 +94,11 @@ public class CompleteServiceTest {
 					"}");
 			Log.info("Server Response: \n" + testConnection);
 			assertTrue(testConnection.trim().equals(expectedResult.trim()));
-			Log.info("=============================================");
+			Log.info("=============================================\n");
 			Log.info("");
-			Log.info("SERVER RESPONSE TEST SUCCESSFUL");
+			Log.info("SERVER RESPONSE TEST SUCCESSFUL\n");
 			Log.info("");
-			Log.info("=============================================");
+			Log.info("=============================================\n");
 			Log.info("");
 			Thread.sleep(1000L);
 			
@@ -734,28 +734,29 @@ public class CompleteServiceTest {
 	 * Starts the temporary servers for the duration of each test 
 	 */
 	private void initializeServices() {
-		new Thread() {
-			public void run() {
-				try {
-					FusekiLogging.setLogging();
-					Dataset ds = DatasetFactory.create();
-					FusekiServer server = FusekiServer.create()
-					  .port(4343)
-					  .add("/QualiChain", ds, true)
-					  .build();
-					server.start();
-					Log.info("Fuseki Server Inicialized");
-				}
-				catch(Exception e) {
-					Log.info(e.getMessage());
-				}
-			}
-		}.start();
+//		new Thread() {
+//			public void run() {
+//				try {
+//					FusekiLogging.setLogging();
+//					Dataset ds = DatasetFactory.create();
+//					FusekiServer server = FusekiServer.create()
+//					  .port(3030)
+//					  .add("/QualiChainTest", ds, true)
+//					  .build();
+//					server.start();
+//					Log.info("Fuseki Server Inicialized");
+//				}
+//				catch(Exception e) {
+//					Log.info("FUSEKI SERVER NOT FOUND ON PORT: 3030, DATASET /QualiChainTest");
+//				}
+//			}
+//		}.start();
 		new Thread() {
 			public void run() {
 				try {
 					String[] args = new  String[1];
-					args[0] = "http://localhost:4343/QualiChain/";
+//					args[0] = "http://localhost:4343/QualiChain/";
+					args[0] = "test";
 					RestServer.main(args);
 					Log.info("RestServer inicialized");
 				} catch (Exception e) {

@@ -57,7 +57,7 @@ class ModelGlobalTest {
 	@BeforeAll
 	void init() {
 		
-		cnf.LoadConfiguration();
+		cnf.LoadConfiguration(true);
 		//Reset database
 		SparqlEndPoint.deleteTriple("?s ?o ?p", "?s ?o ?p");
 		skd = new SkillTestData();

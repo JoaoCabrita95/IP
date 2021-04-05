@@ -36,7 +36,7 @@ class CVModelTest {
 	
 	@BeforeAll
 	void init() {
-		cnf.LoadConfiguration();
+		cnf.LoadConfiguration(true);
 		//Reset database
 		SparqlEndPoint.deleteTriple("?s ?o ?p", "?s ?o ?p");
 		//Make sure database has prefixes
