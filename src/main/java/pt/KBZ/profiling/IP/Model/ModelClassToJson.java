@@ -81,6 +81,7 @@ public class ModelClassToJson {
 		jsonPropValue.addProperty("comment", job.getComment());
 		jsonPropValue.addProperty("creator_id", job.getcreator_id());
 		jsonPropValue.addProperty("jobDescription", job.getJobDescription());
+		jsonPropValue.addProperty("specialization", job.getSpecialization());
 		jsonPropValue.addProperty("contractType", job.getContractType());
 		jsonPropValue.addProperty("sector", job.getSector());
 		jsonPropValue.addProperty("occupation", job.getOccupation());

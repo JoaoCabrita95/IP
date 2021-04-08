@@ -43,7 +43,8 @@ import IP.Server.RestServer;
 
 public class CompleteServiceTest {
 	
-	public static String REQUEST_PATH = "http://localhost:8000";
+	public static String REQUEST_PATH = "http://localhost:7529";
+	private static String REST_PORT = "7529";
 	private static Logger Log = Logger.getLogger(CompleteServiceTest.class.getName());
 	private static FileHandler FileLogOutput; 
 	private static Level logLevel;
@@ -74,6 +75,8 @@ public class CompleteServiceTest {
 			
 			Thread.sleep(4000L);
 			
+			
+			
 			//Variables for parsing server responses
 			Gson gson = new Gson();
 	        
@@ -82,18 +85,43 @@ public class CompleteServiceTest {
 			String body;
 			String response;
 			
+			//Clear test database
+			request = new HTTPrequest(REQUEST_PATH + "/ClearDatabase");	
+			
+			request.addRequestProperty("Content-Type", "text/plain");
+			request.addRequestProperty("Accept", "*/*");
+			request.DELETErequest();
+	
+			
+			//request.addURLParam("query="+query);
+			response = request.Response();
 			Log.info("");
 			Log.info("=============================================");
-			String expectedResult = "{\"head\": {\"vars\": [ \"subject\" , \"predicate\" , \"object\" ]} ,\"results\": {\"bindings\": []}} ";
-			Log.info("Connection test... Server should be empty, should return: \n"
-					+ "{ \"head\": {\"vars\": [ \"subject\" , \"predicate\" , \"object\" ]} ,\"results\": {\"bindings\": []}} ");
-			String testConnection = SparqlEndPoint.query("SELECT ?subject ?predicate ?object\r\n" + 
-					"WHERE {\r\n" + 
-					"  ?subject ?predicate ?object\r\n" + 
-					"  \r\n" + 
-					"}");
-			Log.info("Server Response: \n" + testConnection);
-			assertTrue(testConnection.trim().equals(expectedResult.trim()));
+			Log.info("SERVER RESPONSE:");
+			Log.info(response);
+			Log.info("=============================================");
+			Log.info("");
+			request.close();
+			
+			Log.info("");
+			Log.info("=============================================");
+			Log.info("Connection test... Expecting \"Root\" response");
+			
+			request = new HTTPrequest(REQUEST_PATH + "/");	
+
+			request.addRequestProperty("Content-Type", "text/plain");
+			request.addRequestProperty("Accept", "*/*");
+			request.GETrequest();
+			
+			response = request.Response();
+			
+			Log.info(response);
+
+			assertTrue(response.equals("Root"));
+			
+
+//			Thread.sleep(8000L);
+			
 			Log.info("=============================================\n");
 			Log.info("");
 			Log.info("SERVER RESPONSE TEST SUCCESSFUL\n");
@@ -597,6 +625,9 @@ public class CompleteServiceTest {
 			Log.info("");
 			request.close();
 			
+			
+			
+			
 	
 			Log.info("======================================END OF TEST=============================================");
 						
@@ -740,7 +771,7 @@ public class CompleteServiceTest {
 //					FusekiLogging.setLogging();
 //					Dataset ds = DatasetFactory.create();
 //					FusekiServer server = FusekiServer.create()
-//					  .port(3030)
+//					  .port(4343)
 //					  .add("/QualiChainTest", ds, true)
 //					  .build();
 //					server.start();
@@ -754,9 +785,11 @@ public class CompleteServiceTest {
 		new Thread() {
 			public void run() {
 				try {
-					String[] args = new  String[1];
+					String[] args = new  String[2];
 //					args[0] = "http://localhost:4343/QualiChain/";
 					args[0] = "test";
+//					args[0] = "internal";
+					args[1] = REST_PORT;
 					RestServer.main(args);
 					Log.info("RestServer inicialized");
 				} catch (Exception e) {

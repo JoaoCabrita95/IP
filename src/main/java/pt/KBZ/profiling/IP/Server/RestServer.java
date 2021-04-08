@@ -53,7 +53,7 @@ public class RestServer {
 			if(args[0].equals("test"))
 				cnf.LoadConfiguration(true);
 			else if(args[0].equals("internal")) 
-				SparqlEndPoint.REQUEST_PATH = "http://localhost:4343/QualiChain/";
+				SparqlEndPoint.REQUEST_PATH = "http://localhost:4343/QualiChainTest/";
 			else
 				cnf.LoadConfiguration(false);
 		}
@@ -64,7 +64,12 @@ public class RestServer {
 		Log.setLevel( Level.FINER );
 
 		String ip = IP.hostAddress();
-		String serverURI = String.format(SERVER_BASE_URI, ip, Configuration.port);
+		String serverURI;
+		if(args.length > 0) {
+			serverURI = String.format(SERVER_BASE_URI, ip, args[1]);
+		}
+		else
+			serverURI = String.format(SERVER_BASE_URI, ip, Configuration.port);
 		
 		ResourceConfig config = new ResourceConfig();
 
