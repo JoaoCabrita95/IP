@@ -213,6 +213,7 @@ public class JobpostingService {
 		jsonPropValue.addProperty("comment",job.getComment());
 		jsonPropValue.addProperty("jobDescription", job.getJobDescription());
 		jsonPropValue.addProperty("contractType",job.getContractType());
+		jsonPropValue.addProperty("specialization", job.getSpecialization());
 		jsonPropValue.addProperty("sector",job.getSector());
 		jsonPropValue.addProperty("country",job.getCountry());
 		jsonPropValue.addProperty("state",job.getState());

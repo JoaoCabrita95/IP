@@ -24,6 +24,7 @@ public class JobPostingTestData {
 		jp.setCity("city 1");
 		jp.setState("State 1");
 		jp.setCountry("Country 1");
+		jp.setSpecialization("Project Manager");
 		JPs.set(0, jp);
 		
 		JPs.add(new JobPosting("Job2", "Software Engineer", "JobPosting Comment 2", "Development of Software products", "contract",

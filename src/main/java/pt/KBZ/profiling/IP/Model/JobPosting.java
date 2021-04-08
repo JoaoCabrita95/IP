@@ -42,6 +42,7 @@ public class JobPosting extends RDFObject {
 	private String seniorityLevel;
 	private String expectedSalary;
 	private String salaryCurrency;
+	private String specialization;
 	//match with courses
 	private List<Course> coursesReq;
 	//match with work experience
@@ -121,6 +122,14 @@ public class JobPosting extends RDFObject {
 		if(jobApplications == null)
 			this.jobApplications = new ArrayList<Application>();
 		
+	}
+	
+	public String getSpecialization() {
+		return specialization;
+	}
+	
+	public void setSpecialization(String spec) {
+		specialization = spec;
 	}
 	
 	public String getCountry() {
@@ -437,6 +446,12 @@ public class JobPosting extends RDFObject {
         
         if(seniorityLevel != null) {
         	triple = new Triple(getURI(), prefix + "level", seniorityLevel);
+        	saveData.put(triple, "String");
+//        	SparqlEndPoint.insertPropertyValue(triple);
+        }
+        
+        if(specialization != null) {
+        	triple = new Triple(getURI(), prefix + "specialization", specialization);
         	saveData.put(triple, "String");
 //        	SparqlEndPoint.insertPropertyValue(triple);
         }
@@ -771,6 +786,11 @@ public class JobPosting extends RDFObject {
                 	jp.setCity(city);
                 	break;
                 	
+                case "specialization":
+                	String spec = object;
+                	jp.setSpecialization(spec);
+                	break;
+                	
                 default:
                     break;
             }
@@ -976,6 +996,16 @@ public class JobPosting extends RDFObject {
     		
     	}
     	else if(!this.getSalaryCurrency().equals(compareTo.getSalaryCurrency())){
+        	return false;
+    	}
+    	
+    	if(this.getSpecialization() == null && compareTo.getSpecialization() != null) {
+    		return false;
+    	}
+    	else if(this.getSpecialization() == null && compareTo.getSpecialization() == null) {
+    		
+    	}
+    	else if(!this.getSpecialization().equals(compareTo.getSpecialization())){
         	return false;
     	}
     	
