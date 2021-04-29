@@ -45,6 +45,11 @@ public class careerPathTestData {
 				"Business inc", "Business inc", "Business inc address", "01/10/2016", "ongoing", null, "1200", "Euro", null,
 				tjr, tc, new ArrayList<WorkHistory>(), new ArrayList<Education>());
 		
+		currentJob.setCity("city 1");
+		currentJob.setState("State 1");
+		currentJob.setCountry("Country 1");
+		currentJob.setSpecialization("Test Developer");
+		
 		//Create first job work history for cv60 (first user test)
 		twh.add(new WorkHistory("wh98", currentJob.getOccupation(), currentJob.getStartDate(), currentJob.getEndDate(),
 				currentJob.getHiringOrg(), null, currentJob.getJobDescription(), null, null, "true", null, currentJob.getURI()));
@@ -87,6 +92,12 @@ public class careerPathTestData {
 				currentJob.getHiringOrg(), null, currentJob.getJobDescription(), null, null, "false", null, currentJob.getURI()));
 		JobPosting temp = new JobPosting("Job61", "Job fork 1-1", "Career path advisor test job 1","Junior programmer" ,null , "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Test Developer");
+		
 		jps.add(temp);
 		
 		cvs.get(1).setCurrentJob(temp.getURI());
@@ -98,6 +109,12 @@ public class careerPathTestData {
 				currentJob.getHiringOrg(), null, currentJob.getJobDescription(), null, null, "false", null, currentJob.getURI()));
 		temp = new JobPosting("Job62", "Job fork 1-2", "Career path advisor test job 2", "Back-End Developer", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Backend Developer");
+		
 		jps.add(temp);
 		
 		//second fork-1
@@ -106,6 +123,12 @@ public class careerPathTestData {
 				jps.get(1).getHiringOrg(), null, jps.get(1).getJobDescription(), null, null, "false", null, jps.get(1).getURI()));
 		temp = new JobPosting("Job63", "Job fork 2-1-1", "Career path advisor test job 3", "Senior Developer", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Devops Engineer");
+		
 		jps.add(temp);
 		
 		cvs.get(1).addWorkHistory(twh.get(0));
@@ -116,6 +139,12 @@ public class careerPathTestData {
 				jps.get(1).getHiringOrg(), null, jps.get(1).getJobDescription(), null, null, "false", null, jps.get(1).getURI()));
 		temp = new JobPosting("Job64", "Job fork 2-1-2", "Career path advisor test job 4", "Front-End Developer", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Frontend Developer");
+		
 		jps.add(temp);
 		
 		//second fork-2
@@ -124,6 +153,12 @@ public class careerPathTestData {
 				jps.get(2).getHiringOrg(), null, jps.get(2).getJobDescription(), null, null, "false", null, jps.get(2).getURI()));
 		temp = new JobPosting("Job65", "Job fork 2-2-1", "Career path advisor test job 5", "Server Service Expert", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Data Engineer");
+		
 		jps.add(temp);
 		
 		//third fork-1
@@ -132,6 +167,12 @@ public class careerPathTestData {
 				jps.get(3).getHiringOrg(), null, jps.get(3).getJobDescription(), null, null, "false", null, jps.get(3).getURI()));
 		temp = new JobPosting("Job66", "Job fork 3-1-1", "Career path advisor test job 6", "Lead Developer", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Devops Engineer");
+		
 		jps.add(temp);
 		
 		//third fork-1/2
@@ -140,6 +181,12 @@ public class careerPathTestData {
 				jps.get(4).getHiringOrg(), null, jps.get(4).getJobDescription(), null, null, "false", null, jps.get(4).getURI()));
 		temp = new JobPosting("Job67", "Job fork 3-1-2", "Career path advisor test job 7", "Full-Stack Developer", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Devops Engineer");
+		
 		jps.add(temp);
 				
 		//third fork-2
@@ -148,6 +195,12 @@ public class careerPathTestData {
 				jps.get(5).getHiringOrg(), null, jps.get(5).getJobDescription(), null, null, "false", null, jps.get(5).getURI()));
 		temp = new JobPosting("Job68", "Job fork 3-2-1", "Career path advisor test job 8", "Software Architect", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Mobile Developer");
+		
 		jps.add(temp);
 		
 		//third fork-2
@@ -158,6 +211,12 @@ public class careerPathTestData {
 				jps.get(8).getHiringOrg(), null, jps.get(8).getJobDescription(), null, null, "false", null, jps.get(8).getURI()));
 		temp = new JobPosting("Job69", "Job fork 3-2-2", "Career path advisor test job 9", "Product Manager", null, "IT", "Manager", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Project Manager");
+		
 		jps.add(temp);
 				
 		//fourth fork-1/2
@@ -166,11 +225,17 @@ public class careerPathTestData {
 				temp.getHiringOrg(), null, temp.getJobDescription(), null, null, "false", null, temp.getURI()));
 		temp = new JobPosting("Job70", "Job fork 4-2-1", "Career path advisor test job 10", "Senior advisory", null, "IT", "Programmer", "Business inc", "Business inc",
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Business Analyst");
+		
 		jps.add(temp);
 		
-		Skill skill = new Skill("skill_60", "Final skill for end of career", null, null, null, "cv:Skill");
+		Skill skill = new Skill("skill_60", "Final skill for end of career", null, null, null);
 		SkillJobReq skillRef = new SkillJobReq(skill, "High", "advanced");
-		Skill skill2 = new Skill("skill_61", "Second skill for end of career", null, null, null, "cv:Skill");
+		Skill skill2 = new Skill("skill_61", "Second skill for end of career", null, null, null);
 		SkillJobReq skillRef2 = new SkillJobReq(skill2, "High", "advanced");
 		
 		//fourth fork-2
@@ -181,6 +246,12 @@ public class careerPathTestData {
 				"Business inc address", null, null, null, "1400", "Euro", null, null, null, twh, null);
 		temp.addSkillRef(skillRef);
 		temp.addSkillRef(skillRef2);
+		
+		temp.setCity("city 1");
+		temp.setState("State 1");
+		temp.setCountry("Country 1");
+		temp.setSpecialization("Project Manager");
+		
 		jps.add(temp);
 				
 	}

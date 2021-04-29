@@ -68,10 +68,10 @@ public class CVTestData {
 				"1200", "Euro", null, null, null, null, new Application(":app30", ":30", ":Job2", "3000", "01/01/21", "Euro")));
 		
 		List<WorkHistory> twh = new LinkedList<WorkHistory>();
-		twh.add(new WorkHistory(":wh51", "RoleName51", "20/02/2000", "30/05/2004", "Employer51", "4 years, 3 months", "RoleDescription51", null, null, "false", "jobType51", ":job50"));
+		twh.add(new WorkHistory("wh51", "RoleName51", "20/02/2000", "30/05/2004", "Employer51", "4 years, 3 months", "RoleDescription51", null, null, "false", "jobType51", ":job50"));
 		
 		List<Education> te = new LinkedList<Education>();
-		te.add(new Education(":ed51", "Major51", null, "Bachelors", "01/01/1997", "01/01/2000", "Educational Organization51", "Description of educational course"));
+		te.add(new Education("ed51", "Major51", null, "Bachelors", "01/01/1997", "01/01/2000", "Educational Organization51", "Description of educational course"));
 		
 		List<Course> tc = new LinkedList<Course>();
 		tc.add(new Course());

@@ -158,11 +158,11 @@ public class Education extends RDFObject{
 	 */
 	public static Education getEducation(String URI) {
 		String uri = URI;
-    	if(!uri.startsWith(":") && !uri.startsWith("<http")) {
+    	if(!uri.startsWith(prefix) && !uri.startsWith("<http")) {
         	if(uri.startsWith("http"))
         		uri ="<"+ uri + ">";
         	else
-        		uri = ":"+uri;
+        		uri = prefix+uri;
 		}
 		String properties = SparqlEndPoint.getAllProperties(uri);
 	    //System.out.println(properties);

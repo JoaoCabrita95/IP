@@ -34,7 +34,7 @@ import com.google.gson.JsonObject;
  */
 public class Person extends RDFObject {
     private static final String ClassType ="qc:Person";  
-    public static final String prefix = "qc:";
+    public static final String prefix = ":";
     private String name;
     private String surname;
     private String gender;

@@ -36,6 +36,7 @@ public class ModelClassToJson {
 		jsonPropValue.addProperty("comment", cv.getComment());
 		jsonPropValue.addProperty("title", cv.getTitle());
 		jsonPropValue.addProperty("personURI", cv.getPersonURI());
+		jsonPropValue.addProperty("realocationInfo", cv.getRealocation());
 		jsonPropValue.addProperty("userID", cv.getPersonURI().substring(1));
 		jsonPropValue.addProperty("description", cv.getDescription());
 		jsonPropValue.addProperty("targetSector", cv.getTargetSector());
@@ -70,6 +71,13 @@ public class ModelClassToJson {
 			jsonResults.add(ModelClassToJson.getEducationJson(ed));
 		}
 		jsonPropValue.add("education",jsonResults);
+		
+		jsonResults = new JsonArray();
+		for(String acc : cv.getAccomplishments()) {
+			jsonResults.add(acc);
+		}
+		jsonPropValue.add("accomplishments",jsonResults);
+		
 		
 		return jsonPropValue;
 	}
@@ -115,6 +123,8 @@ public class ModelClassToJson {
 		}
 		jsonPropValue.add("workExperienceReq",jsonResults);
 		
+
+		jsonResults = new JsonArray();
 		for(Course course : job.getCapabilityReq()) {
 			jsonResults.add(ModelClassToJson.getCourseJson(course));
 		}
@@ -129,6 +139,8 @@ public class ModelClassToJson {
 		return jsonPropValue;
 	}
 	
+
+
 	public static JsonElement getApplicationJson(Application application) {
 			
 		JsonObject jsonPropValue = new JsonObject();
@@ -232,6 +244,7 @@ public class ModelClassToJson {
         result.addProperty("evalDate", skillRef.getEvalDate());
         result.addProperty("acquiredDate", skillRef.getAcquiredDate());
         result.addProperty("progress", skillRef.getProgress());
+        result.addProperty("uri", skillRef.getURI());
         
         return result;
     }
@@ -256,6 +269,9 @@ public class ModelClassToJson {
 		jsonPropValue.addProperty("comment", workHistory.getComment());
 		jsonPropValue.addProperty("position", workHistory.getPosition());
 		jsonPropValue.addProperty("employer", workHistory.getEmployer());
+		jsonPropValue.addProperty("description", workHistory.getDescription());
+		jsonPropValue.addProperty("jobReference", workHistory.getJobReference());
+		jsonPropValue.addProperty("jobType", workHistory.getJobType());
 		jsonPropValue.addProperty("from", workHistory.getFrom());
 		jsonPropValue.addProperty("to", workHistory.getTo());
 		jsonPropValue.addProperty("duration", workHistory.getDuration());
@@ -335,14 +351,19 @@ public class ModelClassToJson {
 	
 	public static JsonElement getJobSkillRef(SkillJobReq ref) {
 		
+		Skill skill = Skill.getSkill(ref.getSkillURI());
+		
 		JsonObject jsonPropValue = new JsonObject();
-		jsonPropValue.addProperty("label", ref.getLabel());
+		jsonPropValue.addProperty("label", ref.getSkillName());
 		jsonPropValue.addProperty("comment", ref.getComment());
 		if(ref.getSkillURI() != null)
-			jsonPropValue.addProperty("skillID", ref.getSkillURI().substring(1));
-		jsonPropValue.addProperty("skillName", ref.getSkillName());
+			jsonPropValue.addProperty("uri", skill.getURI());
+		jsonPropValue.addProperty("id", skill.getID());
 		jsonPropValue.addProperty("proficiencyLevel", ref.getSkillLevel());
 		jsonPropValue.addProperty("priorityLevel", ref.getPriorityLevel());
+		jsonPropValue.addProperty("coreTo", skill.getCoreTo());
+		jsonPropValue.addProperty("isFrom", skill.getIsFrom());
+		jsonPropValue.addProperty("skillType", skill.getSkillType());
 //		jsonPropValue.addProperty("uri", ref.getURI());
 //		jsonPropValue.addProperty("id", RDFObject.uri2id(ref.getURI()));
 			

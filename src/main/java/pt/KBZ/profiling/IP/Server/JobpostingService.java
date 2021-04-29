@@ -206,7 +206,6 @@ public class JobpostingService {
 	 * @return
 	 */
 	private JsonObject getJobPostinginJson(JobPosting job) {
-		JsonArray jsonTmp = new JsonArray();
 		
 		JsonObject jsonPropValue = new JsonObject();
 		jsonPropValue.addProperty("label",job.getLabel());
@@ -229,7 +228,8 @@ public class JobpostingService {
 		jsonPropValue.addProperty("uri", job.getURI());
 		jsonPropValue.addProperty("id", RDFObject.uri2id(job.getURI()));
 		
-		
+
+		JsonArray jsonTmp = new JsonArray();
 		for(SkillJobReq skillReq : job.getJobSkillReqRefs()) {
 			jsonTmp.add(ModelClassToJson.getJobSkillRef(skillReq));
 		}

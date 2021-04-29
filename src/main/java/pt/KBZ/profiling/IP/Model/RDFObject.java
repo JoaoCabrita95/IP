@@ -47,15 +47,15 @@ public class RDFObject {
 		CLASSTYPE = classType;
 		PREFIX = prefix;
 		if(id != null) {
-			if(id.startsWith(":")) {
+			if(id.startsWith(PREFIX)) {
 				uri = id;
 				this.id = id.substring(1);
 			}
 			else
-				uri = ":" + id;
+				uri = PREFIX + id;
 		}
 		else
-			uri = ":" + id;
+			uri = PREFIX + id;
 		setURI(uri);
 		this.id = id;
 		this.label = label;
@@ -101,8 +101,8 @@ public class RDFObject {
 	public void setURI(String URI) {
 		this.uri = URI;
 		if(URI.contains("#"))
-			this.uri = ":" + URI.substring(URI.indexOf("#")+1, URI.lastIndexOf(">"));
-		if(URI.contains(":"))
+			this.uri = PREFIX + URI.substring(URI.indexOf("#")+1, URI.lastIndexOf(">"));
+		if(URI.contains(PREFIX))
 			id = URI.substring(URI.indexOf(":")+1);
 		else if(URI.contains("#"))
 			id = URI.substring(URI.indexOf("#")+1, URI.lastIndexOf(">"));
@@ -145,8 +145,12 @@ public class RDFObject {
 		
 		Map<Triple, String> saveData = new HashMap<Triple, String>();
 		
-		if(id == null || uri == null || (!uri.startsWith(":") && !uri.startsWith("<http"))) {
+		if(id == null || uri == null || (!uri.startsWith(PREFIX) && !uri.startsWith("<http")) || !uri.startsWith(PREFIX)) {
 			autoGenerateIDURI();
+		}
+		
+		if(!uri.startsWith(PREFIX)){
+			uri = PREFIX + uri;
 		}
 		
 		Triple triple = new Triple(uri, "rdf:type", CLASSTYPE);
@@ -195,7 +199,7 @@ public class RDFObject {
 		
 		do {
 			id ="id" + UUID.randomUUID().toString();
-			uri = ":" + id;
+			uri = PREFIX + id;
 		}
 		while(SparqlEndPoint.existURI(uri));
 	}

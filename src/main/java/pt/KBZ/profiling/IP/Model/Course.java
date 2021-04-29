@@ -165,11 +165,11 @@ public class Course extends RDFObject {
 	 */
 	public static Course getCourse(String URI) {
 		String uri = URI;
-    	if(!uri.startsWith(":") && !uri.startsWith("<http")) {
+    	if(!uri.startsWith(prefix) && !uri.startsWith("<http")) {
         	if(uri.startsWith("http"))
         		uri ="<"+ uri + ">";
         	else
-        		uri = ":"+uri;
+        		uri = prefix+uri;
 		}
 		String properties = SparqlEndPoint.getAllProperties(uri);
 	    //System.out.println(properties);
@@ -227,7 +227,7 @@ public class Course extends RDFObject {
                 case "relatedTo":
                 	String relatedTo = object;
                 	if(relatedTo.contains("#"))
-                		relatedTo = relatedTo.substring(relatedTo.indexOf("#") + 1);
+                		relatedTo = "saro:" + relatedTo.substring(relatedTo.indexOf("#") + 1);
                 	crs.addRelatedTo(relatedTo);
                 	break;
                 	
