@@ -16,7 +16,7 @@ import org.apache.jena.rdf.model.Resource;
 public class SkillRefObject extends RDFObject {
 	
 	public static final String ClassType ="qc:skillRef";     
-    private static final String prefix ="qc:";     
+    private static final String prefix =":";     
 	private Skill skill;
 	private String skillURI;
 	private String skillID;
@@ -50,7 +50,7 @@ public class SkillRefObject extends RDFObject {
 	
 	public String getSkillURI() {
 		if(skillURI == null && skillID != null) {
-			skillURI = ":" + skillID;
+			skillURI = "saro:" + skillID;
 		}
 		return skillURI;
 	}
@@ -83,7 +83,7 @@ public class SkillRefObject extends RDFObject {
 		Map<Triple, String> saveData = new HashMap<Triple, String>();
 		
 		if(skillURI == null && skillID != null) {
-			skillURI = ":" + skillID;
+			skillURI = "saro:" + skillID;
 		}
 		
 		if(skill == null && skillURI != null) {
@@ -115,11 +115,11 @@ public class SkillRefObject extends RDFObject {
 	
 	public static SkillRefObject getSkillRefObject(String URI) {
 		String uri = URI;
-        if (!uri.startsWith(":") && !uri.startsWith("<http")){
+        if (!uri.startsWith(prefix) && !uri.startsWith("<http")){
         	if(uri.contains("#"))
-        		uri = ":" + uri.substring(uri.indexOf("#") + 1);
+        		uri = prefix + uri.substring(uri.indexOf("#") + 1);
         	else
-        		uri = ":"+URI;
+        		uri = prefix+URI;
         }
         if(!SparqlEndPoint.existURI(uri)) {
 			throw new NoSuchElementException("Skill reference with URI: " + uri + " Not found");
@@ -132,11 +132,11 @@ public class SkillRefObject extends RDFObject {
 	
 	public static SkillRefObject getSkillRefObjectBySkillID(String skillID) {
 		String uri = skillID;
-        if (!uri.startsWith(":") && !uri.startsWith("<http")){
+        if (!uri.startsWith("saro:") && !uri.startsWith("<http")){
         	if(uri.contains("#"))
-        		uri = ":" + uri.substring(uri.indexOf("#") + 1);
+        		uri = "saro:" + uri.substring(uri.indexOf("#") + 1);
         	else
-        		uri = ":"+skillID;
+        		uri = "saro:"+skillID;
         }
         if(!SparqlEndPoint.existURI(uri)) {
 			throw new NoSuchElementException("Skill with URI: " + uri + " Not found");

@@ -19,7 +19,7 @@ import org.apache.jena.rdf.model.Resource;
 public class JobPosting extends RDFObject {
 	
 	private static final String ClassType = "saro:JobPosting";
-	public static final String prefix = "saro:";
+	public static final String prefix = ":";
 	private static final String schemaPrefix = "schema:";
 //	private String URI;
 //	private String ID;
@@ -445,13 +445,13 @@ public class JobPosting extends RDFObject {
         }
         
         if(seniorityLevel != null) {
-        	triple = new Triple(getURI(), prefix + "level", seniorityLevel);
+        	triple = new Triple(getURI(),  "saro:level", seniorityLevel);
         	saveData.put(triple, "String");
 //        	SparqlEndPoint.insertPropertyValue(triple);
         }
         
         if(specialization != null) {
-        	triple = new Triple(getURI(), prefix + "specialization", specialization);
+        	triple = new Triple(getURI(), "saro:specialization", specialization);
         	saveData.put(triple, "String");
 //        	SparqlEndPoint.insertPropertyValue(triple);
         }

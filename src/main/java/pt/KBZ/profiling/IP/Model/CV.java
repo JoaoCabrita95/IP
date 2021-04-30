@@ -31,18 +31,19 @@ import IP.Matching;
 public class CV extends RDFObject {
 	
     private static final String ClassType ="cv:CV";     
-    private static final String prefix ="cv:";     
+    private static final String prefix =":";     
     private String title = null;
     private String personURI = null;
     private String description = null;
     private String targetSector = null;
     private String otherInfo = null;
     private String currentJob = null;
-    private String realocation = null;
+    private String realocationInfo = null;
     private List<WorkHistory> workHistory;
     private List<Education> education;
     private List<Course> courses;
     private List<CVSkillRef> skills;
+    private List<String> accomplishments;
     private List<Application> jobApplications;
 
     //TODO: Add remove methods for Lists
@@ -58,6 +59,7 @@ public class CV extends RDFObject {
     	courses = new ArrayList<>();
     	jobApplications = new ArrayList<>();
     	skills = new ArrayList<>();
+    	accomplishments = new ArrayList<>();
     }
     
     /**
@@ -113,6 +115,8 @@ public class CV extends RDFObject {
     		this.jobApplications = new ArrayList<Application>();
     	else 
     		this.jobApplications = jobApps;
+
+    	accomplishments = new ArrayList<>();
     }
     
     /**
@@ -166,7 +170,8 @@ public class CV extends RDFObject {
     	}
     	this.jobApplications = new ArrayList<Application>();
     	jobApplications.add(jobApp);
-    	
+
+    	accomplishments = new ArrayList<>();
 //    	skillRefs = new ArrayList<>();
     }
 
@@ -276,11 +281,11 @@ public class CV extends RDFObject {
     }
     
     public void setRealocation(String realocation) {
-    	this.realocation = realocation;
+    	this.realocationInfo = realocation;
     }
     
     public String getRealocation() {
-    	return realocation;
+    	return realocationInfo;
     }
     
     /**
@@ -646,8 +651,8 @@ public class CV extends RDFObject {
         	saveData.put(triple, "Object");
         }
         
-        if(realocation != null) {
-        	triple = new Triple(getURI() , "qc:realocationInfo", realocation);
+        if(realocationInfo != null) {
+        	triple = new Triple(getURI() , "qc:realocationInfo", realocationInfo);
 	        saveData.put(triple, "String");
         }
         
@@ -680,6 +685,11 @@ public class CV extends RDFObject {
         	skillRef.Save();
         	
         	triple = new Triple(getURI(), "qc:hasSkillRef", skillRef.getURI());
+        	saveData.put(triple, "Object");
+        }
+        
+        for(String acc : accomplishments) {
+        	triple = new Triple(getURI(), "qc:refersToAccomplishment", acc);
         	saveData.put(triple, "Object");
         }
         
@@ -756,6 +766,7 @@ public class CV extends RDFObject {
 			throw new NoSuchElementException("CV with URI: " + uri + " Not found");
 		}
         String properties = SparqlEndPoint.getAllProperties(uri);
+//        System.out.println(properties);
         CV cv = ParseResponseToCV(properties);
         cv.setURI(uri);
         return cv;
@@ -1003,7 +1014,7 @@ public class CV extends RDFObject {
             //String ID = String.valueOf(res);            
             String ID =  res.getLocalName();            
             try {
-            	CV cv = getCV(":" + ID);
+            	CV cv = getCV(prefix + ID);
             	cv.setID(ID);   
               //cv.setURI(StringUtils.substringAfter(ID,"http://rdfs.org/resume-rdf/cv.rdfs#"));   
 
@@ -1172,6 +1183,17 @@ public class CV extends RDFObject {
                 	catch(Exception e) {
                 		e.printStackTrace();
                 	}
+                	break;
+                	
+                case "refersToAccomplishment":
+                	String accomplishment = object;
+                	if(accomplishment.contains("#"))
+                		accomplishment = accomplishment.substring(accomplishment.indexOf("#") + 1);
+                	Skill tmp = Skill.getSkill(accomplishment);
+                    if(cv.hasSkillRef(tmp) == null)
+                        cv.addSkillRef(tmp, null, null, null, null);
+                	cv.addAccomplishment(accomplishment);
+                	break;
                 	
                 	
                 default:
@@ -1188,7 +1210,15 @@ public class CV extends RDFObject {
 
     }
     
-    /**
+    public void addAccomplishment(String accomplishment) {
+		accomplishments.add(accomplishment);
+	}
+    
+    public List<String> getAccomplishments(){
+    	return accomplishments;
+    }
+
+	/**
      * 
      * @return 
      */
@@ -1290,7 +1320,7 @@ public class CV extends RDFObject {
     	else if(!this.getRealocation().equals(compareTo.getRealocation())){
         	return false;
     	}
-    	
+
     	for(WorkHistory workHistory : this.getWorkHistory()) {
     		contains = false;
     		for(WorkHistory workHistory2 : compareTo.getWorkHistory()) {
@@ -1303,7 +1333,7 @@ public class CV extends RDFObject {
     		if(!contains)
     			return false;
     	}
-    	
+
     	for(WorkHistory workHistory : compareTo.getWorkHistory()) {
     		contains = false;
     		for(WorkHistory workHistory2 : this.getWorkHistory()) {
@@ -1316,7 +1346,7 @@ public class CV extends RDFObject {
     		if(!contains)
     			return false;
     	}
-    	
+
     	for(Education education : this.getEducation()) {
     		contains = false;
     		for(Education education2 : compareTo.getEducation()) {
@@ -1381,7 +1411,7 @@ public class CV extends RDFObject {
     		if(!contains)
     			return false;
     	}
-    	
+
     	for(CVSkillRef skillRef : compareTo.getSkillRefs()) {
     		contains = false;
     		for(CVSkillRef skillRef2 : this.getSkillRefs()) {
@@ -1393,7 +1423,7 @@ public class CV extends RDFObject {
     		if(!contains)
     			return false;
     	}
-    	
+
     	for(Skill skill : this.getSkills()) {
     		contains = false;
     		for(Skill skill2 : compareTo.getSkills()) {
@@ -1406,7 +1436,7 @@ public class CV extends RDFObject {
     		if(!contains)
     			return false;
     	}
-    	
+
     	for(Skill skill : compareTo.getSkills()) {
     		contains = false;
     		for(Skill skill2 : this.getSkills()) {

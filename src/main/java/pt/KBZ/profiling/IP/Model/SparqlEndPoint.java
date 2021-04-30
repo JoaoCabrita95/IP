@@ -39,6 +39,7 @@ import org.apache.jena.sparql.graph.GraphFactory;
 public class SparqlEndPoint {
 	
 	public static String REQUEST_PATH;
+	public static String QUERY_PATH;
 	
 	private static final String QUERYHEADER = "prefix : <http://localhost:3030/QualiChain/#> \r\n" +
 			"prefix vcard: <http://www.w3.org/2006/vcard/ns#> \r\n" +
@@ -272,7 +273,7 @@ public class SparqlEndPoint {
 		+ "WHERE {"
 		+ "	" + SubjectURI + " ?predicate ?object ." 
 		+ " } ";
-
+//		System.out.println(query);
 		return query(query);
 	}
 
@@ -484,14 +485,19 @@ public class SparqlEndPoint {
 	//Send SPARQL query through HTTP GET request to the Sparql end-point
 	private static String sendQuery(String type, String query) {
 //		System.out.println("path:"+REQUEST_PATH);
-		HTTPrequest request = new HTTPrequest(REQUEST_PATH + type);		
-		
+		HTTPrequest request;
+		if(type.equals("query"))
+			request = new HTTPrequest(QUERY_PATH + type);		
+		else 
+			request = new HTTPrequest(REQUEST_PATH + type);	
+			
+//		System.out.println(REQUEST_PATH + type);
 		request.addRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 		request.addRequestProperty("Accept", "application/sparql-results+json, */*; q=0.9");
 		
 		request.addParam(type, query);
 
-		
+//		System.out.println(request);
 		//request.addURLParam("query="+query);
 		String response = request.Response();
 		request.close();

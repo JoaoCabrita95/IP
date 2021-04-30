@@ -226,9 +226,7 @@ public class Matching {
 			for(Course req :Caprequirements) {
 				List<Course> courses = cv.getCourses();
 				for(Course i : courses) {
-					if(i.getQualification().equalsIgnoreCase(req.getQualification()) ||
-							i.getQualification().contains(req.getQualification()) ||
-							req.getQualification().contains(i.getQualification())) {
+					if(i.equals(req)) {
 						score += 1 * COURSE_COEFICIENT;
 						hasReq = true;
 					}
@@ -247,12 +245,7 @@ public class Matching {
 			for(Education req : Exprequirements) {
 				List<Education> education = cv.getEducation();
 				for(Education i : education) {
-					if(i.getMajor().equalsIgnoreCase(req.getMajor())||
-							i.getMajor().contains(req.getMajor()) ||
-							req.getMajor().contains(i.getMajor()) ||
-							i.getDescription().equalsIgnoreCase(req.getDescription())||
-							i.getDescription().contains(req.getDescription()) ||
-							req.getDescription().contains(i.getDescription())) {
+					if(i.equals(req)) {
 						score += 1 * EDUCATION_COEFICIENT;
 						hasReq = true;
 					}
@@ -270,7 +263,7 @@ public class Matching {
 			for(WorkHistory req : Knwrequirements) {
 				List<WorkHistory> workHistory = cv.getWorkHistory();
 				for(WorkHistory i : workHistory) {
-					if(i.getURI().equals(req.getURI()) || i.getDescription().equalsIgnoreCase(req.getDescription()))
+					if(i.getLabel() != null && req.getLabel() != null && i.getLabel().equals(req.getLabel()))
 						score += 1 * WORKHISTORY_COEFICIENT;
 											
 				}

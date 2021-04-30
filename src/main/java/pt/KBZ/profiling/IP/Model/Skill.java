@@ -41,11 +41,11 @@ import com.viceversatech.rdfbeans.annotations.RDFSubject;
  * Java object representing a Skill, either for job requirements, skills a user has knowledge in 
  * or for recomendations of further exploration of certain skills that might be usefull for certain users
  */
-@RDFBean("cv:Skill")
+@RDFBean("saro:Skill")
 public class Skill extends RDFObject //implements Serializable 
 { 	
-    private static String ClassType = "cv:Skill";
-    private static String prefix = ":";  
+    private static String ClassType = "saro:Skill";
+    private static String prefix = "saro:";  
     private List<String> superClasses;
 //    //Right now the accepted values for skill proficiency are as such: Basic, Junior, Senior, Expert
 //    private String proficiencyLevel;
@@ -80,10 +80,8 @@ public class Skill extends RDFObject //implements Serializable
      * @param priority Level of priority of the Skill 
      * @param comment Description of the Skill
      */
-    public Skill(String id, String label, String profLevel, String priority, String comment, String classType) {
-    	super(classType, classType.substring(classType.indexOf(":") + 1), id, label, comment);
-    	ClassType = classType;
-    	prefix = classType.substring(classType.indexOf(":") + 1);
+    public Skill(String id, String label, String profLevel, String priority, String comment) {
+    	super(ClassType, prefix, id, label, comment);
 //    	this.proficiencyLevel = profLevel;
 //    	this.priorityLevel = priority;
     	synonyms = new ArrayList<String>();
@@ -104,10 +102,8 @@ public class Skill extends RDFObject //implements Serializable
      * @param superClasses Skills that use some of the properties of this Skill but are more advanced
      */
     public Skill(String id, String label, String profLevel, String priority, String comment, String coreTo,
-    		List<String> synonyms, List<String> subClasses, List<String> superClasses, String classType) {
-    	super(classType, classType.substring(classType.indexOf(":") + 1), id, label, comment);
-    	ClassType = classType;
-    	prefix = classType.substring(classType.indexOf(":") + 1);
+    		List<String> synonyms, List<String> subClasses, List<String> superClasses) {
+    	super(ClassType, prefix, id, label, comment);
 //    	this.proficiencyLevel = profLevel;
 //    	this.priorityLevel = priority;
     	this.synonyms = synonyms;
@@ -363,13 +359,14 @@ public class Skill extends RDFObject //implements Serializable
 	 */
 	public static Skill getSkill(String URI) {
         String uri = URI;
-    	if(!uri.startsWith(":") && !uri.startsWith("<http")) {
+    	if(!uri.startsWith(prefix) && !uri.startsWith("<http")) {
+    		if(uri.startsWith(":"))
+    			uri = "saro" + uri;
         	if(uri.startsWith("http"))
         		uri ="<"+ uri + ">";
-        	else
-        		uri = ":"+uri;
+        	else if(!uri.startsWith(prefix))
+        		uri = prefix + uri;
         }
-    	
     	if(!SparqlEndPoint.existURI(uri)) {
 			throw new NoSuchElementException("Skill with URI: " + uri + " Not found");
 		}
@@ -480,7 +477,7 @@ public class Skill extends RDFObject //implements Serializable
             //String ID = String.valueOf(res);            
             String ID =  res.getLocalName();      
             try {
-            	Skill skill = getSkill(":" + ID);
+            	Skill skill = getSkill(prefix + ID);
                 skill.setID( ID);   
                 //cv.setURI(StringUtils.substringAfter(ID,"http://rdfs.org/resume-rdf/cv.rdfs#"));   
 
@@ -545,7 +542,7 @@ public class Skill extends RDFObject //implements Serializable
                 case "hasSuperClass":
                 	String hasSuperClass = object; 
                 	if(hasSuperClass.contains("#"))
-                		hasSuperClass = ":" + hasSuperClass.substring(hasSuperClass.indexOf("#") + 1);
+                		hasSuperClass = "saro:" + hasSuperClass.substring(hasSuperClass.indexOf("#") + 1);
                 	skill.addSuperClass(hasSuperClass);
                 	break;
                 	
@@ -589,7 +586,7 @@ public class Skill extends RDFObject //implements Serializable
                 case "hasSubClass":
                 	String hasSubClass = object;
                 	if(hasSubClass.contains("#"))
-                		hasSubClass = ":" + hasSubClass.substring(hasSubClass.indexOf("#") + 1);
+                		hasSubClass = "saro:" + hasSubClass.substring(hasSubClass.indexOf("#") + 1);
                 	skill.addsubClass(hasSubClass);
                 	break;
                 	

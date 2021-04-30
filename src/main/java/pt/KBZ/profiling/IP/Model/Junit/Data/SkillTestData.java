@@ -13,26 +13,26 @@ public class SkillTestData {
 	
 	public SkillTestData() {
 		
-		Ss.add(new Skill("Skill_1", "Java", "advanced", "high", "Skill comment 1", "cv:Skill"));
-		Ss.add(new Skill("Skill_2", "Python", "expert", "high", "Skill comment 2", "cv:Skill"));
-		Ss.add(new Skill("Skill_3", "C++", "basic", "high", "Skill comment 3", "cv:Skill"));
-		Ss.add(new Skill("Skill_4", "Programing", "basic", "high", "Skill comment 4", "cv:Skill"));
-		Ss.add(new Skill("Skill_5", "Nodejs", "basic", "high", "Skill comment 5", "cv:Skill"));
-		Ss.add(new Skill("Skill_6", "Angular", "basic", "high", "Skill comment 6", "cv:Skill"));
-		Ss.add(new Skill("Skill_7", "Javascript", "basic", "high", "Skill comment 7", "cv:Skill"));
-		Ss.add(new Skill("Skill_8", "Blockchain", "basic", "high", "Skill comment 8", "cv:Skill"));
-		Ss.add(new Skill("Skill_9", "PHP", "basic", "high", "Skill comment 9", "cv:Skill"));
-		Ss.add(new Skill("Skill_10", "C#", "basic", "high", "Skill comment 10", "cv:Skill"));
-		Ss.add(new Skill("Skill_11", "R", "basic", "high", "Skill comment 11", "cv:Skill"));
-		Ss.add(new Skill("Skill_12", "Tensorflow", "expert", "high", "Skill comment 12", "cv:Skill"));
-		Ss.add(new Skill("Skill_13", "Angularjs", "basic", "high", "Skill comment 13", "cv:Skill"));
-		Ss.add(new Skill("Skill_14", "Machine Learning", "basic", "high", "Skill comment 14", "cv:Skill"));
-		Ss.add(new Skill("Skill_15", "Neural Network", "advanced", "high", "Skill comment 15", "cv:Skill"));
-		Ss.add(new Skill("Skill_16", "MySQL", "basic", "high", "Skill comment 16", "cv:Skill"));
-		Ss.add(new Skill("Skill_17", "Postgresql", "basic", "high", "Skill comment 17", "cv:Skill"));
-		Ss.add(new Skill("Skill_18", "MongoDB", "basic", "high", "Skill comment 18", "cv:Skill"));
-		Ss.add(new Skill("Skill_19", "SQL", "basic", "high", "Skill comment 19", "cv:Skill"));
-		Ss.add(new Skill("Skill_20", "Apache Spark", "advanced", "high", "Skill comment 20", "cv:Skill"));
+		Ss.add(new Skill("Skill_1", "Java", "advanced", "high", "Skill comment 1"));
+		Ss.add(new Skill("Skill_2", "Python", "expert", "high", "Skill comment 2"));
+		Ss.add(new Skill("Skill_3", "C++", "basic", "high", "Skill comment 3"));
+		Ss.add(new Skill("Skill_4", "Programing", "basic", "high", "Skill comment 4"));
+		Ss.add(new Skill("Skill_5", "Nodejs", "basic", "high", "Skill comment 5"));
+		Ss.add(new Skill("Skill_6", "Angular", "basic", "high", "Skill comment 6"));
+		Ss.add(new Skill("Skill_7", "Javascript", "basic", "high", "Skill comment 7"));
+		Ss.add(new Skill("Skill_8", "Blockchain", "basic", "high", "Skill comment 8"));
+		Ss.add(new Skill("Skill_9", "PHP", "basic", "high", "Skill comment 9"));
+		Ss.add(new Skill("Skill_10", "C#", "basic", "high", "Skill comment 10"));
+		Ss.add(new Skill("Skill_11", "R", "basic", "high", "Skill comment 11"));
+		Ss.add(new Skill("Skill_12", "Tensorflow", "expert", "high", "Skill comment 12"));
+		Ss.add(new Skill("Skill_13", "Angularjs", "basic", "high", "Skill comment 13"));
+		Ss.add(new Skill("Skill_14", "Machine Learning", "basic", "high", "Skill comment 14"));
+		Ss.add(new Skill("Skill_15", "Neural Network", "advanced", "high", "Skill comment 15"));
+		Ss.add(new Skill("Skill_16", "MySQL", "basic", "high", "Skill comment 16"));
+		Ss.add(new Skill("Skill_17", "Postgresql", "basic", "high", "Skill comment 17"));
+		Ss.add(new Skill("Skill_18", "MongoDB", "basic", "high", "Skill comment 18"));
+		Ss.add(new Skill("Skill_19", "SQL", "basic", "high", "Skill comment 19"));
+		Ss.add(new Skill("Skill_20", "Apache Spark", "advanced", "high", "Skill comment 20"));
 		
 		Ss.get(0).addsubClass(Ss.get(4).getURI());
 		Ss.get(0).addsubClass(Ss.get(6).getURI());

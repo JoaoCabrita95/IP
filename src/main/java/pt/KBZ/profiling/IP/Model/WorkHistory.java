@@ -202,12 +202,11 @@ public class WorkHistory extends RDFObject {
 	 */
 	public static WorkHistory getWorkHistory(String URI) {
 		String uri = URI;
-		
-    	if(!uri.startsWith(":") && !uri.startsWith("<http")) {
+    	if(!uri.startsWith(prefix) && !uri.startsWith("<http")) {
         	if(uri.startsWith("http"))
         		uri ="<"+ uri + ">";
         	else
-        		uri = ":"+uri;
+        		uri = prefix+uri;
 		}
     	
 		String properties = SparqlEndPoint.getAllProperties(uri);
@@ -388,7 +387,150 @@ public class WorkHistory extends RDFObject {
         SparqlEndPoint.insertTriples(saveData);
 	}
 	
-	public boolean equals(WorkHistory wh) {
-		return true;
+	public boolean equals(WorkHistory wh) {		
+		
+		if(!this.getURI().equals(wh.getURI()))
+    		return false;
+		
+		
+    	if(!this.getID().equals(wh.getID()))
+    		return false;
+    	
+    	
+    	if(this.getDescription() == null && wh.getDescription() != null) {
+    		return false;
+    	}
+    	else if(this.getDescription() == null && wh.getDescription() == null) {
+    		
+    	}
+    	else if(!this.getDescription().equals(wh.getDescription())){
+        	return false;
+    	}
+
+    	
+    	if(this.getCareerLevel() == null && wh.getCareerLevel() != null) {
+    		return false;
+    	}
+    	else if(this.getCareerLevel() == null && wh.getCareerLevel() == null) {
+    		
+    	}
+    	else if(!this.getCareerLevel().equals(wh.getCareerLevel()))
+    		return false;
+    	
+
+    	
+    	if(this.getNumSubordinates() == null && wh.getNumSubordinates() != null) {
+    		return false;
+    	}
+    	else if(this.getNumSubordinates() == null && wh.getNumSubordinates() == null) {
+    		
+    	}
+    	else if(!this.getNumSubordinates().equals(wh.getNumSubordinates()))
+    		return false;
+    	
+    	
+    	if(this.getJobType() == null && wh.getJobType() != null) {
+    		return false;
+    	}
+    	else if(this.getJobType() == null && wh.getJobType() == null) {
+    		
+    	}
+    	else if(!this.getJobType().equals(wh.getJobType()))
+    		return false;
+
+    	
+//    	if(this.getIsCurrent() == null && wh.getIsCurrent() != null) {
+//    		return false;
+//    	}
+//    	else if(this.getIsCurrent() == null && wh.getIsCurrent() == null) {
+//    		
+//    	}
+//    	else if(!this.getIsCurrent().equals(wh.getIsCurrent()))
+//    		return false;
+    	
+
+    	
+    	if(this.getPosition() == null && wh.getPosition() != null) {
+    		return false;
+    	}
+    	else if(this.getPosition() == null && wh.getPosition() == null) {
+    		
+    	}
+    	else if(!this.getPosition().equals(wh.getPosition()))
+    		return false;
+    	
+
+    	
+    	if(this.getFrom() == null && wh.getFrom() != null) {
+    		return false;
+    	}
+    	else if(this.getFrom() == null && wh.getFrom() == null) {
+    		
+    	}
+    	else if(!this.getFrom().equals(wh.getFrom()))
+    		return false;
+
+    	
+    	if(this.getTo() == null && wh.getTo() != null) {
+    		return false;
+    	}
+    	else if(this.getTo() == null && wh.getTo() == null) {
+    		
+    	}
+    	else if(!this.getTo().equals(wh.getTo()))
+    		return false;
+
+    	
+    	if(this.getEmployer() == null && wh.getEmployer() != null) {
+    		return false;
+    	}
+    	else if(this.getEmployer() == null && wh.getEmployer() == null) {
+    		
+    	}
+    	else if(!this.getEmployer().equals(wh.getEmployer()))
+    		return false;
+
+    	
+    	if(this.getDuration() == null && wh.getDuration() != null) {
+    		return false;
+    	}
+    	else if(this.getDuration() == null && wh.getDuration() == null) {
+    		
+    	}
+    	else if(!this.getDuration().equals(wh.getDuration()))
+    		return false;
+
+    	
+    	if(this.getJobReference() == null && wh.getJobReference() != null) {
+    		return false;
+    	}
+    	else if(this.getJobReference() == null && wh.getJobReference() == null) {
+    		
+    	}
+    	else if(!this.getJobReference().equals(wh.getJobReference()))
+    		return false;
+
+
+    	if(this.getLabel() == null && wh.getLabel() != null) {
+    		return false;
+    	}
+    	else if(this.getLabel() == null && wh.getLabel() == null) {
+    		
+    	}
+    	else if(!this.getLabel().equals(wh.getLabel()))
+    		return false;
+
+    	
+    	if(this.getComment() == null && wh.getComment() != null) {
+    		return false;
+    	}
+    	else if(this.getComment() == null && wh.getComment() == null) {
+    		
+    	}
+    	else if(!this.getComment().equals(wh.getComment()))
+    		return false;
+
+    	
+    	return true;
 	}
 }

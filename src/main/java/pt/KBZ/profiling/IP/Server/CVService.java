@@ -25,6 +25,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import IP.GsonParser;
+import IP.Client.HTTPrequest;
 import IP.Model.CV;
 import IP.Model.CVSkillRef;
 import IP.Model.CareerPath;
@@ -44,8 +45,12 @@ import matomo.matomoClient;
  */
 @Path("/")
 public class CVService {
+	
+	private static final String NOTIFICATION_PATH = "http://qualichain.epu.ntua.gr:5004/notifications HTTP/1.1";
+	
 	rabbitMQService rabbit = new rabbitMQService();
 	matomoClient mc = new matomoClient();
+	
 	
 	public CVService() {
 		
@@ -62,8 +67,12 @@ public class CVService {
 		try {
 			List<CV> cvs = CV.getCVs();
             JsonArray results = new JsonArray();
+            JsonElement cvJson;
             for(CV cv : cvs) {
-                results.add(ModelClassToJson.getCVJson(cv));
+            	if(cv != null) {
+            		cvJson = ModelClassToJson.getCVJson(cv);
+                    results.add(cvJson);
+            	}
             }
             return Response.ok(results.toString()).build();
 		} 
@@ -312,6 +321,7 @@ public class CVService {
 		jsonPropValue.addProperty("userID", RDFObject.uri2id(cv.getPersonURI()));
 		jsonPropValue.addProperty("targetSector",cv.getTargetSector());
 		jsonPropValue.addProperty("description",cv.getDescription());
+		jsonPropValue.addProperty("realocationInfo",cv.getRealocation());
 		
 		
 		for(CVSkillRef skillRef : cv.getSkillRefs()) {
@@ -342,16 +352,6 @@ public class CVService {
 			CV cv = CV.getCVbyPersonURI(personID);
             JsonElement jsonResults = ModelClassToJson.getCVJson(cv);
 //			System.out.println(jsonResults.toString());
-            Date curDate = new GregorianCalendar().getTime();
-            Date evalDate;
-            int year, month, dayOfMonth, hourOfDay, minute, second;
-            String evalDateRef;
-            for(CVSkillRef ref : cv.getSkillRefs()) {
-            	evalDateRef = ref.getEvalDate();
-            	
-//            	evalDate = new GregorianCalendar(year, month, dayOfMonth, hourOfDay,
-//                        minute, second);
-            }
             
             return Response.ok(jsonResults.toString()).build();
 		} 
@@ -522,17 +522,41 @@ public class CVService {
 			CV cv = CV.getCVbyPersonURI(profileID);
 			CVSkillRef newRef = parser.toCVSkillRef(data);
 			
+			if(!newRef.getSkillURI().startsWith("saro:")) {
+				if(!newRef.getSkillURI().startsWith(":")) {
+					newRef.setSkillURI("saro:" + newRef.getSkillURI());
+				}
+				else
+					newRef.setSkillURI("saro" + newRef.getSkillURI());
+			}
+			
+			HTTPrequest request;
+			String response;
 			
 			if(cv.hasSkillRef(newRef) == null) {
 				cv.addSkillRef(newRef);
 				cv.Save();
 				try {
+					if(newRef.getEvalDate() != null) {
+						Skill skill = Skill.getSkill(newRef.getSkillURI());
+						JsonObject notification = new JsonObject();
+						notification.addProperty("user_id", profileID);
+						notification.addProperty("message", "Skill evaluation for skill " + skill.getLabel() + " scheduled to " + newRef.getEvalDate());
+						
+						request = new HTTPrequest(NOTIFICATION_PATH);	
+						request.addRequestProperty("Content-Type", "application/json");
+						response = request.POSTrequest(notification.toString());
+//						System.out.println("NOTIFICATION RESPONSE");
+//						System.out.println(response);
+					}
+					
+					
 					JsonObject rabbitObject = new JsonObject();
 					rabbitObject.add("cv", getCVinJson(cv));
 					
-					System.out.println(rabbitObject);
+//					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
-					System.out.println(rabbit.channel.isOpen());
+//					System.out.println(rabbit.channel.isOpen());
 					mc.send("employees", "newSkill", profileID, 1);
 				}
 				catch (Exception e) {
@@ -575,6 +599,18 @@ public class CVService {
 			CVSkillRef ref = cv.hasSkillRef(newRef);
 			JsonElement result = null;
 			
+			
+			if(!newRef.getSkillURI().startsWith("saro:")) {
+				if(!newRef.getSkillURI().startsWith(":")) {
+					newRef.setSkillURI("saro:" + newRef.getSkillURI());
+				}
+				else
+					newRef.setSkillURI("saro" + newRef.getSkillURI());
+			}
+			
+			HTTPrequest request;
+			String response;
+			
 			if(cv.hasSkillRef(ref) != null) {
 				cv.removeSkillRef(ref);
 				RDFObject.quickDeleteByURI(ref.getURI());
@@ -584,6 +620,18 @@ public class CVService {
 				cv.addSkillRef(newRef);
 				cv.update();
 				result = ModelClassToJson.getCVSkillJsonFromRef(newRef);
+				
+				if(newRef.getEvalDate() != null) {
+					Skill skill = Skill.getSkill(newRef.getSkillURI());
+					JsonObject notification = new JsonObject();
+					notification.addProperty("user_id", profileID);
+					notification.addProperty("message", "Skill evaluation for skill " + skill.getLabel() + " scheduled to " + newRef.getEvalDate());
+					
+					request = new HTTPrequest(NOTIFICATION_PATH);	
+					request.addRequestProperty("Content-Type", "application/json");
+					response = request.POSTrequest(notification.toString());
+					
+				}
 //				try {
 //					JsonObject rabbitObject = new JsonObject();
 //					rabbitObject.add("cv", getCVinJson(cv));

@@ -212,7 +212,7 @@ class ModelGlobalTest {
 	@Test
 	@Order(7)
 	@DisplayName("Career path test")
-//	@Disabled("Disabled")
+	@Disabled("Disabled")
 	void careerPathTest() throws Exception {
 		careerPathTestData data = new careerPathTestData();
 		List<JobPosting> jps = data.getJobPostings();

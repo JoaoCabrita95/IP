@@ -17,6 +17,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import IP.Client.HTTPrequest;
 import IP.Model.Application;
 import IP.Model.CV;
 import IP.Model.Course;
@@ -35,7 +36,8 @@ import IP.Model.Junit.Data.careerPathTestData;
 
 @Path("/")
 public class GeneralService {
-	
+
+	private static final String NOTIFICATION_PATH = "http://qualichain.epu.ntua.gr:5004/notifications HTTP/1.1";
 	rabbitMQService rabbit = new rabbitMQService();
 	
 	public GeneralService() {
@@ -51,6 +53,10 @@ public class GeneralService {
 				input = data.substring(data.lastIndexOf("@prefix"));
 				input = input.substring(input.indexOf("\n"));
 			}
+			input = input.replace("saro:Topic", "saro:Skill");
+			input = input.replace("saro:Product", "saro:Skill");
+			input = input.replace("saro:Tool", "saro:Skill");
+//			System.out.println(input);
 			String response = SparqlEndPoint.insertTriple(input);
 			if(response.equals("IO ERROR"))
 				return Response.status(Response.Status.BAD_REQUEST).entity("Data input incorrect format, use turtle(TTL) format").build();
@@ -215,5 +221,22 @@ public class GeneralService {
 			
 			
 			return null;
+		}
+		@POST
+		@Path("/test/notification/{profileID}")
+		public Response notificationTest(@PathParam("profileID") String profileID) {
+			System.out.println("sending out test notification");
+			HTTPrequest request;
+			String response;
+			
+			JsonObject notification = new JsonObject();
+			notification.addProperty("user_id", profileID);
+			notification.addProperty("message", "Test Notification for +" + profileID);
+			
+			request = new HTTPrequest(NOTIFICATION_PATH);	
+			request.addRequestProperty("Content-Type", "application/json");
+			response = request.POSTrequest(notification.toString());
+			
+			return Response.ok(response).build();
 		}
 }

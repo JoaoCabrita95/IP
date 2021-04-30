@@ -196,9 +196,12 @@ public class HTTPrequest {
 			os.close();
 
 			int responseCode = con.getResponseCode();
-//			System.out.println("POST Response Code :: " + responseCode);
+			System.out.println("POST Response Code :: " + responseCode);
 
 			if (responseCode == HttpURLConnection.HTTP_OK) { //success
+				return con.getResponseMessage();
+			}
+			else if (responseCode == HttpURLConnection.HTTP_NO_CONTENT){
 				return con.getResponseMessage();
 			} else {
 				System.out.println("POST request not worked");

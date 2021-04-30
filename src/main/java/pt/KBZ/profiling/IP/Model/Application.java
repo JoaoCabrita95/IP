@@ -18,7 +18,7 @@ import org.apache.jena.rdf.model.Resource;
 public class Application extends RDFObject {
 	
 	private static final String ClassType ="qc:JobApp";  
-    private static final String prefix = "qc:";
+    private static final String prefix = ":";
 	private String personURI;
 	private String jobURI;
 	private String expectedSalary;

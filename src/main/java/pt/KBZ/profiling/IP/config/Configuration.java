@@ -30,10 +30,15 @@ public class Configuration {
             prop.load(is);
 
             port = Integer.parseInt(prop.getProperty("port","8000"));
-            if(!test)
+            if(!test) {
             	SparqlEndPoint.REQUEST_PATH = prop.getProperty("sparqlendpoint");
-            else
+                SparqlEndPoint.QUERY_PATH = prop.getProperty("queryengine");
+            }
+            else {
             	SparqlEndPoint.REQUEST_PATH = prop.getProperty("sparqlendpointtest");
+                SparqlEndPoint.QUERY_PATH = prop.getProperty("queryenginetest");
+            }
+            
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -174,7 +174,7 @@ public class JobpostingService {
 			
 			try {
 				JsonObject rabbitObject = new JsonObject();
-				rabbitObject.add("job", ModelClassToJson.getJobJson(job));
+				rabbitObject.add("job", getJobPostinginJson(job));
 				
 //				System.out.println(rabbitData);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
@@ -206,7 +206,6 @@ public class JobpostingService {
 	 * @return
 	 */
 	private JsonObject getJobPostinginJson(JobPosting job) {
-		JsonArray jsonTmp = new JsonArray();
 		
 		JsonObject jsonPropValue = new JsonObject();
 		jsonPropValue.addProperty("label",job.getLabel());
@@ -229,7 +228,8 @@ public class JobpostingService {
 		jsonPropValue.addProperty("uri", job.getURI());
 		jsonPropValue.addProperty("id", RDFObject.uri2id(job.getURI()));
 		
-		
+
+		JsonArray jsonTmp = new JsonArray();
 		for(SkillJobReq skillReq : job.getJobSkillReqRefs()) {
 			jsonTmp.add(ModelClassToJson.getJobSkillRef(skillReq));
 		}
@@ -291,14 +291,11 @@ public class JobpostingService {
 			try {
 				newJob.update();
 				try {
-//					rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
-					String testD = "{\"job\": ";
-					byte[] jpData = getJobPostinginJson(newJob).toString().getBytes();
-					testD = testD + jpData.toString() + " }";
-					Map<String, String> rabbitData = new HashMap<String, String>();
-					rabbitData.put("'job'", getJobPostinginJson(newJob).toString());
-					System.out.println(rabbitData);
-					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, testD.getBytes());
+					
+					JsonObject rabbitObject = new JsonObject();
+					rabbitObject.add("job", getJobPostinginJson(newJob));
+					
+					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 					System.out.println(rabbit.channel.isOpen());
 				}
 				catch (Exception e) {
