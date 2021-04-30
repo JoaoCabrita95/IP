@@ -272,18 +272,18 @@ public class CVService {
 			
 			
 			//TODO:Add to publishing queue RabbitMQ
-//			try {
-//				JsonObject rabbitObject = new JsonObject();
-//				rabbitObject.add("cv", getCVinJson(cv));
-//				
-////				System.out.println(rabbitObject);
-//				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
-////				System.out.println(rabbit.channel.isOpen());
-//			}
-//			catch (Exception e) {
-//				System.out.println("Could not send the created CV to the RabbitMQ queue.");
-//				e.printStackTrace();
-//			}
+			try {
+				JsonObject rabbitObject = new JsonObject();
+				rabbitObject.add("cv", getCVinJson(cv));
+				
+//				System.out.println(rabbitObject);
+				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
+//				System.out.println(rabbit.channel.isOpen());
+			}
+			catch (Exception e) {
+				System.out.println("Could not send the created CV to the RabbitMQ queue.");
+				e.printStackTrace();
+			}
 			
 			
 			return Response.ok(ModelClassToJson.getCVJson(cv).toString(), MediaType.APPLICATION_JSON).build();

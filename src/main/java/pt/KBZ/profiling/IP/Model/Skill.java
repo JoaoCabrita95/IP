@@ -360,9 +360,11 @@ public class Skill extends RDFObject //implements Serializable
 	public static Skill getSkill(String URI) {
         String uri = URI;
     	if(!uri.startsWith(prefix) && !uri.startsWith("<http")) {
+    		if(uri.startsWith(":"))
+    			uri = "saro" + uri;
         	if(uri.startsWith("http"))
         		uri ="<"+ uri + ">";
-        	else
+        	else if(!uri.startsWith(prefix))
         		uri = prefix + uri;
         }
     	if(!SparqlEndPoint.existURI(uri)) {

@@ -24,10 +24,10 @@ public class careerPathTestData {
 	public careerPathTestData() {
 		
 		List<WorkHistory> twh = new LinkedList<WorkHistory>();
-		twh.add(new WorkHistory(":wh50", "RoleName50", "20/02/2000", "30/05/2004", "Employer50", "4 years, 3 months", "RoleDescription50", null, null, "false", "jobType50", "job50"));
+		twh.add(new WorkHistory("wh50", "RoleName50", "20/02/2000", "30/05/2004", "Employer50", "4 years, 3 months", "RoleDescription50", null, null, "false", "jobType50", "job50"));
 		
 		List<Education> te = new LinkedList<Education>();
-		te.add(new Education(":ed50", "Major50", null, "Bachelors", "01/01/1997", "01/01/2000", "Educational Organization50", "Description of educational course"));
+		te.add(new Education("ed50", "Major50", null, "Bachelors", "01/01/1997", "01/01/2000", "Educational Organization50", "Description of educational course"));
 		
 		List<Course> tc = new LinkedList<Course>();
 //		tc.add(new Course());

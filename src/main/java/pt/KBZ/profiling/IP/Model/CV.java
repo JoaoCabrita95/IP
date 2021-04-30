@@ -1334,7 +1334,6 @@ public class CV extends RDFObject {
     			return false;
     	}
 
-    	System.out.println("AAAAAAAAAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDAAAA");
     	for(WorkHistory workHistory : compareTo.getWorkHistory()) {
     		contains = false;
     		for(WorkHistory workHistory2 : this.getWorkHistory()) {
