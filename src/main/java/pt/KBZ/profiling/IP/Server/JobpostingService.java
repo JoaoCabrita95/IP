@@ -185,7 +185,7 @@ public class JobpostingService {
 			}
 			
 			
-			return Response.ok(response, MediaType.APPLICATION_JSON).build();
+			return Response.ok(getJobPostinginJson(job).toString(), MediaType.APPLICATION_JSON).build();
 
 			
 		} catch (Exception e) {

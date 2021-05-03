@@ -334,7 +334,7 @@ public class Skill extends RDFObject //implements Serializable
             }
             
             for(String superClass : superClasses) {
-            	triple = new Triple(getURI(), "saro:hasSuperClass" , superClass);
+            	triple = new Triple(getURI(), "saro:broaderSkill" , superClass);
             	saveData.put(triple, "Object");
             }
             
@@ -344,7 +344,7 @@ public class Skill extends RDFObject //implements Serializable
             }
             
             for(String subClass : subClasses) {
-            	triple = new Triple(getURI(), "saro:hasSubClass" , subClass);
+            	triple = new Triple(getURI(), "saro:narrowerSkill" , subClass);
             	saveData.put(triple, "Object");
             }
             
@@ -539,7 +539,7 @@ public class Skill extends RDFObject //implements Serializable
                 	skill.setComment(comment);
                 	break;
                 	
-                case "hasSuperClass":
+                case "broaderSkill":
                 	String hasSuperClass = object; 
                 	if(hasSuperClass.contains("#"))
                 		hasSuperClass = "saro:" + hasSuperClass.substring(hasSuperClass.indexOf("#") + 1);
@@ -583,7 +583,7 @@ public class Skill extends RDFObject //implements Serializable
                 	skill.addSynonym(synonym);
                 	break;
                 	
-                case "hasSubClass":
+                case "narrowerSkill":
                 	String hasSubClass = object;
                 	if(hasSubClass.contains("#"))
                 		hasSubClass = "saro:" + hasSubClass.substring(hasSubClass.indexOf("#") + 1);
