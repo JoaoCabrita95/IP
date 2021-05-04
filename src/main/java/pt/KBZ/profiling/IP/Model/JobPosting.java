@@ -26,6 +26,7 @@ public class JobPosting extends RDFObject {
 //	private String Label;
 //	//Seniority Level in the comment section of JobPosting
 //	private String Comment;
+	private String isHiring;
 	private String creator_id;
 	private String jobDescription;
 	private String contractType;
@@ -456,6 +457,18 @@ public class JobPosting extends RDFObject {
 //        	SparqlEndPoint.insertPropertyValue(triple);
         }
         
+        if(expectedSalary != null) {
+			triple = new Triple(getURI(), "qc:hasExpectedSalary", expectedSalary);
+			saveData.put(triple, "String");
+//			SparqlEndPoint.insertPropertyValue(triple);
+		}
+        
+        if(salaryCurrency != null) {
+	        triple = new Triple(getURI(), "qc:expectedSalaryCurrency", salaryCurrency);
+	        saveData.put(triple, "String");
+//	        SparqlEndPoint.insertPropertyValue(triple);
+        }
+        
         for(SkillJobReq skillRef : skillReq) {
         	skillRef.Save();
         	triple = new Triple(getURI(), "qc:hasSkillRef", skillRef.getURI());
@@ -590,9 +603,8 @@ public class JobPosting extends RDFObject {
 
             QuerySolution soln = results.nextSolution();
             Resource res= soln.getResource("subject");
-
             //String ID = String.valueOf(res);            
-            String ID =  res.getLocalName(); 
+            String ID =  res.getURI().substring(res.getURI().lastIndexOf("#")+1);
             try {
             	JobPosting jp = getJobPosting(":" + ID);
 
@@ -750,6 +762,16 @@ public class JobPosting extends RDFObject {
                 case "level": 
                 	String level = object;
                 	jp.setseniorityLevel(level);
+                	break;
+                	
+                case "hasExpectedSalary":
+                	String expSalary = object;
+                	jp.setExpectedSalary(expSalary);
+                	break;
+                	
+                case "expectedSalaryCurrency":
+                	String expSalCur = object;
+                	jp.setSalaryCurrency(expSalCur);
                 	break;
                 	
                 case "hasJobApplication":
