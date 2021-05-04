@@ -181,7 +181,7 @@ public class JobpostingService {
 //				System.out.println(rabbit.channel.isOpen());
 			}
 			catch (Exception e) {
-				System.out.println("Could not send the created CV to the RabbitMQ queue.");
+				System.out.println("Could not send the created JobPosting to the RabbitMQ queue.");
 			}
 			
 			
