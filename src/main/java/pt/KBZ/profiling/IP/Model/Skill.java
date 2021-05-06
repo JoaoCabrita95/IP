@@ -475,7 +475,7 @@ public class Skill extends RDFObject //implements Serializable
             Resource res= soln.getResource("subject");
 
             //String ID = String.valueOf(res);            
-            String ID =  res.getLocalName();      
+            String ID =  res.getURI().substring(res.getURI().lastIndexOf("#")+1);   
             try {
             	Skill skill = getSkill(prefix + ID);
                 skill.setID( ID);   

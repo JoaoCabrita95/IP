@@ -175,7 +175,7 @@ public class JobpostingService {
 			try {
 				JsonObject rabbitObject = new JsonObject();
 				rabbitObject.add("job", getJobPostinginJson(job));
-				
+				Log.info(rabbitObject.toString() + "\n");
 //				System.out.println(rabbitData);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //				System.out.println(rabbit.channel.isOpen());
@@ -294,7 +294,7 @@ public class JobpostingService {
 					
 					JsonObject rabbitObject = new JsonObject();
 					rabbitObject.add("job", getJobPostinginJson(newJob));
-					
+					Log.info(rabbitObject.toString() + "\n");
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 					System.out.println(rabbit.channel.isOpen());
 				}
@@ -302,7 +302,7 @@ public class JobpostingService {
 					System.out.println("Could not send the created CV to the RabbitMQ queue.");
 				}
 				
-				return Response.ok("job updated", MediaType.APPLICATION_JSON).build();
+				return Response.ok(getJobPostinginJson(newJob).toString(), MediaType.APPLICATION_JSON).build();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();		

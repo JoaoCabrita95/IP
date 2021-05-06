@@ -254,6 +254,7 @@ public class ModelClassToJson {
         	return null;
         Skill skill = Skill.getSkill(skillRef.getSkillURI());
         JsonObject jsonProps = (JsonObject) getSkillJson(skill);
+        jsonProps.addProperty("skillName", skill.getLabel());
         jsonProps.addProperty("proficiencyLevel", skillRef.getSkillLevel());
         jsonProps.addProperty("priorityLevel", skillRef.getPriorityLevel());
         jsonProps.addProperty("uri", skillRef.getURI());
