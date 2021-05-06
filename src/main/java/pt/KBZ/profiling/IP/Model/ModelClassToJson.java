@@ -355,8 +355,8 @@ public class ModelClassToJson {
 		Skill skill = Skill.getSkill(ref.getSkillURI());
 		
 		JsonObject jsonPropValue = new JsonObject();
-		jsonPropValue.addProperty("label", ref.getSkillName());
-		jsonPropValue.addProperty("comment", ref.getComment());
+		jsonPropValue.addProperty("label", skill.getLabel());
+		jsonPropValue.addProperty("comment", skill.getComment());
 		if(ref.getSkillURI() != null)
 			jsonPropValue.addProperty("uri", skill.getURI());
 		jsonPropValue.addProperty("id", skill.getID());
