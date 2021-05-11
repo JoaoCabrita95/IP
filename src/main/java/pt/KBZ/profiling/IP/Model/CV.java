@@ -819,19 +819,19 @@ public class CV extends RDFObject {
     public static CV getCVbyPerson(String name) throws Exception {
     	
     	String properties = SparqlEndPoint.getInstancesByProperty("cv:CV", "cv:aboutPerson",":"+ name);
-    	System.out.println(properties);
+//    	System.out.println(properties);
     	List<CV> cvTMP = ParseResponse(properties);
     	if(cvTMP.isEmpty())
-    		throw new NoSuchElementException("CV not found, no applications can be retrieved");
+    		throw new NoSuchElementException("CV from profile " + name + " not found");
     	return cvTMP.get(0);    	
     }
     
     // Return a map with one Job to one Score
-    public static HashMap<String, Integer> getJobApplicationScores(String PersonURI) throws Exception{
-    	CV cv = getCVbyPersonURI(PersonURI);
+    public static HashMap<String, Integer> getJobApplicationScores(String PersonID) throws Exception{
+    	CV cv = getCVbyPerson(PersonID);
     	HashMap<String, Integer> jobScores = Matching.getApplicationsScores(cv);
     	if(jobScores.isEmpty())
-    		throw new NoSuchElementException("No valid applications made by user: " + PersonURI);
+    		throw new NoSuchElementException("No valid applications made by user: " + PersonID);
     	return jobScores;
     }
     
@@ -930,8 +930,8 @@ public class CV extends RDFObject {
      * @throws Exception 
      */
     //choose return
-    public static List<Skill> getSkillRecomendations(String PersonURI, String jobURI) throws Exception{
-    	CV cv = CV.getCVbyPersonURI(PersonURI);
+    public static List<Skill> getSkillRecomendations(String PersonID, String jobURI) throws Exception{
+    	CV cv = CV.getCVbyPerson(PersonID);
     	JobPosting job;
 		
 		job = JobPosting.getJobPosting(jobURI);
@@ -959,8 +959,8 @@ public class CV extends RDFObject {
     	
     }
     
-    public static List<JobPosting> getJobRecomendations(String cvURI) throws Exception{
-    	CV cv = CV.getCVbyPersonURI(cvURI);
+    public static List<JobPosting> getJobRecomendations(String PersonID) throws Exception{
+    	CV cv = CV.getCVbyPerson(PersonID);
     	
     	List<JobPosting> jobRecomendations = new ArrayList<JobPosting>();
     	

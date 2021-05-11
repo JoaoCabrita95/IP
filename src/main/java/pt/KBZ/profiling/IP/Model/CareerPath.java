@@ -1,25 +1,28 @@
 package IP.Model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.util.Pair;
+
 import IP.Matching;
 
 public class CareerPath {
 	
-	public static String getJobCareerPathStringOutput(String personURI, boolean internal) throws Exception {
+	public static String getJobCareerPathStringOutput(String personID, boolean internal) throws Exception {
 		String results = "";
 		
-		Person person = Person.getPerson(personURI);
-    	CV cv = CV.getCV(person.getCVURI());
+//		Person person = Person.getPerson(personURI);
+		CV cv = CV.getCVbyPerson(personID);
     	JobPosting currentJob;
-    	if(person.getCurrentJobURI() != null)
-    		currentJob = JobPosting.getJobPosting(person.getCurrentJobURI());
-    	else if(cv.getCurrentJob() != null)
+//    	if(person.getCurrentJobURI() != null)
+//    		currentJob = JobPosting.getJobPosting(person.getCurrentJobURI());
+    	if(cv.getCurrentJob() != null)
     		currentJob = JobPosting.getJobPosting(cv.getCurrentJob());
-    	else throw new NoCurrentJobException("Selected Person: " + person.getURI() + " does not have a current Job");
+    	else throw new NoCurrentJobException("Selected Person: " + personID + " does not have a current Job");
     	HashMap<String, Integer> JobScores;
     	if(internal) {
     		String company = currentJob.getHiringOrg();
@@ -29,7 +32,7 @@ public class CareerPath {
     		JobScores = Matching.getAllJobScoresByCV(cv);
     	}
     	
-    	results = processData(JobScores, currentJob, personURI);
+    	results = processData(JobScores, currentJob, personID);
 		
 		return results;
 	}
@@ -67,17 +70,17 @@ public class CareerPath {
 		return results;
 	}
 
-	public static HashMap<String, LinkedList<JobPosting>> getJobCareerPath(String personURI, boolean internal) throws Exception{
+	public static HashMap<String, LinkedList<JobPosting>> getJobCareerPath(String personID, boolean internal) throws Exception{
     	
     	//get CV, then get JobPosting with curJob, then get hiring org from JobPosting so the company name doesn't have to be an input string
-    	Person person = Person.getPerson(personURI);
-    	CV cv = CV.getCV(person.getCVURI());
+//    	Person person = Person.getPerson(personURI);
+		CV cv = CV.getCVbyPerson(personID);
     	JobPosting currentJob;
-    	if(person.getCurrentJobURI() != null)
-    		currentJob = JobPosting.getJobPosting(person.getCurrentJobURI());
-    	else if(cv.getCurrentJob() != null)
+//    	if(person.getCurrentJobURI() != null)
+//    		currentJob = JobPosting.getJobPosting(person.getCurrentJobURI());
+    	if(cv.getCurrentJob() != null)
     		currentJob = JobPosting.getJobPosting(cv.getCurrentJob());
-    	else throw new NoCurrentJobException("Selected Person: " + person.getURI() + " does not have a current Job");
+    	else throw new NoCurrentJobException("Selected Person: " + personID + " does not have a current Job");
     	HashMap<String, Integer> JobScores;
     	if(internal) {
     		String company = currentJob.getHiringOrg();

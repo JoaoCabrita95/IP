@@ -91,10 +91,10 @@ public class CVService {
      * @return
      */
     @GET
-    @Path("/cv/{PersonURI}/percentage")
-    public Response getCVCompleteness(@PathParam("PersonURI") String PersonURI) {
+    @Path("/cv/{PersonID}/percentage")
+    public Response getCVCompleteness(@PathParam("PersonID") String PersonID) {
     	try{
-    		CV cv = CV.getCVbyPersonURI(PersonURI);
+    		CV cv = CV.getCVbyPerson(PersonID);
     		int completenessPercentage = 0;
     		if(!cv.getWorkHistory().isEmpty())
     			completenessPercentage += 25;
@@ -105,10 +105,10 @@ public class CVService {
     		if(!cv.getSkillRefs().isEmpty())
     			completenessPercentage += 25;
     		
-    		return Response.status(Response.Status.OK).entity("{\"uid\":" + PersonURI + ",\"completeness\":" + completenessPercentage + "}").build();
+    		return Response.status(Response.Status.OK).entity("{\"uid\":" + PersonID + ",\"completeness\":" + completenessPercentage + "}").build();
     	}
     	catch (NoSuchElementException e1) {
-    		return Response.status(Response.Status.OK).entity("{\"uid\":" + PersonURI + ",\"completeness\":" + 0 + "}").build();
+    		return Response.status(Response.Status.OK).entity("{\"uid\":" + PersonID + ",\"completeness\":" + 0 + "}").build();
     	}
     	catch (Exception e) {
 			e.printStackTrace();
@@ -122,12 +122,12 @@ public class CVService {
      * @return
      */
     @GET
-    @Path("/cv/{PersonURI}/careerPath")
+    @Path("/cv/{PersonID}/careerPath")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCareerPath(@PathParam("PersonURI") String PersonURI){
+    public Response getCareerPath(@PathParam("PersonID") String PersonID){
     	try {
 //    		HashMap<String, LinkedList<JobPosting>> careerPath = CV.getJobCareerPath(PersonURI);
-    		String careerPath = CareerPath.getJobCareerPathStringOutput(PersonURI, true);
+    		String careerPath = CareerPath.getJobCareerPathStringOutput(PersonID, true);
     		return Response.ok(careerPath).build();
     	} 
     	catch (NoSuchElementException e1) {
@@ -150,11 +150,11 @@ public class CVService {
      * @return
      */
     @GET
-    @Path("/cv/{PersonURI}/recommendations/{jobID}/skills")
+    @Path("/cv/{PersonID}/recommendations/{jobID}/skills")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSkillRecommendations(@PathParam("PersonURI") String PersonURI, @PathParam("jobID") String jobID){
+    public Response getSkillRecommendations(@PathParam("PersonID") String PersonID, @PathParam("jobID") String jobID){
     	try {
-    		List<Skill> skillRecommendations = CV.getSkillRecomendations(PersonURI, jobID);
+    		List<Skill> skillRecommendations = CV.getSkillRecomendations(PersonID, jobID);
     		
     		JsonArray skillResults = new JsonArray();
 			for(Skill skill : skillRecommendations) {
@@ -178,11 +178,11 @@ public class CVService {
      * @return
      */
     @GET
-    @Path("/cv/{PersonURI}/recommendations/jobs")
+    @Path("/cv/{PersonID}/recommendations/jobs")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getJobRecommendations(@PathParam("PersonURI") String PersonURI){
+    public Response getJobRecommendations(@PathParam("PersonID") String PersonID){
     	try {
-    		List<JobPosting> jobRecommendations = CV.getJobRecomendations(PersonURI);
+    		List<JobPosting> jobRecommendations = CV.getJobRecomendations(PersonID);
     		JsonArray jobs = new JsonArray();
     		for(JobPosting job: jobRecommendations) {
     			jobs.add(ModelClassToJson.getJobJson(job));
@@ -204,11 +204,11 @@ public class CVService {
      * @return
      */
     @GET
-    @Path("/cv/{PersonURI}/applicationScores")
+    @Path("/cv/{PersonID}/applicationScores")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getApplicationScores(@PathParam("PersonURI") String PersonURI){
+    public Response getApplicationScores(@PathParam("PersonID") String PersonID){
     	try {
-    		HashMap<String, Integer> scores = CV.getJobApplicationScores(PersonURI);
+    		HashMap<String, Integer> scores = CV.getJobApplicationScores(PersonID);
     		if(scores.isEmpty())
     			return Response.ok("No scores were able to be calculated").build();
     		Gson gson = new Gson(); 
@@ -349,7 +349,7 @@ public class CVService {
 	public Response GetCV(@PathParam("personID")String personID) {
 		
 		try {
-			CV cv = CV.getCVbyPersonURI(personID);
+			CV cv = CV.getCVbyPerson(personID);
             JsonElement jsonResults = ModelClassToJson.getCVJson(cv);
 //			System.out.println(jsonResults.toString());
             
@@ -382,12 +382,12 @@ public class CVService {
 	 * @return
 	 */
 	@PUT
-	@Path("/cv/{personURI}")
+	@Path("/cv/{PersonID}")
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response UpdateCV(@PathParam("personURI")String personURI, String data) {
+	public Response UpdateCV(@PathParam("PersonID")String PersonID, String data) {
 		try {
-			CV cv = CV.getCVbyPersonURI(personURI);
+			CV cv = CV.getCVbyPerson(PersonID);
 			GsonParser parser = new GsonParser();
 			
 			CV updatedCV = parser.toCV(data);
@@ -438,7 +438,7 @@ public class CVService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteCV(@PathParam("profileID")String profileID) {
 		try {
-			CV cv = CV.getCVbyPersonURI(profileID);
+			CV cv = CV.getCVbyPerson(profileID);
 			RDFObject.quickDeleteByURI(cv.getURI());
 			RDFObject.deleteURIAssociations(cv.getURI());
 			JsonElement cvJson = getCVinJson(cv);
@@ -463,7 +463,7 @@ public class CVService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCVSkills(@PathParam("profileID") String profileID) {
 		try {
-			CV cv = CV.getCVbyPersonURI(profileID);
+			CV cv = CV.getCVbyPerson(profileID);
 			List<Skill> skills = cv.getSkills();
 			if(skills == null || skills.isEmpty())
 				return Response.status(Response.Status.NOT_FOUND).entity("No skills found on this profile").build();
@@ -488,7 +488,7 @@ public class CVService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCVSkillRefs(@PathParam("profileID") String profileID) {
 		try {
-			CV cv = CV.getCVbyPersonURI(profileID);
+			CV cv = CV.getCVbyPerson(profileID);
 			
 			List<CVSkillRef> refs = cv.getSkillRefs();
 			
@@ -519,7 +519,7 @@ public class CVService {
 	public Response makeSkillRef(@PathParam("profileID") String profileID, String data) {
 		try {
 			GsonParser parser = new GsonParser();
-			CV cv = CV.getCVbyPersonURI(profileID);
+			CV cv = CV.getCVbyPerson(profileID);
 			CVSkillRef newRef = parser.toCVSkillRef(data);
 			
 			if(!newRef.getSkillURI().startsWith("saro:")) {
@@ -591,7 +591,7 @@ public class CVService {
 		//Have to remove old reference from cv and add the new one
 		try {
 			GsonParser parser = new GsonParser();
-			CV cv = CV.getCVbyPersonURI(profileID);
+			CV cv = CV.getCVbyPerson(profileID);
 			CVSkillRef newRef = parser.toCVSkillRef(data);
 			String skillURI = newRef.getSkillURI();
 			
