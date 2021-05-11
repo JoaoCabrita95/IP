@@ -218,36 +218,44 @@ public class PersonService {
 //		return person;
 //	}
 	
-	//TODO: Probably need to do some extra cleaning up in this method, do I erase the application after its been accepted, do I remove the Job offer?
+	//TODO: Remove profile check, check only if the application was made to the job by the user
 	@POST
 	@Path("/profiles/{userid}/currentJob/{jobid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response AssignJobToPerson(@PathParam("jobid") String jobid, @PathParam("userid") String userid ) {
 		try {
-			Person person = Person.getPerson(userid);
-			if(person.hasAppliedToJob(jobid)) {
-				if(person.getCurrentJobURI() != null) {
-					if(person.getCurrentJobURI().equals(jobid) || person.getCurrentJobURI().equals("saro:" + jobid)){
-						return Response.status(Response.Status.BAD_REQUEST).entity("Person has already been selected for this job: " + jobid).build();
-					}
-				}
-				
-				if(jobid.contains(":"))
-					person.setCurrentJobURI(jobid);
-				else if(jobid.contains("http"))
-					person.setCurrentJobURI(":" + jobid.substring(jobid.indexOf("#") + 1));
-				else
-					person.setCurrentJobURI(":" + jobid);
-				
-				try {
-					person.Save();
-					return Response.ok(ModelClassToJson.getProfileJson(person).toString()).build();
-				} catch (Exception e) {
-					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Could not save profile").build();
-				}
-			}
-			else
-				return Response.status(Response.Status.BAD_REQUEST).entity("Person has not applied for the selected Job").build();
+			
+			Application app = Application.getApplicationByUserJob(jobid, userid);
+			
+			CV cv = CV.getCVbyPerson(userid);
+			cv.setCurrentJob(":" + jobid);
+			cv.Save();
+			
+			return Response.ok("User " + userid + " new current job is: " + jobid).build();
+//			Person person = Person.getPerson(userid);
+//			if(person.hasAppliedToJob(jobid)) {
+//				if(person.getCurrentJobURI() != null) {
+//					if(person.getCurrentJobURI().equals(jobid) || person.getCurrentJobURI().equals("saro:" + jobid)){
+//						return Response.status(Response.Status.BAD_REQUEST).entity("Person has already been selected for this job: " + jobid).build();
+//					}
+//				}
+//				
+//				if(jobid.contains(":"))
+//					person.setCurrentJobURI(jobid);
+//				else if(jobid.contains("http"))
+//					person.setCurrentJobURI(":" + jobid.substring(jobid.indexOf("#") + 1));
+//				else
+//					person.setCurrentJobURI(":" + jobid);
+//				
+//				try {
+//					person.Save();
+//					return Response.ok(ModelClassToJson.getProfileJson(person).toString()).build();
+//				} catch (Exception e) {
+//					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Could not save profile").build();
+//				}
+//			}
+//			else
+//				return Response.status(Response.Status.BAD_REQUEST).entity("Person has not applied for the selected Job").build();
 		} 
 		catch(NoSuchElementException e1) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e1.getMessage()).build();
@@ -258,17 +266,21 @@ public class PersonService {
 		}
 		
 	}
+	
+	//TODO: Remove user check, check if application exists, if so remove it
 
 	@DELETE
 	@Path("/profiles/{userid}/applications/{jobid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response DeleteApplication(@PathParam("jobid")String jobid, @PathParam("userid")String userid) {
 		
-		Person person;
+//		Person person;
 		try {
-			person = Person.getPerson(userid);
-			CV cv = CV.getCV(person.getCVURI());
-			Application app = cv.getApplication(jobid);
+			Application app = Application.getApplicationByUserJob(jobid, userid);
+//			person = Person.getPerson(userid);
+//			CV cv = CV.getCV(person.getCVURI());
+//			Application app = cv.getApplication(jobid);
+			CV cv = CV.getCVbyPerson(userid);
 			
 			if(app == null)
 				return Response.status(Response.Status.BAD_REQUEST).entity("User " + userid + " does not have an application to job " + jobid).build();
@@ -277,6 +289,9 @@ public class PersonService {
 			
 			cv.removeJobApplication(jobid);
 			jp.removeApplications(app.getURI());
+			
+			cv.Save();
+			jp.Save();
 			
 			
 			SparqlEndPoint.deleteObjectByUri(app.getURI());

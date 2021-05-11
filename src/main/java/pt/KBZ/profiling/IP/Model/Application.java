@@ -191,6 +191,10 @@ public class Application extends RDFObject {
 				result = app;
 		}
 		
+		if(result == null) {
+			throw new NoSuchElementException("No application made to job: " + jobID + " by profile: " + profileID);
+		}
+		
 		return result;
 	}
 	
