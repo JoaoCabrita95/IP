@@ -168,13 +168,13 @@ public class MatchingService {
 //					rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
 					JsonObject rabbitObject = new JsonObject();
 					rabbitObject.add("job_application", getApplicationForRabbitMQ(application));
-					
-					System.out.println(rabbitObject);
+					rabbitObject.addProperty("status", "create");
+//					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //					System.out.println(rabbit.channel.isOpen());
 				}
 				catch (Exception e) {
-					System.out.println("Could not send the created CV to the RabbitMQ queue.");
+					System.out.println("Could not send the created Job Application to the RabbitMQ queue.");
 				}
 
 //				cv.addJobApplication(application);
@@ -236,6 +236,18 @@ public class MatchingService {
 			RDFObject.quickDeleteByURI(app.getURI());
 			RDFObject.deleteURIAssociations(app.getURI());
 			
+			try {
+//				rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
+				JsonObject rabbitObject = new JsonObject();
+				rabbitObject.add("job_application", getApplicationForRabbitMQ(app));
+				rabbitObject.addProperty("status", "delete");
+//				System.out.println(rabbitObject);
+				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
+//				System.out.println(rabbit.channel.isOpen());
+			}
+			catch (Exception e) {
+				System.out.println("Could not send the deleted Job Application to the RabbitMQ queue.");
+			}
 //			cv.removeJobApplication(jobid);
 			
 			
@@ -262,6 +274,19 @@ public class MatchingService {
 			Application app = Application.getApplication(applicationID);
 			RDFObject.quickDeleteByURI(app.getURI());
 			RDFObject.deleteURIAssociations(app.getURI());
+			
+			try {
+//				rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
+				JsonObject rabbitObject = new JsonObject();
+				rabbitObject.add("job_application", getApplicationForRabbitMQ(app));
+				rabbitObject.addProperty("status", "delete");
+//				System.out.println(rabbitObject);
+				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
+//				System.out.println(rabbit.channel.isOpen());
+			}
+			catch (Exception e) {
+				System.out.println("Could not send the deleted Job Application to the RabbitMQ queue.");
+			}
 			
 			return Response.ok(ModelClassToJson.getApplicationJson(app).toString()).build();
 			
