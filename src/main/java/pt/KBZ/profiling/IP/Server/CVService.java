@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -38,6 +40,7 @@ import IP.Model.Skill;
 import IP.Model.SkillRefObject;
 import IP.Model.SparqlEndPoint;
 import IP.Model.WorkHistory;
+import jdk.internal.org.jline.utils.Log;
 import matomo.matomoClient;
 
 /**
@@ -51,9 +54,9 @@ public class CVService {
 	rabbitMQService rabbit = new rabbitMQService();
 	matomoClient mc = new matomoClient();
 	
-	
+	private static Logger Log = Logger.getLogger(CVService.class.getName());
 	public CVService() {
-		
+		Log.setLevel( Level.FINER );
 	}
 
 	/**
@@ -239,7 +242,7 @@ public class CVService {
 		try {
 			parser = new GsonParser();
 			CV cv = parser.toCV(data);
-						
+			Log.info(getCVinJson(cv).toString());			
 			try {
 				Person p = Person.getPerson(cv.getPersonURI());
 				p.setCVURI(cv.getURI());
@@ -275,6 +278,7 @@ public class CVService {
 			try {
 				JsonObject rabbitObject = new JsonObject();
 				rabbitObject.add("cv", getCVinJson(cv));
+				rabbitObject.addProperty("status", "create");
 				
 //				System.out.println(rabbitObject);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
@@ -350,6 +354,9 @@ public class CVService {
 		
 		try {
 			CV cv = CV.getCVbyPerson(personID);
+			
+			Log.info(getCVinJson(cv).toString());
+			
             JsonElement jsonResults = ModelClassToJson.getCVJson(cv);
 //			System.out.println(jsonResults.toString());
             
@@ -395,6 +402,11 @@ public class CVService {
 //			if(updatedCV.getURI() == null){
 //				updatedCV.setURI(cv.getURI());
 //			}
+			Log.info("Old CV:\n");
+			Log.info(getCVinJson(cv).toString());	
+			
+			Log.info("Updated CV:\n");
+			Log.info(getCVinJson(updatedCV).toString());	
 			
 			if(cv.getURI().equals(updatedCV.getURI())) {
 				updatedCV.update();
@@ -402,13 +414,14 @@ public class CVService {
 				try {
 					JsonObject rabbitObject = new JsonObject();
 					rabbitObject.add("cv", getCVinJson(updatedCV));
+					rabbitObject.addProperty("status", "update");
 					
 //					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //					System.out.println(rabbit.channel.isOpen());
 				}
 				catch (Exception e) {
-					System.out.println("Could not send the created CV to the RabbitMQ queue.");
+					System.out.println("Could not send the updated CV to the RabbitMQ queue.");
 				}
 				
 				JsonElement newCV = ModelClassToJson.getCVJson(updatedCV);
@@ -439,9 +452,26 @@ public class CVService {
 	public Response deleteCV(@PathParam("profileID")String profileID) {
 		try {
 			CV cv = CV.getCVbyPerson(profileID);
+			
+			Log.info(getCVinJson(cv).toString());
+			
 			RDFObject.quickDeleteByURI(cv.getURI());
 			RDFObject.deleteURIAssociations(cv.getURI());
 			JsonElement cvJson = getCVinJson(cv);
+			
+			try {
+				JsonObject rabbitObject = new JsonObject();
+				rabbitObject.add("cv", getCVinJson(cv));
+				rabbitObject.addProperty("status", "delete");
+				
+//				System.out.println(rabbitObject);
+				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
+//				System.out.println(rabbit.channel.isOpen());
+			}
+			catch (Exception e) {
+				System.out.println("Could not send the deleted CV to the RabbitMQ queue.");
+			}
+			
 			return Response.ok(cvJson.toString()).build();
 		} 
 		catch (NoSuchElementException e1) {
@@ -464,6 +494,9 @@ public class CVService {
 	public Response getCVSkills(@PathParam("profileID") String profileID) {
 		try {
 			CV cv = CV.getCVbyPerson(profileID);
+			
+			Log.info(getCVinJson(cv).toString());
+			
 			List<Skill> skills = cv.getSkills();
 			if(skills == null || skills.isEmpty())
 				return Response.status(Response.Status.NOT_FOUND).entity("No skills found on this profile").build();
@@ -489,6 +522,8 @@ public class CVService {
 	public Response getCVSkillRefs(@PathParam("profileID") String profileID) {
 		try {
 			CV cv = CV.getCVbyPerson(profileID);
+			
+			Log.info(getCVinJson(cv).toString());
 			
 			List<CVSkillRef> refs = cv.getSkillRefs();
 			
@@ -520,6 +555,8 @@ public class CVService {
 		try {
 			GsonParser parser = new GsonParser();
 			CV cv = CV.getCVbyPerson(profileID);
+			
+			
 			CVSkillRef newRef = parser.toCVSkillRef(data);
 			
 			if(!newRef.getSkillURI().startsWith("saro:")) {
@@ -535,6 +572,9 @@ public class CVService {
 			
 			if(cv.hasSkillRef(newRef) == null) {
 				cv.addSkillRef(newRef);
+				
+				Log.info(getCVinJson(cv).toString());
+				
 				cv.Save();
 				try {
 					if(newRef.getEvalDate() != null) {
@@ -553,6 +593,7 @@ public class CVService {
 					
 					JsonObject rabbitObject = new JsonObject();
 					rabbitObject.add("cv", getCVinJson(cv));
+					rabbitObject.addProperty("status", "update");
 					
 //					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
@@ -560,7 +601,7 @@ public class CVService {
 					mc.send("employees", "newSkill", profileID, 1);
 				}
 				catch (Exception e) {
-					System.out.println("Could not send the created CV to the RabbitMQ queue.");
+					System.out.println("Could not send the updated CV to the RabbitMQ queue.");
 				}
 				
 			}
@@ -592,6 +633,7 @@ public class CVService {
 		try {
 			GsonParser parser = new GsonParser();
 			CV cv = CV.getCVbyPerson(profileID);
+						
 			CVSkillRef newRef = parser.toCVSkillRef(data);
 			String skillURI = newRef.getSkillURI();
 			
@@ -621,6 +663,8 @@ public class CVService {
 				cv.update();
 				result = ModelClassToJson.getCVSkillJsonFromRef(newRef);
 				
+				Log.info(getCVinJson(cv).toString());
+				
 				if(newRef.getEvalDate() != null) {
 					Skill skill = Skill.getSkill(newRef.getSkillURI());
 					JsonObject notification = new JsonObject();
@@ -632,17 +676,18 @@ public class CVService {
 					response = request.POSTrequest(notification.toString());
 					
 				}
-//				try {
-//					JsonObject rabbitObject = new JsonObject();
-//					rabbitObject.add("cv", getCVinJson(cv));
-//					
+				try {
+					JsonObject rabbitObject = new JsonObject();
+					rabbitObject.add("cv", getCVinJson(cv));
+					rabbitObject.addProperty("status", "update");
+					
 //					System.out.println(rabbitObject);
-//					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
+					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //					System.out.println(rabbit.channel.isOpen());
-//				}
-//				catch (Exception e) {
-//					System.out.println("Could not send the created CV to the RabbitMQ queue.");
-//				}
+				}
+				catch (Exception e) {
+					System.out.println("Could not send the updated CV to the RabbitMQ queue.");
+				}
 			}
 			else
 				return Response.status(Response.Status.BAD_REQUEST).entity("The selected skill reference "+ ref.getURI()

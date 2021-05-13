@@ -175,6 +175,7 @@ public class JobpostingService {
 			try {
 				JsonObject rabbitObject = new JsonObject();
 				rabbitObject.add("job", getJobPostinginJson(job));
+				rabbitObject.addProperty("status", "create");
 				Log.info(rabbitObject.toString() + "\n");
 //				System.out.println(rabbitData);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
@@ -294,12 +295,13 @@ public class JobpostingService {
 					
 					JsonObject rabbitObject = new JsonObject();
 					rabbitObject.add("job", getJobPostinginJson(newJob));
+					rabbitObject.addProperty("status", "update");
 					Log.info(rabbitObject.toString() + "\n");
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
-					System.out.println(rabbit.channel.isOpen());
+//					System.out.println(rabbit.channel.isOpen());
 				}
 				catch (Exception e) {
-					System.out.println("Could not send the created CV to the RabbitMQ queue.");
+					System.out.println("Could not send the updated JobPosting to the RabbitMQ queue.");
 				}
 				
 				return Response.ok(getJobPostinginJson(newJob).toString(), MediaType.APPLICATION_JSON).build();
@@ -336,6 +338,18 @@ public class JobpostingService {
 //			}
 			
 			RDFObject.quickDeleteByURI(job.getURI());
+			try {
+				
+				JsonObject rabbitObject = new JsonObject();
+				rabbitObject.add("job", getJobPostinginJson(job));
+				rabbitObject.addProperty("status", "delete");
+				Log.info(rabbitObject.toString() + "\n");
+				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
+//				System.out.println(rabbit.channel.isOpen());
+			}
+			catch (Exception e) {
+				System.out.println("Could not send the deleted JobPosting to the RabbitMQ queue.");
+			}
 			//Not sure if I should erase all associations or not
 //			RDFObject.deleteURIAssociations(job.getURI());
 			return Response.status(Response.Status.OK).entity("Job Posting with URI: " + jobURI + " has been deleted.").build();
