@@ -556,41 +556,41 @@ public class CV extends RDFObject {
      * @throws Exception
      */
     public void update() throws Exception {
-    	CV oldCV = CV.getCV(getURI());
+//    	CV oldCV = CV.getCV(getURI());
     	
-    	if(this.title == null)
-    		this.title = oldCV.getTitle();
-    	if(this.personURI == null)
-    		this.personURI = oldCV.getPersonURI();
-    	if(this.description == null)
-    		this.description = oldCV.getDescription();
-    	if(this.targetSector == null)
-    		this.targetSector = oldCV.getTargetSector();
-    	if(this.otherInfo == null)
-    		this.otherInfo = oldCV.getOtherInfo();
-    	if(this.currentJob == null)
-    		this.currentJob = oldCV.getCurrentJob();
-    	
-    	for(WorkHistory wh : oldCV.getWorkHistory()) {
-    		if(!this.hasWorkExperience(wh))
-    			this.addWorkHistory(wh);
-    	}
-    	for(Education ed : oldCV.getEducation()) {
-    		if(!this.hasEducation(ed))
-    			this.addEducation(ed);
-    	}
-    	for(Course course : oldCV.getCourses()) {
-    		if(!this.hasCourse(course))
-    			this.addCourse(course);
-    	}
-    	for(CVSkillRef skillRef : oldCV.getSkillRefs()) {
-    		if(this.hasSkillRef(skillRef) == null)
-    			this.addSkillRef(skillRef);
-    	}
-    	for(Application app : oldCV.getApplications()) {
-    		if(this.getApplication(app.getJobURI()) == null)
-    			this.addJobApplication(app);
-    	}
+//    	if(this.title == null)
+//    		this.title = oldCV.getTitle();
+//    	if(this.personURI == null)
+//    		this.personURI = oldCV.getPersonURI();
+//    	if(this.description == null)
+//    		this.description = oldCV.getDescription();
+//    	if(this.targetSector == null)
+//    		this.targetSector = oldCV.getTargetSector();
+//    	if(this.otherInfo == null)
+//    		this.otherInfo = oldCV.getOtherInfo();
+//    	if(this.currentJob == null)
+//    		this.currentJob = oldCV.getCurrentJob();
+//    	
+//    	for(WorkHistory wh : oldCV.getWorkHistory()) {
+//    		if(!this.hasWorkExperience(wh))
+//    			this.addWorkHistory(wh);
+//    	}
+//    	for(Education ed : oldCV.getEducation()) {
+//    		if(!this.hasEducation(ed))
+//    			this.addEducation(ed);
+//    	}
+//    	for(Course course : oldCV.getCourses()) {
+//    		if(!this.hasCourse(course))
+//    			this.addCourse(course);
+//    	}
+//    	for(CVSkillRef skillRef : oldCV.getSkillRefs()) {
+//    		if(this.hasSkillRef(skillRef) == null)
+//    			this.addSkillRef(skillRef);
+//    	}
+//    	for(Application app : oldCV.getApplications()) {
+//    		if(this.getApplication(app.getJobURI()) == null)
+//    			this.addJobApplication(app);
+//    	}
 
 		quickDeleteByURI(getURI());
 		Save();
