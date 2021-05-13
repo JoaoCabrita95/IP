@@ -40,7 +40,6 @@ import IP.Model.Skill;
 import IP.Model.SkillRefObject;
 import IP.Model.SparqlEndPoint;
 import IP.Model.WorkHistory;
-import jdk.internal.org.jline.utils.Log;
 import matomo.matomoClient;
 
 /**
