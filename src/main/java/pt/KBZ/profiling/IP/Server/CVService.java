@@ -401,7 +401,7 @@ public class CVService {
 				
 				try {
 					JsonObject rabbitObject = new JsonObject();
-					rabbitObject.add("cv", getCVinJson(cv));
+					rabbitObject.add("cv", getCVinJson(updatedCV));
 					
 //					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
