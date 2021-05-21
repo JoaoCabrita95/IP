@@ -41,7 +41,6 @@ import IP.Model.Junit.Data.PersonTestData;
 import IP.Model.Junit.Data.SkillTestData;
 import IP.Model.Junit.Data.careerPathTestData;
 import IP.RML.Mapping;
-import jdk.internal.org.jline.utils.Log;
 
 @Path("/")
 public class GeneralService {
