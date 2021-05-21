@@ -1,8 +1,13 @@
 package IP.Server;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -12,6 +17,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.jena.atlas.logging.java.TextFormatter;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,14 +40,18 @@ import IP.Model.Junit.Data.JobPostingTestData;
 import IP.Model.Junit.Data.PersonTestData;
 import IP.Model.Junit.Data.SkillTestData;
 import IP.Model.Junit.Data.careerPathTestData;
+import IP.RML.Mapping;
+import jdk.internal.org.jline.utils.Log;
 
 @Path("/")
 public class GeneralService {
 
 	private static final String NOTIFICATION_PATH = "http://qualichain.epu.ntua.gr:5004/notifications HTTP/1.1";
 	rabbitMQService rabbit = new rabbitMQService();
-	
+
+	private static Logger Log = Logger.getLogger(GeneralService.class.getName());
 	public GeneralService() {
+		Log.setLevel( Level.FINER );
 	}
 	
 	@POST
@@ -57,6 +68,7 @@ public class GeneralService {
 			input = input.replace("saro:Product", "saro:Skill");
 			input = input.replace("saro:Tool", "saro:Skill");
 //			System.out.println(input);
+			Log.info(input);
 			String response = SparqlEndPoint.insertTriple(input);
 			if(response.equals("IO ERROR"))
 				return Response.status(Response.Status.BAD_REQUEST).entity("Data input incorrect format, use turtle(TTL) format").build();
