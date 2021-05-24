@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -45,9 +47,10 @@ public class MatchingService {
 	
 	rabbitMQService rabbit = new rabbitMQService();
 	matomoClient mc = new matomoClient();
+	private static Logger Log = Logger.getLogger(MatchingService.class.getName());
 	
 	public MatchingService() {
-		
+		Log.setLevel( Level.FINER );
 	}
 
 	//TODO:Need to double check the case where results == null
@@ -158,10 +161,10 @@ public class MatchingService {
 				
 				mc.send("job_applications", "apply", job.getID(), 1);
 				
-				//TODO: Calculate job matching score and check if it's above a certain threshold, if so send another tick to matomo
-				if(false) {
-					mc.send("job_applications", "matching", job.getID(), 1);
-				}
+//				//TODO: Calculate job matching score and check if it's above a certain threshold, if so send another tick to matomo
+//				if(false) {
+//					mc.send("job_applications", "matching", job.getID(), 1);
+//				}
 				
 								
 				try {
@@ -169,7 +172,7 @@ public class MatchingService {
 					JsonObject rabbitObject = new JsonObject();
 					rabbitObject.add("job_application", getApplicationForRabbitMQ(application));
 					rabbitObject.addProperty("status", "create");
-//					System.out.println(rabbitObject);
+					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //					System.out.println(rabbit.channel.isOpen());
 				}
@@ -239,9 +242,22 @@ public class MatchingService {
 			try {
 //				rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
 				JsonObject rabbitObject = new JsonObject();
-				rabbitObject.add("job_application", getApplicationForRabbitMQ(app));
+				JsonObject jobApp = new JsonObject();
+				try {
+					jobApp.addProperty("job_id", Integer.valueOf(jobid));
+				}
+				catch(NumberFormatException e) {
+					jobApp.addProperty("job_id", jobid);
+				}
+				try {
+					jobApp.addProperty("user_id", Integer.valueOf(userid));
+				}
+				catch(NumberFormatException e) {
+					jobApp.addProperty("user_id", userid);
+				}
+				rabbitObject.add("job_application", jobApp);
 				rabbitObject.addProperty("status", "delete");
-//				System.out.println(rabbitObject);
+				Log.info(rabbitObject.toString() + "\n");
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //				System.out.println(rabbit.channel.isOpen());
 			}
@@ -277,10 +293,30 @@ public class MatchingService {
 			
 			try {
 //				rabbit.bindQueue(rabbitMQService.ROUTING_KEY);
+				String jobid = app.getJobURI();
+				if(jobid.startsWith(":"))
+					jobid = jobid.substring(1);
+				String userid = app.getPersonURI();
+				if(userid.startsWith(":"))
+					userid = userid.substring(1);
+				
 				JsonObject rabbitObject = new JsonObject();
-				rabbitObject.add("job_application", getApplicationForRabbitMQ(app));
+				JsonObject jobApp = new JsonObject();
+				try {
+					jobApp.addProperty("job_id", Integer.valueOf(jobid));
+				}
+				catch(NumberFormatException e) {
+					jobApp.addProperty("job_id", jobid);
+				}
+				try {
+					jobApp.addProperty("user_id", Integer.valueOf(userid));
+				}
+				catch(NumberFormatException e) {
+					jobApp.addProperty("user_id", userid);
+				}
+				rabbitObject.add("job_application", jobApp);
 				rabbitObject.addProperty("status", "delete");
-//				System.out.println(rabbitObject);
+				Log.info(rabbitObject.toString() + "\n");
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //				System.out.println(rabbit.channel.isOpen());
 			}

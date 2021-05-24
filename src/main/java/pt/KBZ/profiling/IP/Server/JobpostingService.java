@@ -176,8 +176,8 @@ public class JobpostingService {
 				JsonObject rabbitObject = new JsonObject();
 				rabbitObject.add("job", getJobPostinginJson(job));
 				rabbitObject.addProperty("status", "create");
-				Log.info(rabbitObject.toString() + "\n");
-//				System.out.println(rabbitData);
+//				Log.info(rabbitObject.toString() + "\n");
+				System.out.println(rabbitObject);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //				System.out.println(rabbit.channel.isOpen());
 			}
@@ -341,7 +341,14 @@ public class JobpostingService {
 			try {
 				
 				JsonObject rabbitObject = new JsonObject();
-				rabbitObject.add("job", getJobPostinginJson(job));
+				JsonObject jobID = new JsonObject();
+				try {
+					jobID.addProperty("job_id", Integer.valueOf(jobURI));
+				}
+				catch(NumberFormatException e) {
+					jobID.addProperty("job_id", jobURI);
+				}
+				rabbitObject.add("job", jobID);
 				rabbitObject.addProperty("status", "delete");
 				Log.info(rabbitObject.toString() + "\n");
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());

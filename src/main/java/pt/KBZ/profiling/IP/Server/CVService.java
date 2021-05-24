@@ -279,7 +279,7 @@ public class CVService {
 				rabbitObject.add("cv", getCVinJson(cv));
 				rabbitObject.addProperty("status", "create");
 				
-//				System.out.println(rabbitObject);
+				System.out.println(rabbitObject);
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //				System.out.println(rabbit.channel.isOpen());
 			}
@@ -415,7 +415,7 @@ public class CVService {
 					rabbitObject.add("cv", getCVinJson(updatedCV));
 					rabbitObject.addProperty("status", "update");
 					
-//					System.out.println(rabbitObject);
+					System.out.println(rabbitObject);
 					rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //					System.out.println(rabbit.channel.isOpen());
 				}
@@ -452,7 +452,7 @@ public class CVService {
 		try {
 			CV cv = CV.getCVbyPerson(profileID);
 			
-			Log.info(getCVinJson(cv).toString());
+			Log.info(getCVinJson(cv).toString() + "\n");
 			
 			RDFObject.quickDeleteByURI(cv.getURI());
 			RDFObject.deleteURIAssociations(cv.getURI());
@@ -460,10 +460,17 @@ public class CVService {
 			
 			try {
 				JsonObject rabbitObject = new JsonObject();
-				rabbitObject.add("cv", getCVinJson(cv));
+				JsonObject userID = new JsonObject();
+				try {
+					userID.addProperty("user_id", Integer.valueOf(profileID));
+				}
+				catch(NumberFormatException e) {
+					userID.addProperty("user_id", profileID);
+				}
+				rabbitObject.add("cv", userID);
 				rabbitObject.addProperty("status", "delete");
 				
-//				System.out.println(rabbitObject);
+				Log.info(rabbitObject.toString() + "\n");
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, rabbitObject.toString().getBytes());
 //				System.out.println(rabbit.channel.isOpen());
 			}
