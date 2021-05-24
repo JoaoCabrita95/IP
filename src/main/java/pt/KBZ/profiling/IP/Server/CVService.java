@@ -20,6 +20,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -256,6 +257,13 @@ public class CVService {
 			}
 			catch (Exception e) {
 				e.printStackTrace();
+			}
+			try {
+				CV cvtmp = CV.getCVbyPerson(cv.getPersonURI().substring(1));
+				return Response.status(Status.BAD_REQUEST).entity("CV already exists, either delete cv with person URI: " + cv.getPersonURI() + " or use update service").build();
+			}
+			catch(Exception e) {
+				
 			}
 			
 			if(SparqlEndPoint.existURI(cv.getURI()))
