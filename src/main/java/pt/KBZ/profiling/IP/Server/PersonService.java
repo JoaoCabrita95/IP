@@ -228,7 +228,7 @@ public class PersonService {
 			Application app = Application.getApplicationByUserJob(jobid, userid);
 			
 			CV cv = CV.getCVbyPerson(userid);
-			cv.setCurrentJob(":" + jobid);
+			cv.setCurrentJob(jobid);
 			cv.Save();
 			
 			return Response.ok("User " + userid + " new current job is: " + jobid).build();

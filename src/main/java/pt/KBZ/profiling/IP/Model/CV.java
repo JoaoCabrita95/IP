@@ -1161,7 +1161,7 @@ public class CV extends RDFObject {
                 	String curJob = object;
                 	if(curJob.contains("#"))
                 		curJob = curJob.substring(curJob.indexOf("#") + 1);
-                	cv.setCurrentJob(":" + curJob);
+                	cv.setCurrentJob(curJob);
                 	break;
                 	
                 case "hasSkill":
