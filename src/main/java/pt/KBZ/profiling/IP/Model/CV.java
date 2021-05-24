@@ -648,7 +648,7 @@ public class CV extends RDFObject {
         
         if(currentJob != null) {
         	triple = new Triple(getURI(), "qc:currentJob", currentJob);
-        	saveData.put(triple, "Object");
+        	saveData.put(triple, "String");
         }
         
         if(realocationInfo != null) {
@@ -1159,8 +1159,8 @@ public class CV extends RDFObject {
                 	
                 case "currentJob":
                 	String curJob = object;
-                	if(curJob.contains("#"))
-                		curJob = curJob.substring(curJob.indexOf("#") + 1);
+//                	if(curJob.contains("#"))
+//                		curJob = curJob.substring(curJob.indexOf("#") + 1);
                 	cv.setCurrentJob(curJob);
                 	break;
                 	
