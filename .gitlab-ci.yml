@@ -4,7 +4,7 @@ stages:
 before_script:
   - docker info
 
-build-docker:
+build-docker-image:
   stage: dev
   tags:
     - kbz
@@ -13,5 +13,7 @@ build-docker:
   script:
     - ls -la
     - echo ${CI_REGISTRY}
-    - echo ${CI_DEPLOY_USER}
+    - docker build -t ${CI_REGISTRY}:${CI_COMMIT_SHA} .
+    - docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}:${CI_COMMIT_SHA}
+    - docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}:latest
 
