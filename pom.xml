@@ -28,7 +28,6 @@
   	<dependency>
         <groupId>org.piwik.java.tracking</groupId>
         <artifactId>matomo-java-tracker</artifactId>
-        <version>1.5</version>
     </dependency>
 
 	<dependency>
