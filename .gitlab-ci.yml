@@ -14,6 +14,7 @@ build-docker-image:
     - ls -la
     - echo ${CI_REGISTRY}
     - docker build -t ${CI_REGISTRY}:${CI_COMMIT_SHA} .
-    - docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}:${CI_COMMIT_SHA}
-    - docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}:latest
+    - docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}
+    - docker push ${CI_REGISTRY}:${CI_COMMIT_SHA}
+    - docker push ${CI_REGISTRY}:latest
 
