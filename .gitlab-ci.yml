@@ -12,7 +12,5 @@ build-docker:
     - master 
   script:
     - ls -la
-    - docker build -t $CI_REGISTRY:${CI_COMMIT_SHA} .
-    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD ${CI_REGISTRY}:${CI_COMMIT_SHA}
-    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD ${CI_REGISTRY}:latest
+    - echo ${CI_REGISTRY}
 
