@@ -25,5 +25,5 @@ deploy-2-staging:
   only:
     - master
   script:
-    - docker run --publish 8000:8000 -t ${CI_REGISTRY}:latest
+    - docker run --publish ${STAGING_PORT}:8000 -t ${CI_REGISTRY}:latest
 
