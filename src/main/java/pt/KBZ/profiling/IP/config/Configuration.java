@@ -26,10 +26,11 @@ public class Configuration {
 
         Properties prop = new Properties();
         try {
-            InputStream is = this.getClass().getResourceAsStream("/app.config");
+            InputStream is = this.getClass().getResourceAsStream("/app.config");            
             prop.load(is);
 
             port = Integer.parseInt(prop.getProperty("port","8000"));
+            
             if(!test) {
             	SparqlEndPoint.REQUEST_PATH = prop.getProperty("sparqlendpoint");
                 SparqlEndPoint.QUERY_PATH = prop.getProperty("queryengine");
@@ -38,7 +39,7 @@ public class Configuration {
             	SparqlEndPoint.REQUEST_PATH = prop.getProperty("sparqlendpointtest");
                 SparqlEndPoint.QUERY_PATH = prop.getProperty("queryenginetest");
             }
-            
+            system.out.println(SparqlEndPoint.REQUEST_PATH);
 
         } catch (IOException e) {
             e.printStackTrace();
