@@ -39,7 +39,8 @@ public class Configuration {
             	SparqlEndPoint.REQUEST_PATH = prop.getProperty("sparqlendpointtest");
                 SparqlEndPoint.QUERY_PATH = prop.getProperty("queryenginetest");
             }
-            system.out.println(SparqlEndPoint.REQUEST_PATH);
+            System.out.print("SparqlEndPoint.REQUEST_PATH:");
+            System.out.println(SparqlEndPoint.REQUEST_PATH);
 
         } catch (IOException e) {
             e.printStackTrace();
