@@ -25,5 +25,5 @@ deploy-2-staging:
   only:
     - master
   script:
-    - docker run --detach --publish ${STAGING_PORT}:8000 -t ${CI_REGISTRY}:latest
+    - docker run --rm --name profiling --detach --publish ${STAGING_PORT}:8000 -t ${CI_REGISTRY}:latest
 
