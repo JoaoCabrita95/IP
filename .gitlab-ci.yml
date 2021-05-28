@@ -1,11 +1,11 @@
 stages:
-  - dev
+  - staging
 
 before_script:
   - docker info
 
 build-docker-image:
-  stage: dev
+  stage: staging
   tags:
     - kbz
   only:
@@ -17,4 +17,13 @@ build-docker-image:
     - docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}
     - docker push ${CI_REGISTRY}:${CI_COMMIT_SHA}
     - docker push ${CI_REGISTRY}:latest
+
+deploy-2-staging:
+  stage: staging
+  tags:
+    - kbz
+  only:
+    - master
+  script:
+    - docker run --publish 8000:8000 -t ${CI_REGISTRY}:latest
 
