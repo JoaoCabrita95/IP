@@ -77,9 +77,13 @@ public class JobpostingService {
 		try {
 			List<JobPosting> jobs = JobPosting.getJobPostings();
             JsonArray results = new JsonArray();
-            for(JobPosting job : jobs) {
-                results.add(ModelClassToJson.getJobJson(job));
+            int size = jobs.size() - 1;
+            for(int i = size; i >= 0; i--) {
+            	results.add(ModelClassToJson.getJobJson(jobs.get(i)));
             }
+//            for(JobPosting job : jobs) {
+//                results.add(ModelClassToJson.getJobJson(job));
+//            }
             return Response.status(Response.Status.OK).entity(results.toString()).build();
 		} 
 		catch (NoSuchElementException e1) {
