@@ -100,13 +100,13 @@ public class CVService {
     		CV cv = CV.getCVbyPerson(PersonID);
     		int completenessPercentage = 0;
     		if(!cv.getWorkHistory().isEmpty())
-    			completenessPercentage += 25;
+    			completenessPercentage += 33;
     		if(!cv.getEducation().isEmpty())
-    			completenessPercentage += 25;
-    		if(!cv.getCourses().isEmpty())
-    			completenessPercentage += 25;
+    			completenessPercentage += 33;
+//    		if(!cv.getCourses().isEmpty())
+//    			completenessPercentage += 25;
     		if(!cv.getSkillRefs().isEmpty())
-    			completenessPercentage += 25;
+    			completenessPercentage += 34;
     		
     		return Response.status(Response.Status.OK).entity("{\"uid\":" + PersonID + ",\"completeness\":" + completenessPercentage + "}").build();
     	}
@@ -145,7 +145,7 @@ public class CVService {
     	}
     	
     }
-    
+    //TODO: CHANGE THE SKILL RECOMENDATION TO NOT REQUIRE A JOBID, MAYBE THROUGH APPLICATIONS MADE BY USER AND SKILL REQUIREMENTS THAT ARE NOT IN CV
     /**
      * 
      * @param PersonURI
@@ -459,6 +459,8 @@ public class CVService {
 	public Response deleteCV(@PathParam("profileID")String profileID) {
 		try {
 			CV cv = CV.getCVbyPerson(profileID);
+			
+			
 			
 			Log.info(getCVinJson(cv).toString() + "\n");
 			
