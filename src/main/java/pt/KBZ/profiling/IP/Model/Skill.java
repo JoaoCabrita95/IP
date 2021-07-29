@@ -579,6 +579,8 @@ public class Skill extends RDFObject //implements Serializable
                 	break;
                 	
                 case "synonymOf":
+                case "prefLabel":
+                case "altLabel":
                 	String synonym = object;  
                 	skill.addSynonym(synonym);
                 	break;

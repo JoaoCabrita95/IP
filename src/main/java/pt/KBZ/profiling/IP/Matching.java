@@ -156,9 +156,9 @@ public class Matching {
 	@SuppressWarnings("unused")
 	private static int getJobMaxScore(JobPosting job) {
 		int score = 0;
-		for(Course cs: job.getCapabilityReq()) {
-			score += 1 * COURSE_COEFICIENT;
-		}
+//		for(Course cs: job.getCapabilityReq()) {
+//			score += 1 * COURSE_COEFICIENT;
+//		}
 		for(Education ed: job.getEducationReq()) {
 			score += 1 * EDUCATION_COEFICIENT;
 		}
