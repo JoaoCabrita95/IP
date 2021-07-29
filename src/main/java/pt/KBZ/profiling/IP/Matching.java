@@ -169,10 +169,13 @@ public class Matching {
 			int tmpScore = 1;
 			if(skl.getSkillLevel() != null) {
 				switch(skl.getSkillLevel()) {
-					case "junior":
-						tmpScore += 2;
+					case "intermediate":
+						tmpScore += 1;
 						break;
 					case "advanced":
+						tmpScore += 2;
+						break;
+					case "expert":
 						tmpScore += 3;
 						break;
 					default : 
@@ -296,29 +299,32 @@ public class Matching {
 	}
 	
 	private static int getSkillReqScore(SkillJobReq jobSkillRef, CVSkillRef cvSkillRef) {
-		int score = 0;
+		int score = 1;
 		String cvSkillLevel = cvSkillRef.getSkillLevel();
 		String jobSkillLevel = jobSkillRef.getSkillLevel();
 		
 		if(cvSkillLevel != null && jobSkillLevel != null) {
 			switch(cvSkillLevel) {
-			
-			case "basic":
-				score += 1;
-				break;
-				
-			case "junior":
+							
+			case "intermediate":
 				if(!jobSkillLevel.equalsIgnoreCase("basic"))
-					score += 2;
-				else
 					score += 1;
 				break;
 				
 			case "advanced":
-				if(jobSkillLevel.equalsIgnoreCase("advanced"))
-					score += 3;
-				else
+				if(jobSkillLevel.equalsIgnoreCase("intermediate"))
+					score += 1;
+				else if(!jobSkillLevel.equalsIgnoreCase("basic"))
 					score += 2;
+				break;
+				
+			case "expert":
+				if(jobSkillLevel.equalsIgnoreCase("advanced"))
+					score += 2;
+				else if(jobSkillLevel.equalsIgnoreCase("intermediate"))
+					score += 1;
+				else if(jobSkillLevel.equalsIgnoreCase("expert"))
+					score += 3;
 				break;
 			}
 		}
