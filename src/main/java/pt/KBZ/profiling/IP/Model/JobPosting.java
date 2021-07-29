@@ -531,7 +531,7 @@ public class JobPosting extends RDFObject {
 			throw new NoSuchElementException("JobPosting with URI: " + uri + " Not found");
 		}
         
-        String properties = SparqlEndPoint.getAllProperties(uri);
+        String properties = SparqlEndPoint.getAllPropertiesByType(uri, JobPosting.ClassType);
         JobPosting jp = ParseResponseToJobPost(properties);
         jp.setURI(uri);
         return jp;
@@ -597,6 +597,7 @@ public class JobPosting extends RDFObject {
 
         List<JobPosting> JPs = new ArrayList<>();  
         InputStream in = new ByteArrayInputStream(SparqlJsonResults.getBytes(StandardCharsets.UTF_8));
+        System.out.println(SparqlJsonResults);
         ResultSet results = ResultSetFactory.fromJSON(in);
         
         while (results.hasNext()) {
