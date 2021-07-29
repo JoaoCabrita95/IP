@@ -276,6 +276,18 @@ public class SparqlEndPoint {
 //		System.out.println(query);
 		return query(query);
 	}
+	
+	public static String getAllPropertiesByType(String SubjectURI, String ClassType) {
+		
+		String query = QUERYHEADER  
+		+ " SELECT ?subject ?predicate ?object "
+		+ "WHERE {"
+		+ SubjectURI + " a " + ClassType + " ."
+		+ "	" + SubjectURI + " ?predicate ?object ." 
+		+ " } ";
+//		System.out.println(query);
+		return query(query);
+	}
 
 		// Find all properties of an instance
 		public static String getProperties(String uri) {
