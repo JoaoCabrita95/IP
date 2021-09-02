@@ -17,7 +17,7 @@ public class matomoClient {
 
     public matomoClient() {
         actionUrl = "http://qualichain.epu.ntua.gr";
-        hostUrl = "http://knowledgebizvpn.ddns.net/matomo/matomo.php";
+        hostUrl = "http://vpnknowledgebiz.ddns.net/matomo/matomo.php";
         siteId = 1;
 
     }
