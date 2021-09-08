@@ -6,6 +6,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -20,7 +21,9 @@ import org.cyberborean.rdfbeans.annotations.RDFBean;
 import org.cyberborean.rdfbeans.annotations.RDFNamespaces;
 import org.cyberborean.rdfbeans.annotations.RDFSubject;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /*
 //for <classpathentry kind="lib" path="lib/RDFBeans-2.1/RDFBeans-2.1.jar"/>
@@ -458,6 +461,100 @@ public class Skill extends RDFObject //implements Serializable
     	return skillRelationships;
     }
     
+    public static List<String> getSkillFields() {
+		// TODO Auto-generated method stub
+    	
+    	List<String> fields = new LinkedList<String>();
+    	
+    	String SparqlJsonResults = SparqlEndPoint.getAllPropertiesByType("saro:isCoreTo");
+    	
+    	InputStream in = new ByteArrayInputStream(SparqlJsonResults.getBytes(StandardCharsets.UTF_8));
+        ResultSet results = ResultSetFactory.fromJSON(in);
+        String object = "";
+        while (results.hasNext()) {
+        	QuerySolution soln = results.nextSolution();
+            Resource res= soln.getResource("object");
+            
+            RDFNode Onode = soln.get("object");
+            if (Onode.isResource()) {
+                object = String.valueOf(soln.getResource("object"));
+            }
+            else{
+                object = String.valueOf(soln.getLiteral("object"));   
+            }
+                  
+            if(object.contains("#"))
+            	object = object.substring(object.indexOf("#") +1 );
+            
+            if(!fields.contains(object))
+            	fields.add(object);
+        }
+        
+		return fields;
+	}
+    
+    public static JsonArray getSkillLabelsByField(String field){
+    	
+    	JsonArray skillsLabelsByURI = new JsonArray();
+    	
+    	List<List<String>> skillLabels = new LinkedList<List<String>>();
+    	List<String> tmpList;
+    	if(!field.contains(":"))
+    		field = "saro:" + field;
+    	
+    	String SparqlJsonResults = SparqlEndPoint.getLabelByPropertyValueFromClass(ClassType, "saro:isCoreTo", field);
+    	
+    	
+    	InputStream in = new ByteArrayInputStream(SparqlJsonResults.getBytes(StandardCharsets.UTF_8));
+        ResultSet results = ResultSetFactory.fromJSON(in);
+        String subject = "";
+        String object = "";
+        
+        JsonObject tmpSkill;
+        
+        while (results.hasNext()) {
+        	
+        	tmpSkill = new JsonObject();
+        	
+        	tmpList = new LinkedList<String>();
+        	QuerySolution soln = results.nextSolution();
+            
+            RDFNode Onode = soln.get("object");
+            if (Onode.isResource()) {
+                object = String.valueOf(soln.getResource("object"));
+            }
+            else{
+                object = String.valueOf(soln.getLiteral("object"));   
+            }
+            
+            if(object.contains("#"))
+            	object = object.substring(object.indexOf("#") +1 );
+            
+            Onode = soln.get("subject");
+            if (Onode.isResource()) {
+            	subject = String.valueOf(soln.getResource("subject"));
+            }
+            else{
+            	subject = String.valueOf(soln.getLiteral("subject"));   
+            }
+            
+            if(subject.contains("#"))
+            	subject = subject.substring(subject.indexOf("#") +1 );
+            
+            if(!subject.contains(":"))
+            	subject = "saro:" + subject;
+            
+            tmpList.add(subject);
+            tmpList.add(object);
+            skillLabels.add(tmpList);
+            
+            tmpSkill.addProperty(subject, object);
+            skillsLabelsByURI.add(tmpSkill);
+        }
+        
+    	return skillsLabelsByURI;
+    }
+    
     /**
      * Parses a Json Response from the Database into Skill objects and creates a List of all the Skills gathered from the Response
      * @param SparqlJsonResults Database query response in Json format with RDF data structure 
@@ -693,4 +790,6 @@ public class Skill extends RDFObject //implements Serializable
     	
     	return true;
     }
+
+	
 }
