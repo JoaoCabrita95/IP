@@ -108,4 +108,23 @@ public class SkillService {
         }
 		return Response.ok(results.toString()).build();
     }
+    
+    @GET
+    @Path("/skill/getFields")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSkillFields() {
+    	List<String> fields = Skill.getSkillFields();
+    	if(fields.isEmpty())
+    		return Response.status(Response.Status.NO_CONTENT).build();
+    	return Response.status(Response.Status.OK).entity(fields).build();
+    }
+    
+    @GET
+    @Path("/skill/searchByField/{field}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response SearchSkillsByField(@PathParam("field") String field) {
+    	JsonArray skillsLabels = Skill.getSkillLabelsByField(field);
+    	
+    	return Response.status(Response.Status.OK).entity(skillsLabels.toString()).build();
+    }
 }

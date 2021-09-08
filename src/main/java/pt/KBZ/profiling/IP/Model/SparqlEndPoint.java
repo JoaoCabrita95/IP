@@ -265,6 +265,19 @@ public class SparqlEndPoint {
 		return query(query);
 	}
 	
+	public static String getLabelByPropertyValueFromClass(String ClassType, String property, String value) {
+
+		String query = QUERYHEADER  
+		+ " SELECT ?subject ?object "
+		+ "WHERE {"
+		+ "	?subject a " + ClassType +" ."  
+		+ " ?subject "+ property +" " + value +" ."
+		+ " ?subject rdfs:label ?object ."
+		+ " }";
+
+		return query(query);
+	}
+	
 	//gets all the properties of an entity by URI
 	public static String getAllProperties(String SubjectURI) {
 		
