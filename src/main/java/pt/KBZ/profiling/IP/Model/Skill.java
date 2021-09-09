@@ -61,6 +61,8 @@ public class Skill extends RDFObject //implements Serializable
     private List<String> synonyms;
     private List<String> subClasses;
     
+    private enum translationLanguages {pt, en, el};
+    
     
     
     //TODO: Add constructors for different cases if found necessary
@@ -497,14 +499,12 @@ public class Skill extends RDFObject //implements Serializable
     	
     	JsonArray skillsLabelsByURI = new JsonArray();
     	
-    	List<List<String>> skillLabels = new LinkedList<List<String>>();
-    	List<String> tmpList;
     	if(!field.contains(":"))
     		field = "saro:" + field;
     	
     	String SparqlJsonResults = SparqlEndPoint.getLabelByPropertyValueFromClass(ClassType, "saro:isCoreTo", field);
     	
-    	
+    	JsonObject translations;
     	InputStream in = new ByteArrayInputStream(SparqlJsonResults.getBytes(StandardCharsets.UTF_8));
         ResultSet results = ResultSetFactory.fromJSON(in);
         String subject = "";
@@ -512,11 +512,14 @@ public class Skill extends RDFObject //implements Serializable
         
         JsonObject tmpSkill;
         
+        String translationSparqlJsonResults;
+        String translation;
+        String[] splitTranslation = new String[2];
+        
         while (results.hasNext()) {
         	
         	tmpSkill = new JsonObject();
         	
-        	tmpList = new LinkedList<String>();
         	QuerySolution soln = results.nextSolution();
             
             RDFNode Onode = soln.get("object");
@@ -544,11 +547,38 @@ public class Skill extends RDFObject //implements Serializable
             if(!subject.contains(":"))
             	subject = "saro:" + subject;
             
-            tmpList.add(subject);
-            tmpList.add(object);
-            skillLabels.add(tmpList);
             
-            tmpSkill.addProperty(subject, object);
+            translations = new JsonObject();
+            
+            translationSparqlJsonResults = SparqlEndPoint.getObjectByUriProperty(subject, "skos:prefLabel");
+            
+            InputStream translationIn = new ByteArrayInputStream(translationSparqlJsonResults.getBytes(StandardCharsets.UTF_8));
+            ResultSet translationResults = ResultSetFactory.fromJSON(translationIn);
+            
+            while (translationResults.hasNext()) {
+            	QuerySolution transSoln = translationResults.nextSolution();
+                
+                RDFNode transOnode = transSoln.get("object");
+                if (transOnode.isResource()) {
+                	translation = String.valueOf(transSoln.getResource("object"));
+                }
+                else{
+                	translation = String.valueOf(transSoln.getLiteral("object"));   
+                }
+                splitTranslation = translation.split("@");
+                
+                for(translationLanguages l : translationLanguages.values()) {
+                	if(splitTranslation[1].equals(l.toString()))
+                		translations.addProperty(splitTranslation[1], splitTranslation[0]);
+                }
+                
+            }
+            
+            
+            tmpSkill.addProperty("uri", subject);
+            tmpSkill.addProperty("label", object);
+            tmpSkill.add("translations", translations);
+            
             skillsLabelsByURI.add(tmpSkill);
         }
         
