@@ -530,9 +530,12 @@ public class JobPosting extends RDFObject {
         if(!SparqlEndPoint.existURI(uri)) {
 			throw new NoSuchElementException("JobPosting with URI: " + uri + " Not found");
 		}
-        
+                
         String properties = SparqlEndPoint.getAllPropertiesByType(uri, JobPosting.ClassType);
+        
         JobPosting jp = ParseResponseToJobPost(properties);
+        if(jp == null)
+        	throw new NoSuchElementException("JobPosting with URI: " + uri + " Not found");
         jp.setURI(uri);
         return jp;
     }
@@ -632,9 +635,10 @@ public class JobPosting extends RDFObject {
 //        System.out.println("============================================");
         
         JobPosting jp = new JobPosting();
+        boolean hasResults = false;
 
         while (results.hasNext()) {
-
+        	hasResults = true;
             QuerySolution soln = results.nextSolution();
             
             //System.out.println("soln: "+soln.toString());
@@ -824,7 +828,11 @@ public class JobPosting extends RDFObject {
             //cv.setId(StringUtils.substringAfter(ID,"http://rdfs.org/resume-rdf/cv.rdfs#"));   
 
         } 
-        return jp; 
+        
+        if(hasResults)
+        	return jp; 
+        else
+        	return null;
 
     }
     
