@@ -705,11 +705,12 @@ public class Skill extends RDFObject //implements Serializable
                 	skill.setReuseLevel(hasReuseLevel);
                 	break;
                 	
-                case "synonymOf":
+//                case "synonymOf":
                 case "prefLabel":
-                case "altLabel":
+//                case "altLabel":
                 	String synonym = object;  
-                	skill.addSynonym(synonym);
+                	if(!skill.getSynonyms().contains(synonym))
+                		skill.addSynonym(synonym);
                 	break;
                 	
                 case "narrowerSkill":

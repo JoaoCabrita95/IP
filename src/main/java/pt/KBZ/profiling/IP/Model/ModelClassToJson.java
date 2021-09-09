@@ -4,7 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+
 public class ModelClassToJson {
+	
+	private enum translationLanguages {pt, en, el};
 	
 	public static JsonElement getProfileJson(Person person) {
 		
@@ -196,7 +199,7 @@ public class ModelClassToJson {
 		
 	public static JsonElement getSkillJson(Skill skill) {
 		
-        JsonArray temp = new JsonArray();
+        JsonArray temp;
 		
 		JsonObject jsonPropValue = new JsonObject();
 		jsonPropValue.addProperty("label", skill.getLabel());
@@ -207,10 +210,20 @@ public class ModelClassToJson {
 		jsonPropValue.addProperty("isFrom", skill.getIsFrom());
 		jsonPropValue.addProperty("skillType", skill.getSkillType());
         jsonPropValue.addProperty("reuseLevel", skill.getReuseLevel());
+        
+        JsonObject skillTranslationData = new JsonObject();
+        String[] translationSplit = new String[2];
+        
         for(String synonim : skill.getSynonyms()) {
-            temp.add(synonim);
+        	translationSplit = synonim.split("@");
+        	for(translationLanguages l : translationLanguages.values()) {
+            	if(translationSplit[1].equals(l.toString())) {
+            		skillTranslationData.addProperty(translationSplit[1], translationSplit[0]);
+            	}
+            }
+        	
         }
-        jsonPropValue.add("synonyms", temp);
+        jsonPropValue.add("translations", skillTranslationData);
         temp = new JsonArray();
         
         for(String superClass : skill.getSuperClasses()) {
