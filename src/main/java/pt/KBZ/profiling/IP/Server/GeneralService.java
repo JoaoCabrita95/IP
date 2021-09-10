@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,10 @@ import org.apache.jena.atlas.logging.java.TextFormatter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
 
 import IP.Client.HTTPrequest;
 import IP.Model.Application;
@@ -47,10 +52,20 @@ public class GeneralService {
 
 	private static final String NOTIFICATION_PATH = "http://qualichain.epu.ntua.gr:5004/notifications HTTP/1.1";
 	rabbitMQService rabbit = new rabbitMQService();
+//	rabbitMQConsumer rabbitConsumer = new rabbitMQConsumer();
 
 	private static Logger Log = Logger.getLogger(GeneralService.class.getName());
+	
+	public ConnectionFactory factory;
+	public Connection conn;
+	public Channel channel;
+	public String exchange;
+	public static final String ROUTING_KEY = "produce_user_id";
+	private final static String QUEUE_NAME = "produce_user_id";
+	public static String REQUEST_PATH = "http://localhost:8000";
 	public GeneralService() {
 		Log.setLevel( Level.FINER );
+		startRabbitMQConsumer();
 	}
 	
 	@POST
@@ -74,7 +89,7 @@ public class GeneralService {
 			return Response.ok().entity("Data inserted successfully").build();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			
 			return Response.serverError().entity(e.getMessage()).build();
 		}
 	}
@@ -107,7 +122,7 @@ public class GeneralService {
 						RDFObject.quickDeleteByURI(skill.getURI());
 						RDFObject.deleteURIAssociations(skill.getURI());
 					} catch (Exception e) {
-						e.printStackTrace();
+						Log.info(e.getMessage());
 					}
 				}
 				for(JobPosting jp: jps) {
@@ -123,7 +138,7 @@ public class GeneralService {
 						RDFObject.quickDeleteByURI(p.getURI());
 						RDFObject.deleteURIAssociations(p.getURI());
 					} catch (Exception e) {
-						e.printStackTrace();
+						Log.info(e.getMessage());
 					}
 				}
 				
@@ -131,21 +146,21 @@ public class GeneralService {
 					try {
 						skill.Save();
 					} catch (Exception e) {
-						e.printStackTrace();
+						Log.info(e.getMessage());
 					}
 				}
 				for(JobPosting jp: jps) {
 					try {
 						jp.Save();
 					} catch (Exception e) {
-						System.err.println(e.getMessage());
+						Log.info(e.getMessage());
 					}
 				}
 				for(Person p : ps) {
 					try {
 						p.Save();
 					} catch (Exception e) {
-						e.printStackTrace();
+						Log.info(e.getMessage());
 					}
 				}
 				
@@ -153,7 +168,7 @@ public class GeneralService {
 					try {
 						cv.Save();
 					} catch (Exception e) {
-						e.printStackTrace();
+						Log.info(e.getMessage());
 					}
 				}
 				
@@ -169,7 +184,7 @@ public class GeneralService {
 						RDFObject.deleteURIAssociations(job.getURI());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.info(e.getMessage());
 					}
 				}
 				for(Person p : ps) {
@@ -177,7 +192,7 @@ public class GeneralService {
 						RDFObject.quickDeleteByURI(p.getURI());
 						RDFObject.deleteURIAssociations(p.getURI());
 					} catch(Exception e) {
-						e.printStackTrace();
+						Log.info(e.getMessage());
 					}
 				}
 				for(CV cv : cvs) {
@@ -186,7 +201,7 @@ public class GeneralService {
 						RDFObject.deleteURIAssociations(cv.getURI());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.info(e.getMessage());
 					}
 				}
 			}
@@ -196,14 +211,14 @@ public class GeneralService {
 					job.Save();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.info(e.getMessage());
 				}
 			}
 			for(Person p : ps) {
 				try {
 					p.Save();
 				} catch(Exception e) {
-					e.printStackTrace();
+					Log.info(e.getMessage());
 				}
 			}
 			for(CV cv : cvs) {
@@ -211,7 +226,7 @@ public class GeneralService {
 					cv.Save();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.info(e.getMessage());
 				}
 			}
 			
@@ -227,7 +242,7 @@ public class GeneralService {
 			try {
 				rabbit.channel.basicPublish(rabbit.exchange, rabbitMQService.ROUTING_KEY, null, test.getBytes());
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.info(e.getMessage());
 			}
 			
 			
@@ -250,4 +265,89 @@ public class GeneralService {
 			
 			return Response.ok(response).build();
 		}
+		
+//		@DELETE
+//		@Path("/rabbit/deleteUser/{userID}")
+		public Response deleteUserAndRelationships( String userID) {
+			Log.info("Trying to delete user with ID: " + userID + "\n");
+			
+			//Write delete function
+			
+			try {
+				List<Application> apps = Application.getApplicationsByProfile(userID);
+				if(apps.isEmpty())
+					Log.info("No applications made by user found\n");
+				for(Application app : apps) {
+					System.out.println(app.getJobURI());
+					Application.deleteURIAssociations(app.getURI());
+					Application.quickDeleteByURI(app.getURI());
+				}
+					
+			} catch (Exception e) {
+				Log.info("Application deletion process error: " + e.getMessage() + "\n");
+			}
+			try {
+				CV cv = CV.getCVbyPerson(userID);
+				System.out.println(cv.getURI());
+				CV.deleteObject(cv.getURI());
+			} catch (Exception e) {
+				Log.info("CV deletion process error: " + e.getMessage() + "\n");
+			}
+
+			try {
+				Person.deleteObject(userID);
+			} catch (Exception e) {
+				Log.info("Profile deletion process error: " + e.getMessage() + "\n");
+			}
+			
+			
+			return Response.status(Response.Status.OK).entity("User with ID: "+ userID + " has been deleted.").build();
+		}
+		
+		public void startRabbitMQConsumer() {
+			factory = new ConnectionFactory();
+			factory.setUsername("rabbitmq");
+			factory.setPassword("rabbitmq");
+			factory.setVirtualHost("/");
+			factory.setHost("qualichain.epu.ntua.gr");
+			factory.setPort(5672);
+			exchange = "";
+			try {
+				conn = factory.newConnection();
+				System.out.println(conn.getServerProperties());
+				channel = conn.createChannel();
+
+				channel.queueDeclarePassive(ROUTING_KEY);
+//			    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+
+			    DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+//			    	HTTPrequest request;
+//					String body;
+//					String response;
+			        String message = new String(delivery.getBody(), "UTF-8");
+//			        System.out.println(" [x] Received '" + message + "'");
+			        
+			        String userID = message.substring(message.indexOf(":") +1, message.lastIndexOf("}")).trim();
+//			        System.out.println(userID);
+			        
+			        deleteUserAndRelationships(userID);
+			        
+//			        request = new HTTPrequest(REQUEST_PATH + "/rabbit/deleteUser/" + userID);	
+//					
+//					request.addRequestProperty("Content-Type", "text/plain");
+//					request.addRequestProperty("Accept", "*/*");
+//					request.DELETErequest();
+//					
+//					response = request.Response();
+			    };
+			    channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
+				
+			} catch (IOException e) {
+				Log.info(e.getMessage());
+			} catch (TimeoutException e) {
+				Log.info(e.getMessage());
+			}
+		}
+		
+		
 }

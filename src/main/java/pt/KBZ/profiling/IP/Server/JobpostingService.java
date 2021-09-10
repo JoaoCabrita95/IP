@@ -90,7 +90,7 @@ public class JobpostingService {
 			return Response.status(Response.Status.OK).entity(e1.getMessage()).build();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Log.info(e.getMessage());
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}	
 	}
