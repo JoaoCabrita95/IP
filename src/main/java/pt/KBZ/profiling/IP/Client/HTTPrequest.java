@@ -230,7 +230,7 @@ public class HTTPrequest {
 			if (status == HttpURLConnection.HTTP_OK) { // success
 				return con.getResponseMessage();
 			} else {
-				System.out.println("GET request not worked");
+				System.out.println("Request response: " + con.getResponseMessage());
 			}
 		} catch (ProtocolException e) {
 			// TODO Auto-generated catch block

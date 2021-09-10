@@ -78,18 +78,30 @@ public class Matching {
 			
 			if(app.getJobURI() == null)
 				continue;
+			try {
+				job = JobPosting.getJobPosting(app.getJobURI());
 			
-			job = JobPosting.getJobPosting(app.getJobURI());
-			
-			highScore = getJobMaxScore(job);
-			score = getScore(job, cv);
-			if (score>highScore) 
-				score = highScore;
-			
-			if(highScore == 0)
-				scores.put(app.getJobURI(), 100);
-			else
-				scores.put(app.getJobURI(), (score*100)/highScore);
+				highScore = getJobMaxScore(job);
+				score = getScore(job, cv);
+				System.out.println(score);
+				if (score>highScore) 
+					score = highScore;
+				
+				if(highScore == 0)
+					scores.put(app.getJobURI(), 100);
+				else
+					scores.put(app.getJobURI(), (score*100)/highScore);
+				
+//				System.out.println("JOB IS: " + job.getID());
+//				System.out.println("THIS ONE IS FROM APPLY");
+//				System.out.println("score:");
+//				System.out.println(score);
+//				System.out.println("OUT OF:");
+//				System.out.println(highScore);
+			}
+			catch(Exception e) {
+				continue;
+			}
 		}
 		return scores;
 	}

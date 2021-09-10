@@ -40,7 +40,10 @@ public class ModelClassToJson {
 		jsonPropValue.addProperty("title", cv.getTitle());
 		jsonPropValue.addProperty("personURI", cv.getPersonURI());
 		jsonPropValue.addProperty("realocationInfo", cv.getRealocation());
-		jsonPropValue.addProperty("userID", cv.getPersonURI().substring(1));
+		if(cv.getPersonURI() != null)
+			jsonPropValue.addProperty("userID", cv.getPersonURI().substring(1));
+		else
+			jsonPropValue.addProperty("userID", cv.getPersonURI());
 		jsonPropValue.addProperty("description", cv.getDescription());
 		jsonPropValue.addProperty("targetSector", cv.getTargetSector());
 		jsonPropValue.addProperty("otherInfo", cv.getOtherInfo());
