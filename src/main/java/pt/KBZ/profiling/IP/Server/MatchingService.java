@@ -39,8 +39,8 @@ import com.google.gson.JsonObject;
 
 import org.apache.http.HttpResponse;
 import org.apache.jena.base.Sys;
-import org.piwik.java.tracking.PiwikRequest;
-import org.piwik.java.tracking.PiwikTracker;
+import org.matomo.java.tracking.MatomoRequest;
+import org.matomo.java.tracking.MatomoTracker;
 
 @Path("/")
 public class MatchingService {

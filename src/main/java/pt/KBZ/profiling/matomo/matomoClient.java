@@ -2,12 +2,15 @@ package matomo;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
-import org.piwik.java.tracking.PiwikRequest;
-import org.piwik.java.tracking.PiwikTracker;
+import org.matomo.java.tracking.MatomoException;
+import org.matomo.java.tracking.MatomoRequest;
+import org.matomo.java.tracking.MatomoTracker;
+import org.matomo.java.tracking.TrackerConfiguration;
 
 public class matomoClient {
 
@@ -47,14 +50,14 @@ public class matomoClient {
              * g.src='http://knowledgebizvpn.ddns.net/matomo/js/container_4Y0Ogro1.js';
              * s.parentNode.insertBefore(g,s); </script> <!-- End Matomo Tag Manager -->
              */
-            PiwikRequest request = new PiwikRequest(siteId, new URL(actionUrl));
+            MatomoRequest request = MatomoRequest.request().siteId(siteId).actionUrl(actionUrl).build();
             // request.setActionName("myAction");
             // request.addCustomTrackingParameter(key, value);
 
             request.setEventCategory(category);
             request.setEventAction(action);
             request.setEventName(name);
-            request.setEventValue(value);
+            request.setEventValue(value == null ? null : value.doubleValue());
 
             /*
              * request.setEventCategory("counters"); request.setEventAction("count"); //
@@ -62,18 +65,14 @@ public class matomoClient {
              * request.setEventName("matched_candidates_tag"); request.setEventValue(816);
              * 
              */
-            PiwikTracker tracker = new PiwikTracker(hostUrl);
+            MatomoTracker tracker = new MatomoTracker(TrackerConfiguration.builder().apiEndpoint(URI.create(hostUrl)).build());
 
-            HttpResponse response = tracker.sendRequest(request);
-            System.out.println(response);
+            tracker.sendRequest(request);
 
             // Future<HttpResponse> Future = tracker.sendRequestAsync(request);
             // System.out.println(Future);
 
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (MatomoException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
